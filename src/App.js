@@ -8,12 +8,10 @@ import RegistrationForm2 from "./pages/RegistractionForm2";
 function App() {
   return (
     <div className="App">
+      {/* <Sidebar /> */}
+      {/* <RegistrationForm /> */}
 
-    {/* <Sidebar /> */}
-    {/* <RegistrationForm /> */}
-
-    <RegistrationForm2 />
-
+      <RegistrationForm2 />
     </div>
   );
 }
