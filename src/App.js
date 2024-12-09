@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Nav from "./components/Nav";
 import Sidebar from "./components/Sidebar";
-import Registraction2 from "./pages/RegistractionForm2"; // Correct the import if needed
+// import Registration from "./pages/registrationPage/RegistrationForm"; // Correct the import if needed
+// import AddDevice from "./pages/registrationPage/AddDevice";
+import DrawPicture from "./pages/registrationPage/DrawPicture";
 
 function App() {
   return (
@@ -14,7 +16,7 @@ function App() {
         <Sidebar />
 
         <Routes>
-          <Route path="/" element={<Registraction2 />} />
+          <Route path="/" element={<DrawPicture/>} />
           
           {/* <Route path="/customer-registry" element={<CustomerRegistry />} /> */}
         </Routes>
