@@ -1,175 +1,189 @@
 import React, { useState } from "react";
-import Sidebar from "../components/Sidebar";
 
-const RegistrationForm2 = () => {
-  const [formdata, setFormData] = useState({
+const RegistrationForm = () => {
+  const [formData, setFormData] = useState({
     companyName: "",
-    panNo: "",
+    panNumber: "",
     email: "",
-    gstNo: "",
-    phoneNo: "",
+    gstNumber: "",
+    phone: "",
     password: "",
-    rePassword: "",
+    verifyPassword: "",
     address: "",
     category: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name) {
-      setFormData({ ...formdata, [name]: value });
-    } else {
-      console.error("Missing name attribute on input element");
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted: ", formdata);
-
-    setFormData({
-      companyName: "",
-      panNo: "",
-      email: "",
-      gstNo: "",
-      phoneNo: "",
-      password: "",
-      rePassword: "",
-      address: "",
-      category: "",
-    });
+    console.log("Submitted Form Data: ", formData);
   };
 
   return (
-    <div className="d-flex">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Form Section */}
-      <div className="container d-flex flex-column align-items-start py-4">
-        {/* Title */}
-        <div className="w-auto text-start">
-          <h1 className="h2 font-weight-bold mb-3">Registration Form</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      {/* Header */}
+      <div className="flex items-center w-full max-w-4xl  mb-6 ">
+        <div className="bg-white px-6 py-2 text-lg font-semibold shadow-md rounded-lg">
+          Registration Form
         </div>
-        <div className="border-b-2 border-dark mb-4 w-full"></div>
+        <div className="flex-grow border-t border-gray-400 mx-4"></div>
+        <div className="w-3 h-3 bg-gray-800 rounded-full"></div>
+      </div>
 
-        {/* Form Container */}
-        <div
-          className="container shadow p-5"
-          style={{ backgroundColor: "rgb(217, 217, 217)" }}
-        >
-          {/* Form Fields */}
-          <form className="row g-4 mt-3" onSubmit={handleSubmit}>
-            <div className="col-md-6">
-              <input
-                type="text"
-                name="companyName" 
-                placeholder="Company Name"
-                className="form-control h-12"
-                value={formdata.companyName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                type="text"
-                name="panNo" 
-                placeholder="PAN No"
-                className="form-control h-12"
-                value={formdata.panNo}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="form-control h-12"
-                value={formdata.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                type="text"
-                name="gstNo"
-                placeholder="GST No"
-                className="form-control h-12"
-                value={formdata.gstNo}
-                onChange={handleChange}
-              />
-            </div>
-            {/* Password and Phone No */}
-            <div className="col-md-6">
-              <input
-                type="text"
-                name="phoneNo"
-                placeholder="Phone No"
-                className="form-control h-12"
-                value={formdata.phoneNo}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                className="form-control h-12"
-                value={formdata.password}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Address on Left */}
-            <div className="col-md-6">
-              <textarea
-                name="address"
-                placeholder="Address"
-                className="form-control"
-                value={formdata.address}
-                onChange={handleChange}
-                rows="4"
-              />
-            </div>
-
-            {/* Re-enter Password and Category on Right */}
-            <div className="col-md-6 d-flex flex-column gap-3">
-              <input
-                type="password"
-                name="rePassword"
-                placeholder="Re-enter Password"
-                className="form-control h-12"
-                value={formdata.rePassword}
-                onChange={handleChange}
-              />
-              <select
-                name="category"
-                className="form-select h-12"
-                value={formdata.category}
-                onChange={handleChange}
-              >
-                <option value="">Category</option>
-                <option value="Aquafarming">Aquafarming</option>
-                <option value="Water Body">Water Body</option>
-              </select>
-            </div>
-          </form>
-
-          {/* Save Button */}
-          <div className="text-center mt-5">
-            <button
-              className="btn btn-light border-dark px-5 py-2"
-              onClick={handleSubmit}
-            >
-              Save
-            </button>
+      {/* Form Container */}
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-6 gap-y-4">
+          {/* Input Fields */}
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-black bg-gray-200 ">
+              <i className="bi bi-building"></i>
+            </span>
+            <input
+              type="text"
+              name="companyName"
+              value={formData.companyName}
+              onChange={handleChange}
+              placeholder="Company Name"
+              className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
+
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+              <i className="bi bi-credit-card"></i>
+            </span>
+            <input
+              type="text"
+              name="panNumber"
+              value={formData.panNumber}
+              onChange={handleChange}
+              placeholder="PAN Number"
+              className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+              <i className="bi bi-envelope"></i>
+            </span>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+              <i className="bi bi-receipt"></i>
+            </span>
+            <input
+              type="text"
+              name="gstNumber"
+              value={formData.gstNumber}
+              onChange={handleChange}
+              placeholder="GST Number"
+              className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+              <i className="bi bi-telephone"></i>
+            </span>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Phone No"
+              className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+              <i className="bi bi-lock"></i>
+            </span>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="relative col-span-1">
+      <span className="absolute top-3 left-3 text-gray-500">
+        <i className="bi bi-geo-alt"></i>
+      </span>
+      <textarea
+        name="address"
+        value={formData.address}
+        onChange={handleChange}
+        placeholder="Address"
+        className="w-full h-28 pl-10 pt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <div className="flex flex-col gap-4 col-span-1">
+      {/* Verify Password Field */}
+      <div className="relative">
+        <span className="absolute top-3 left-3 text-gray-500">
+          <i className="bi bi-lock"></i>
+        </span>
+        <input
+          type="password"
+          name="verifyPassword"
+          value={formData.verifyPassword}
+          onChange={handleChange}
+          placeholder="Verify Password"
+          className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Category Field */}
+      <div className="relative">
+        <span className="absolute top-3 left-3 text-gray-500">
+          <i className="bi bi-grid"></i>
+        </span>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="w-full h-12 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>
+            Category
+          </option>
+          <option value="Category1">Category 1</option>
+          <option value="Category2">Category 2</option>
+        </select>
+      </div>
+    </div>
+        </form>
+
+        {/* Submit Button */}
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default RegistrationForm2;
+export default RegistrationForm;

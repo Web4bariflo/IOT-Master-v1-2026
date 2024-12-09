@@ -1,18 +1,25 @@
-import logo from "./logo.svg";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
+import Nav from "./components/Nav";
 import Sidebar from "./components/Sidebar";
-import RegistrationForm from "./pages/RegistractionForm";
-import RegistrationForm2 from "./pages/RegistractionForm2";
-// import Todolist from "./pages/Todolist";
+import Registraction2 from "./pages/RegistractionForm2"; // Correct the import if needed
 
 function App() {
   return (
-    <div className="App">
-      {/* <Sidebar /> */}
-      {/* <RegistrationForm /> */}
+    <Router>
+      <div className="App">
+        
+        <Nav />
+        <Sidebar />
 
-      <RegistrationForm2 />
-    </div>
+        <Routes>
+          <Route path="/" element={<Registraction2 />} />
+          
+          {/* <Route path="/customer-registry" element={<CustomerRegistry />} /> */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
