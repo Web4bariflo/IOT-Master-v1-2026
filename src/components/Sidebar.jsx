@@ -33,7 +33,7 @@ const Sidebar = () => {
         <div className="flex flex-col p-3">
           {/* Toggle Sidebar Button */}
           <button
-            className="text-black p-3 rounded hover:bg-white cursor-pointer"
+            className="text-black p-3 rounded  cursor-pointer"
             onClick={toggleSidebar}
           >
             <FaBars className="text-xl" />
@@ -75,26 +75,25 @@ const Sidebar = () => {
           </div>
 
           {/* Device Registry Menu */}
-          <div className="text-black p-3 rounded hover:bg-white cursor-pointer">
-            <Link to="/device-registry" className="no-underline text-black">
-              <i className="bi bi-diagram-3-fill text-2xl"></i>
-              <span
-                className={`${
-                  isSidebarOpen
-                    ? "inline opacity-100 transition-opacity duration-500"
-                    : "hidden opacity-0"
-                } ml-2 text-sm`}
-              >
-                Device Registry
-              </span>
-            </Link>
-          </div>
+          <div className="flex items-center text-black p-3 rounded hover:bg-white cursor-pointer">
+  <Link to="/device-registry" className="flex items-center no-underline text-black">
+    <i className="bi bi-diagram-3-fill text-2xl"></i>
+    <span
+      className={`ml-2 text-sm transition-opacity duration-500 ${
+        isSidebarOpen ? "inline opacity-100" : "hidden opacity-0"
+      }`}
+    >
+      Device Registry
+    </span>
+  </Link>
+</div>
+
         </div>
       </aside>
 
       {/* for mobile screeen */}
       <aside
-        className="absolute p-2 ml-3 md:hidden block bg-sky-100 mt-4"
+        className="absolute  ml-3 md:hidden block bg-sky-100 mt-4 "
         style={{ zIndex: 1000 }}
       >
         <button
@@ -113,13 +112,13 @@ const Sidebar = () => {
               <span className="text-sm ml-2">Customers</span>
               {submenuOpen === "customers" && (
                 <div className="  top-10 mt-3 w-40 bg-sky-100 shadow-md">
-                  <Link to="/" className="no-underline text-black">
+                  <Link to="/registration" className="no-underline text-black">
                     <div className="p-2 hover:bg-white text-sm">
                       New Registration
                     </div>
                   </Link>
                   <Link
-                    to="/customer-registry"
+                    to="/"
                     className="no-underline text-black"
                   >
                     <div className="p-2 hover:bg-white text-sm">
@@ -130,7 +129,7 @@ const Sidebar = () => {
               )}
             </div>
 
-            <div className="text-black p-3 rounded hover:bg-white cursor-pointer">
+            <div className="text-black p-3 rounded hover:bg-white cursor-pointer flex">
               <i className="bi bi-diagram-3-fill text-2xl"></i>
               <Link to="/device-registry" className="no-underline text-black">
                 <div className="p-2 hover:bg-white text-sm">

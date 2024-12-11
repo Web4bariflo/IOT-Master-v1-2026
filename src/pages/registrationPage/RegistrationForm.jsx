@@ -114,7 +114,7 @@ const RegistrationForm = () => {
       console.log("Submitted Form Data: ", formData);
     } else {
       // If validation fails, show a general error message
-      setPopupMessage("Please correct the errors in the form.");
+      setPopupMessage("Please fillup all input field");
       setShowModal(true);
     }
   };
@@ -127,7 +127,7 @@ const RegistrationForm = () => {
     <div className="flex flex-col items-center justify-center mt-5">
      
       {/* Form Container */}
-      <div className="w-full max-w-6xl bg-white rounded-lg p-8">
+      <div className="w-full  max-w-6xl bg-white rounded-lg p-4">
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4"
@@ -222,7 +222,7 @@ const RegistrationForm = () => {
               <i className="bi bi-telephone"></i>
             </span>
             <input
-              type="text"
+              type="number"
               name="phone"
               value={formData.phone}
               onChange={handleChange}

@@ -5,16 +5,17 @@ import DrawPicture from "./registrationPage/DrawPicture";
 const Registration = () => {
   return (
     <div className="flex-col w-full">
-      <div className="flex w-full text-center  mt-12 mx-24">
-        <div className="bg-white p-3 h-10 text-lg font-normal shadow-md rounded-lg ">
+      <div className="flex items-center w-full max-w-7xl px-2 mt-24">
+        <div className="bg-white px-4 py-2 text-base font-semibold shadow-md rounded-lg ml-4">
           Registration Form
         </div>
-        <div className="flex-grow border-t max-w-7xl border-white bg-black h-0.5 mt-5"></div>
-        <div className="w-3 h-3 bg-black rounded-full mt-4"></div>
+        <div className="flex-grow border-t border-gray-800 mx-2"></div>
+        <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
-      <div className="w-auto my-20 mx-24 bg-white shadow-lg">
+
+      <div className="w-auto lg:my-10 lg:mx-24   bg-white shadow-lg">
         <RegistrationForm />
-        <DrawPicture/>
+        <DrawPicture />
       </div>
     </div>
   );

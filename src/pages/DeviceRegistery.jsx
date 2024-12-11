@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import { Link } from "react-router-dom";
-
-import devicepage from "./DevicePage";
 
 const DeviceRegistery = () => {
   const [customers, setCustomers] = useState([]);
-
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -17,7 +12,6 @@ const DeviceRegistery = () => {
         const response = await axios.get(
           "http://your-backend-api-url/customers"
         );
-
         setCustomers(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -27,124 +21,151 @@ const DeviceRegistery = () => {
     fetchData();
   }, []);
 
+  const filteredCustomers = customers.filter((customer) =>
+    customer.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen mx-auto py-6 px-4 p-4">
-      {/* <div className="min-h-screen bg-gray-100 p-4"> */}
-
+    <div className="h-screen w-full ">
       {/* Title Section */}
-
-      <div className="flex items-center w-80 xl:w-full max-w-full px-0 mb-6">
-        <div className="bg-white px-6 py-2 text-lg font-semibold shadow-xl border rounded-lg">
+      <div className="flex items-center w-full max-w-7xl px-2 mt-20">
+        <div className="bg-white px-4 py-2 text-base font-semibold shadow-md rounded-lg ml-4">
           Device Registery
         </div>
-
-        <div className="flex-grow border-t border-gray-400 mx-4"></div>
-
-        <div className="w-3 h-3 bg-gray-800 rounded-full"></div>
+        <div className="flex-grow border-t border-gray-800 mx-2"></div>
+        <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
 
       {/* Search Bar */}
-
-      <div className="mb-4 relative">
+      <div className="mb-4 relative ml-20 mt-4">
         <input
           type="text"
           placeholder="  Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full sm:w-1/3 lg:w-1/4 h-12 px-4 py-2 pl-10 border border-gray-300 rounded-3xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full sm:w-1/3 lg:w-1/4 h-10 px-4 py-2 pl-10 border border-gray-300 rounded-3xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <i className="bi bi-search absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 h-max"></i>
       </div>
 
-      {/* Table Section with Horizontal Scrolling for Mobile */}
-
-      <div className="shadow-lg rounded-lg mt-8 w-80 xl:w-full">
-        <div className="overflow-x-auto bg-[#E1E3E7] shadow-lg rounded-lg mb-10">
+      {/* Table Section */}
+      <div className="shadow-lg rounded-lg mt-8  lg:my-10 lg:mx-20">
+      <div className="overflow-x-auto bg-[#E1E3E7] shadow-lg rounded-lg mb-10">
           <table className="min-w-full table-auto mb-8">
             <thead className="bg-gray-200">
               <tr className="text-gray-800 text-center">
                 <th className="px-4 py-3">S.L</th>
-
                 <th className="px-4 py-3">Customer Name</th>
-
                 <th className="px-4 py-3">Aeration</th>
-
                 <th className="px-4 py-3">Power Circuit</th>
-
                 <th className="px-4 py-3">Monitoring</th>
-
                 <th className="px-4 py-3">Automated Feeder</th>
-
                 <th className="px-4 py-3">Checktray</th>
-
                 <th className="px-4 py-3">Lora Gateway</th>
               </tr>
             </thead>
-
             <tbody className="text-[#51586E]">
               {/* Static Rows */}
-
-              <tr className="bg-white border-b hover:bg-gray-50 text-center">
+              <tr className="bg-white border-b hover:bg-gray-100 text-center">
                 <td className="px-4 py-3">1</td>
-
-                <td className="px-4 py-3 text-blue-600 hover:underline">
-                  <Link to={`/devicepage`}>Magnum Seafood and Exports</Link>
+                <td className="px-4 py-3">Magnum Seafood and Exports</td>
+                {/* Change: Move the link from here to Aeration */}
+                <td className="px-4 py-3">
+                  <Link
+                    to={`/devicepage`}
+                    className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
+                  >
+                    123456
+                  </Link>
                 </td>
-
-                <td className="px-4 py-3">123456</td>
-
-                <td className="px-4 py-3">Yes</td>
-
-                <td className="px-4 py-3">Active</td>
-
-                <td className="px-4 py-3">Yes</td>
-
-                <td className="px-4 py-3">No</td>
-
-                <td className="px-4 py-3">Connected</td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
               </tr>
 
               <tr className="bg-white border-b hover:bg-gray-50 text-center">
                 <td className="px-4 py-3">1</td>
+                <td className="px-4 py-3"></td>
 
-                <td className="px-4 py-3">Magnum Seafood and Exports</td>
+                <td className="px-4 py-3">
+                  <Link
+                    to={`/devicepage`}
+                    className="text-blue-600 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
+                  ></Link>
+                </td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+              </tr>
 
-                <td className="px-4 py-3">123456</td>
+              <tr className="bg-white border-b hover:bg-gray-50 text-center">
+                <td className="px-4 py-3">1</td>
+                <td className="px-4 py-3"></td>
 
-                <td className="px-4 py-3">Yes</td>
-
-                <td className="px-4 py-3">Active</td>
-
-                <td className="px-4 py-3">Yes</td>
-
-                <td className="px-4 py-3">No</td>
-
-                <td className="px-4 py-3">Connected</td>
+                <td className="px-4 py-3">
+                  <Link
+                    to={`/devicepage`}
+                    className="text-blue-600 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
+                  ></Link>
+                </td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
+                <td className="px-4 py-3"></td>
               </tr>
 
               {/* Dynamic Rows */}
-
-              {customers.map((customer, index) => (
+              {filteredCustomers.map((customer, index) => (
                 <tr
                   key={customer.id}
                   className="bg-white border-b hover:bg-gray-50 text-center"
                 >
                   <td className="px-4 py-3">{index + 2}</td>
-
-                  <td className="px-4 py-3">{customer.name}</td>
-
-                  <td className="px-4 py-3">{customer.aeration}</td>
-
-                  <td className="px-4 py-3">{customer.powerCircuit}</td>
-
-                  <td className="px-4 py-3">{customer.monitoring}</td>
-
-                  <td className="px-4 py-3">{customer.automatedFeeder}</td>
-
-                  <td className="px-4 py-3">{customer.checktray}</td>
-
-                  <td className="px-4 py-3">{customer.loraGateway}</td>
+                  <td className="px-4 py-3 text-blue-800 hover:underline">
+                    {customer.name}
+                  </td>
+                  {/* Aeration now has the link */}
+                  <td className="px-4 py-3">
+                    {customer.aeration && customer.aeration.length > 0
+                      ? customer.aeration.map((id, idx) => (
+                          <div key={`aeration-${idx}`}>
+                            <Link
+                              to={`/devicepage/${id}`}
+                              className="text-blue-600 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
+                            >
+                              {id}
+                            </Link>
+                          </div>
+                        ))
+                      : "N/A"}
+                  </td>
+                  {/* Power Circuit has the link */}
+                  <td className="px-4 py-3">
+                    {customer.powerCircuit && customer.powerCircuit.length > 0
+                      ? customer.powerCircuit.map((id, idx) => (
+                          <div key={`powerCircuit-${idx}`}>
+                            <Link
+                              to={`/devicepage/${id}`}
+                              className="text-blue-600 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
+                            >
+                              {id}
+                            </Link>
+                          </div>
+                        ))
+                      : "N/A"}
+                  </td>
+                  <td className="px-4 py-3">{customer.monitoring || "N/A"}</td>
+                  <td className="px-4 py-3">
+                    {customer.automatedFeeder || "N/A"}
+                  </td>
+                  <td className="px-4 py-3">{customer.checktray || "N/A"}</td>
+                  <td className="px-4 py-3">{customer.loraGateway || "N/A"}</td>
                 </tr>
               ))}
             </tbody>

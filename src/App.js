@@ -7,6 +7,9 @@ import Registration from "./pages/Registration";
 import CustomerRegister from "./pages/CustomerRegister";
 import DeviceRegistery from "./pages/DeviceRegistery";
 import DevicePage from "./pages/DevicePage";
+import Cluster from "./pages/Cluster";
+import PondPage from "./pages/PondPage";
+import CustomerProfile from "./pages/CustomerProfile";
 
 function App() {
   return (
@@ -20,6 +23,11 @@ function App() {
           <Route exact path="/registration" element={<Registration/>} />
           <Route exact path="/device-registry" element={<DeviceRegistery/>} />
           <Route exact path="/devicepage" element={<DevicePage/>} />
+          <Route path="/cluster/:customer_id" element={<Cluster />} />
+          <Route path="/pond/:customer_id" element={<PondPage />} />
+          <Route path="/customerprofile/:customer_id" element={<CustomerProfile />} />
+
+
         </Routes>
         </div>      
       </div>
