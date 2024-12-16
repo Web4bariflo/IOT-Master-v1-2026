@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link  } from "react-router-dom";
+
 
 const CustomerRegister = () => {
   const [customers, setCustomers] = useState([]);
+  const URL = process.env.REACT_APP_IP
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.61:8000/viewuser/9876543210/"
+          `${URL}/viewuser_all/`
         );
         console.log(response.data);
         setCustomers(response.data);
@@ -55,7 +58,7 @@ const CustomerRegister = () => {
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">{customer.company_name}</td>
                   <td className="px-4 py-3">{customer.email}</td>
-                  <td className="px-4 py-3">{customer.mob}</td>
+                  <td className="px-4 py-3">{customer.Mob}</td>
                   <td className="px-4 py-3">{customer.customer_id}</td>
                   <td className="px-4 py-3 flex justify-center gap-2">
                   <Link

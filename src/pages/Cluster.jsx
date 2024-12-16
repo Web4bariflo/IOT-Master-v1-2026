@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-import Mapimg from "../assets/img/cluster.png";
+import Mapimg from "../assets/Images/Cluster.jpg";
 import axios from "axios";
-import URL from "../URL";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Cluster = () => {
-  const api = URL;
+  const { customer_id } = useParams();
+  const URL = process.env.REACT_APP_IP;
   //   const navigate = useNavigate();
   const [clusters, setClusters] = useState([]);
 
   // Fetch cluster and user data
   const fetchClusters = async () => {
     try {
-      const response = await axios.get(`${api}/admin_cluster_view/129125/`);
+      const response = await axios.get(
+        `${URL}/admin_cluster_view/${customer_id}/`
+      );
       console.log(response.data);
       setClusters(response.data); // Assuming response.data is an array of clusters
     } catch (error) {
@@ -45,7 +47,7 @@ const Cluster = () => {
               key={index}
               className="w-60 p-4 bg-white rounded-lg shadow-md mt-4 ml-6 "
             >
-              <Link to={`/pond/${clusters.cluster_id}`}>
+              <Link to={`/pond/${cluster.id}`} key={cluster.id}>
                 <img
                   src={Mapimg}
                   alt="Cluster Map"

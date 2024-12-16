@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import PondImage from "../assets/img/pond_image.png"; 
+import { useParams,Link } from "react-router-dom";
+import PondImage from "../assets/Images/Pond.jpg"; 
 import axios from "axios";
-import URL from "../URL";
+
 const PondPage = () => {
-  const api = URL;
-  // const navigate = useNavigate();
+  const {  id } = useParams();
+  // console.log("Customer ID:", customer_id);
+  console.log("Pond ID:", id); 
+  const URL = process.env.REACT_APP_IP;
+  
   const [ponds, setPonds] = useState([]);
 
   // Fetch pond data
   const fetchPonds = async () => {
     try {
-      const response = await axios.get(`${api}/adminpond_view/1/`); 
-      console.log(response.data);
+      const response = await axios.get(`${URL}/adminpond_view/${id}/`);
+      console.log(response);
       setPonds(response.data); 
     } catch (error) {
       console.error(error);
@@ -38,10 +41,12 @@ const PondPage = () => {
       <div className="w-full mt-8 flex gap-3 flex-wrap justify-center sm:justify-start">
         {ponds.length > 0 ? (
           ponds.map((pond, index) => (
+      <Link to={`/ponddetails/${pond.id}`} key={pond.id}> 
             <div
               key={index}
               className="w-60 p-4 bg-white rounded-lg shadow-md mt-4 ml-6"
             >
+
               <img
                 src={PondImage}
                 alt="Pond"
@@ -51,7 +56,7 @@ const PondPage = () => {
                 {pond.name}
               </p>
             </div>
-
+            </Link>
 
 
           ))

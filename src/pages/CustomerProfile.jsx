@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CustomerProfile = () => {
+  const {id} = useParams();
   const [profileData, setProfileData] = useState([]); 
   const navigate = useNavigate();
+  const URL = process.env.REACT_APP_IP
+
 
   // Fetch customer data
   const fetchCustomerData = async () => {
     try {
-      const response = await axios.get("http://192.168.1.61:8000/viewuser/9876543210/"); 
+      const response = await axios.get(`${URL}/viewuser/${id}/`); 
       setProfileData(response.data); // Assuming API returns an array of customer profiles
     } catch (error) {
       console.error("Error fetching customer data:", error);

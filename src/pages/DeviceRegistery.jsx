@@ -3,16 +3,23 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const DeviceRegistery = () => {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([]); // Initialize customers as an empty array
   const [search, setSearch] = useState("");
+  const URL = process.env.REACT_APP_IP;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://your-backend-api-url/customers"
+          `${URL}/deviceregistry_view/customer_id/`
         );
-        setCustomers(response.data);
+        console.log("response of deviceregistry:",response)
+        // Ensure the data is always an array, even if the response is empty
+        if (Array.isArray(response.data)) {
+          setCustomers(response.data);
+        } else {
+          console.error("Response data is not an array", response.data);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -21,12 +28,13 @@ const DeviceRegistery = () => {
     fetchData();
   }, []);
 
+  // Filter customers based on search input
   const filteredCustomers = customers.filter((customer) =>
     customer.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="h-screen w-full ">
+    <div className="h-screen w-full">
       {/* Title Section */}
       <div className="flex items-center w-full max-w-7xl px-2 mt-20">
         <div className="bg-white px-4 py-2 text-base font-semibold shadow-md rounded-lg ml-4">
@@ -50,8 +58,8 @@ const DeviceRegistery = () => {
       </div>
 
       {/* Table Section */}
-      <div className="shadow-lg rounded-lg mt-8  lg:my-10 lg:mx-20">
-      <div className="overflow-x-auto bg-[#E1E3E7] shadow-lg rounded-lg mb-10">
+      <div className="shadow-lg rounded-lg mt-8 lg:my-10 lg:mx-20">
+        <div className="overflow-x-auto bg-[#E1E3E7] shadow-lg rounded-lg mb-10">
           <table className="min-w-full table-auto mb-8">
             <thead className="bg-gray-200">
               <tr className="text-gray-800 text-center">
@@ -70,7 +78,6 @@ const DeviceRegistery = () => {
               <tr className="bg-white border-b hover:bg-gray-100 text-center">
                 <td className="px-4 py-3">1</td>
                 <td className="px-4 py-3">Magnum Seafood and Exports</td>
-                {/* Change: Move the link from here to Aeration */}
                 <td className="px-4 py-3">
                   <Link
                     to={`/devicepage`}
@@ -78,40 +85,6 @@ const DeviceRegistery = () => {
                   >
                     123456
                   </Link>
-                </td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-              </tr>
-
-              <tr className="bg-white border-b hover:bg-gray-50 text-center">
-                <td className="px-4 py-3">1</td>
-                <td className="px-4 py-3"></td>
-
-                <td className="px-4 py-3">
-                  <Link
-                    to={`/devicepage`}
-                    className="text-blue-600 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
-                  ></Link>
-                </td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-                <td className="px-4 py-3"></td>
-              </tr>
-
-              <tr className="bg-white border-b hover:bg-gray-50 text-center">
-                <td className="px-4 py-3">1</td>
-                <td className="px-4 py-3"></td>
-
-                <td className="px-4 py-3">
-                  <Link
-                    to={`/devicepage`}
-                    className="text-blue-600 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
-                  ></Link>
                 </td>
                 <td className="px-4 py-3"></td>
                 <td className="px-4 py-3"></td>

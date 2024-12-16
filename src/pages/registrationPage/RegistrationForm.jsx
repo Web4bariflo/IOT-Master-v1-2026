@@ -1,36 +1,39 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useRegistrationContext } from "../../context/RegistrationContext";
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ onSuccess }) => {
+  const { setName, setMob } = useRegistrationContext(); // Access context setters
+  const [userCategory, setUserCategory] = useState(""); //track the catagory
   const [formData, setFormData] = useState({
-    companyName: "",
-    panNumber: "",
+    company_name: "",
+    Pan_no: "",
     email: "",
-    gstNumber: "",
-    phone: "",
+    GST_no: "",
+    mobno: "",
     password: "",
-    verifyPassword: "",
     address: "",
-    category: "",
   });
 
   const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+  const URL = process.env.REACT_APP_IP;
 
   const validateForm = () => {
     const newErrors = {};
 
     // Company Name Validation
-    if (!formData.companyName.trim()) {
-      newErrors.companyName = "Company Name is required";
+    if (!formData.company_name.trim()) {
+      newErrors.company_name = "Company Name is required";
     }
 
     // PAN Number Validation
     const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-    if (!formData.panNumber.trim()) {
-      newErrors.panNumber = "PAN Number is required";
-    } else if (!panPattern.test(formData.panNumber)) {
-      newErrors.panNumber = "Invalid PAN Number format";
+    if (!formData.Pan_no.trim()) {
+      newErrors.Pan_no = "PAN Number is required";
+    } else if (!panPattern.test(formData.Pan_no)) {
+      newErrors.Pan_no = "Invalid PAN Number format";
     }
 
     // Email Validation
@@ -44,27 +47,10 @@ const RegistrationForm = () => {
     // GST Number Validation
     const gstPattern =
       /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9]{1}$/;
-    if (!formData.gstNumber.trim()) {
-      newErrors.gstNumber = "GST Number is required";
-    } else if (!gstPattern.test(formData.gstNumber)) {
-      newErrors.gstNumber = "Invalid GST Number format";
-    }
-
-    // Phone Number Validation
-    const phonePattern = /^[6-9]\d{9}$/;
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone Number is required";
-    } else if (!phonePattern.test(formData.phone)) {
-      newErrors.phone = "Invalid phone number";
-    }
-
-    // Password Validation
-    const passwordPattern =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (!passwordPattern.test(formData.password)) {
-      newErrors.password = "Weak password";
+    if (!formData.GST_no.trim()) {
+      newErrors.GST_no = "GST Number is required";
+    } else if (!gstPattern.test(formData.GST_no)) {
+      newErrors.GST_no = "Invalid GST Number format";
     }
 
     // Verify Password Validation
@@ -80,9 +66,9 @@ const RegistrationForm = () => {
     }
 
     // Category Validation
-    if (!formData.category) {
-      newErrors.category = "Please select a category";
-    }
+    // if (!formData.category) {
+    //   newErrors.category = "Please select a category";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -90,13 +76,17 @@ const RegistrationForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "panNumber") {
+    if (name === "Pan_no") {
       const input = value.toUpperCase();
-      setFormData({ ...formData, panNumber: input });
+      setFormData({ ...formData, Pan_no: input });
     } else {
       setFormData({ ...formData, [name]: value });
     }
+
+    // Handle category selection
+    // if (name === "category") {
+    //   setUserCategory(value); // Update the category state
+    // }
 
     // Clear specific error when user starts typing
     if (errors[name]) {
@@ -106,15 +96,47 @@ const RegistrationForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      // All validations passed
-      console.log("Submitted Form Data: ", formData);
-    } else {
-      // If validation fails, show a general error message
-      setPopupMessage("Please fillup all input field");
+    try {
+      if (validateForm()) {
+        const res = await axios.post(`${URL}/signup/`, formData);
+        console.log("Submitted Form Data: ", formData);
+
+        // Store name and mobno to context
+        setName(formData.company_name);
+        setMob(formData.mobno);
+
+        // Call the parent `onCategorySelect` with the selected category value
+
+        if (onSuccess) {
+          onSuccess();
+        }
+
+        console.log("Response from server:", res.data);
+      } else {
+        setPopupMessage("Please correct the errors in the form.");
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+
+      if (error.response) {
+        setPopupMessage(
+          `Error: ${
+            error.response.data.message ||
+            "There was an issue with your submission."
+          }`
+        );
+      } else if (error.request) {
+        setPopupMessage("Network error. Please check your connection.");
+      } else {
+        setPopupMessage(
+          "There was an error submitting the form. Please try again."
+        );
+      }
+
       setShowModal(true);
     }
   };
@@ -125,13 +147,9 @@ const RegistrationForm = () => {
 
   return (
     <div className="flex flex-col items-center justify-center mt-5">
-     
       {/* Form Container */}
-      <div className="w-full  max-w-6xl bg-white rounded-lg p-4">
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4"
-        >
+      <div className="w-full max-w-6xl bg-white rounded-lg p-8">
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           {/* Input Fields */}
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center bg-gray-300 px-3 border-r border-gray-300 rounded-lg">
@@ -139,17 +157,17 @@ const RegistrationForm = () => {
             </span>
             <input
               type="text"
-              name="companyName"
-              value={formData.companyName}
+              name="company_name"
+              value={formData.company_name}
               onChange={handleChange}
               placeholder="Company Name"
               className={`w-full h-12 pl-12 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.companyName ? "border-red-500" : ""
+                errors.company_name ? "border-red-500" : ""
               }`}
             />
-            {errors.companyName && (
+            {errors.company_name && (
               <span className="mt-1 text-red-500 text-xs absolute bottom-[-15px] left-0">
-                {errors.companyName}
+                {errors.company_name}
               </span>
             )}
           </div>
@@ -160,17 +178,17 @@ const RegistrationForm = () => {
             </span>
             <input
               type="text"
-              name="panNumber"
-              value={formData.panNumber}
+              name="Pan_no"
+              value={formData.Pan_no}
               onChange={handleChange}
               placeholder="PAN Number"
               className={`w-full h-12 pl-12 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.panNumber ? "border-red-500" : ""
+                errors.Pan_no ? "border-red-500" : ""
               }`}
             />
-            {errors.panNumber && (
+            {errors.Pan_no && (
               <span className="text-red-500 text-xs absolute bottom-[-15px] left-0">
-                {errors.panNumber}
+                {errors.Pan_no}
               </span>
             )}
           </div>
@@ -202,17 +220,17 @@ const RegistrationForm = () => {
             </span>
             <input
               type="text"
-              name="gstNumber"
-              value={formData.gstNumber}
+              name="GST_no"
+              value={formData.GST_no}
               onChange={handleChange}
               placeholder="GST Number"
               className={`w-full h-12 pl-12 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.gstNumber ? "border-red-500" : ""
+                errors.GST_no ? "border-red-500" : ""
               }`}
             />
-            {errors.gstNumber && (
+            {errors.GST_no && (
               <span className="text-red-500 text-xs absolute bottom-[-15px] left-0">
-                {errors.gstNumber}
+                {errors.GST_no}
               </span>
             )}
           </div>
@@ -223,17 +241,17 @@ const RegistrationForm = () => {
             </span>
             <input
               type="number"
-              name="phone"
-              value={formData.phone}
+              name="mobno"
+              value={formData.mobno}
               onChange={handleChange}
-              placeholder="Phone No"
+              placeholder="mobno No"
               className={`w-full h-12 pl-12 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.phone ? "border-red-500" : ""
+                errors.mobno ? "border-red-500" : ""
               }`}
             />
-            {errors.phone && (
+            {errors.mobno && (
               <span className="text-red-500 text-xs absolute bottom-[-15px] left-0">
-                {errors.phone}
+                {errors.mobno}
               </span>
             )}
           </div>
@@ -252,11 +270,11 @@ const RegistrationForm = () => {
                 errors.password ? "border-red-500" : ""
               }`}
             />
-            {errors.password && (
+            {/* {errors.password && (
               <span className="text-red-500 text-xs absolute bottom-[-15px] left-0">
                 {errors.password}
               </span>
-            )}
+            )} */}
           </div>
 
           <div className="relative col-span-1">
@@ -302,7 +320,7 @@ const RegistrationForm = () => {
               )}
             </div>
 
-            {/* Category Field */}
+            {/* Category Field
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center bg-gray-300 px-3 border-r border-gray-300 rounded-lg">
                 <i className="bi bi-grid"></i>
@@ -318,15 +336,15 @@ const RegistrationForm = () => {
                 <option value="" disabled>
                   Category
                 </option>
-                <option value="Category1">Aquafarming</option>
-                <option value="Category2">Water Body</option>
+                <option value="Aquafarming">Aquafarming</option>
+                <option value="WaterBody">Water Body</option>
               </select>
               {errors.category && (
                 <span className="text-red-500 text-xs absolute bottom-[-15px] left-0">
                   {errors.category}
                 </span>
               )}
-            </div>
+            </div> */}
           </div>
         </form>
 

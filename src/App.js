@@ -10,6 +10,8 @@ import DevicePage from "./pages/DevicePage";
 import Cluster from "./pages/Cluster";
 import PondPage from "./pages/PondPage";
 import CustomerProfile from "./pages/CustomerProfile";
+import DrawPicture from "./pages/registrationPage/DrawPicture";
+import PondDetails from "./pages/PondDetails";
 
 function App() {
   return (
@@ -24,10 +26,10 @@ function App() {
           <Route exact path="/device-registry" element={<DeviceRegistery/>} />
           <Route exact path="/devicepage" element={<DevicePage/>} />
           <Route path="/cluster/:customer_id" element={<Cluster />} />
-          <Route path="/pond/:customer_id" element={<PondPage />} />
-          <Route path="/customerprofile/:customer_id" element={<CustomerProfile />} />
-
-
+          <Route path="/pond/:id" element={<PondPage />} />
+          <Route path="/customerprofile/:id" element={<CustomerProfile />} />
+          <Route path="/ponddetails/:id" element={<PondDetails/>} />
+          <Route exact path="/drawpicture" element={<DrawPicture/>} />
         </Routes>
         </div>      
       </div>
