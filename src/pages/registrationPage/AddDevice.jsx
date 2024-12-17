@@ -13,17 +13,7 @@ const AddDevice = () => {
   const [successfulPonds, setSuccessfulPonds] = useState([]);
   const [pondData, setPondData] = useState({}); // State to hold input data for ponds
   const [pondName, setPondName] = useState("");
-  const [showDrawPicture, setShowDrawPicture] = useState(false); // State to control visibility
-
-
-  // const fields = [
-  //   "Aeration",
-  //   "Power Circuit",
-  //   "Monitoring",
-  //   "Automated Feeder",
-  //   "Check Tray",
-  //   "Lora Gateway",
-  // ];
+  const [showDrawPicture, setShowDrawPicture] = useState(false); // State to control visibil
 
   const fieldData = {
     Aeration: { label: "Aeration" },
@@ -102,46 +92,6 @@ const AddDevice = () => {
     setShowDrawPicture(true); // Show the DrawPicture component
     console.log("drawdata click")
   };
- 
-  //   const payload = pondList.map((pond) => ({
-  //     pondName: pond,
-  //     ...fields.reduce((acc, field) => {
-  //       acc[field] = pondData[pond]?.[field] || ""; // Ensure all fields exist
-  //       return acc;
-  //     }, {}),
-  //   }));
-
-  // const handleSubmit = () => {
-  //   const payload = pondList.map((pond) => ({
-  //     pondName: pond,
-  //     ...Object.keys(fieldData).reduce((acc, field) => {
-  //       acc[field] = pondData[pond]?.[field] || ""; // Ensure all fields exist
-  //       return acc;
-  //     }, {}),
-  //   }));
-
-  //   console.log("Sending JSON to backend:", payload);
-
-  //   fetch("/api/submit-pond-data", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(payload),
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error("Failed to submit data");
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       console.log("Backend response:", data);
-  //       alert("Data submitted successfully!");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       alert("Failed to submit data. Please try again.");
-  //     });
-  // };
 
   return (
     <React.Fragment>

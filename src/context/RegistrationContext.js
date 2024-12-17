@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 
 // Create the context
-const RegistrationContext = createContext();
+export const RegistrationContext = createContext();
 
 // Create a custom hook to use the context
 export const useRegistrationContext = () => {
@@ -12,12 +12,18 @@ export const useRegistrationContext = () => {
 export const RegistrationProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [mob, setMob] = useState("");
+  const [coustmerId, setCoustmerId] = useState("");
+  const [clusterId, setClusterId] = useState("");
 
   const value = {
     name,
     setName,
     mob,
     setMob,
+    coustmerId,
+    setCoustmerId,
+    clusterId,
+    setClusterId,
   };
 
   return (

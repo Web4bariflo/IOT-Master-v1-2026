@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import RegistrationForm from "./registrationPage/RegistrationForm";
 import AddCluster from "../components/ClusterCard";
-import { RegistrationProvider } from "../context/RegistrationContext";
 import AddDevice from "./registrationPage/AddDevice";
 
 const Registration = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [clusters, setClusters] = useState([]);
   const [isClusterCreated, setIsClusterCreated] = useState(false);
-  // const [selectedCategory, setSelectedCategory] = useState(""); // Track selected category
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     console.log("form submitted");
     setIsRegistered(true); // Set registered state to true
   };
@@ -19,13 +18,10 @@ const Registration = () => {
     setIsClusterCreated(true); // Mark cluster as created
   };
 
-  // const handleCategorySelect = (userCategory) => {
-  //   console.log("selected Category:", userCategory);
-  //   setSelectedCategory(userCategory); // Set the selected category
-  // };
+
 
   return (
-    <RegistrationProvider>
+   <div>
       <form className="flex-col w-full" onSubmit={handleSubmit}>
         <div className="flex w-full text-center mt-12 mx-24">
           <div className="bg-white p-3 h-10 text-lg font-normal shadow-md rounded-lg ">
@@ -45,12 +41,12 @@ const Registration = () => {
                 setClusters={setClusters}
                 onClusterCreated={handleClusterCreationSuccess}
               />
-              {isClusterCreated && <AddDevice />}
+              {isClusterCreated && <AddDevice/>}
             </div>
           )}
         </div>
       </form>
-    </RegistrationProvider>
+      </div>
   );
 };
 

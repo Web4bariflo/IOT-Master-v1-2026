@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { TbWorldLongitude, TbWorldLatitude } from "react-icons/tb";
+import { useRegistrationContext } from "../../context/RegistrationContext";
 
 const PondLocation = ({ pond, onClose, fieldData }) => {
   const mapRef = useRef(null);
@@ -29,6 +30,9 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
   const [searchName, setSearchName] = useState();
   const navigate = useNavigate();
   const BASEURL = process.env.REACT_APP_IP;
+
+  const {clusterId} = useRegistrationContext();
+
 
   useEffect(() => {
     if (mapRef.current !== null) return;
@@ -118,7 +122,7 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
         console.log("Sending JSON to backend:", {
           name: pond,
           location: coardinates,
-          clusterid: 1,
+          clusterid: clusterId,
           device_quantity: deviceQuantity, // Ensure this is an object
           area: totalArea,
           latitude: latitude,
@@ -128,7 +132,7 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
         const res = await axios.post(`${BASEURL}/demo/`, {
           name: pond,
           location: coardinates,
-          clusterid: 1,
+          clusterid: clusterId,
           device_quantity: deviceQuantity, // Use dynamic object
           area: totalArea,
           latitude: latitude,

@@ -3,12 +3,14 @@ import { useRegistrationContext } from "./../context/RegistrationContext"; // Im
 import axios from "axios"; // Import axios for API calls
 
 const AddCluster = ({ clusters, setClusters, onClusterCreated }) => {
-  const { mob } = useRegistrationContext(); // Access mob from context
+  const { mob, setCoustmerId,setClusterId } = useRegistrationContext(); // Access mob from context
   const [clusterName, setClusterName] = useState("");
   const [loading, setLoading] = useState(false); // To manage loading state
   const [error, setError] = useState(""); // To manage error messages
   const [success, setSuccess] = useState(""); // To manage success messages
   const URL = process.env.REACT_APP_IP; // Get base URL from environment variable
+
+  
 
   const handleAddCluster = async () => {
     if (!clusterName) {
@@ -25,7 +27,12 @@ const AddCluster = ({ clusters, setClusters, onClusterCreated }) => {
         name: clusterName,
         mob, // We are sending the mob as well from the context
       });
-      console.log(clusterName);
+      console.log(response.data.message.customer_id);
+
+
+      setCoustmerId(response.data.message.customer_id)
+      setClusterId(response.data.message.cluster_id)
+      
       // Add the new cluster to the list of clusters
       setClusters((prevClusters) => [...prevClusters, response.data]);
 
