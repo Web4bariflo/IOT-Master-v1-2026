@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams,Link } from "react-router-dom";
 import PondImage from "../assets/Images/Pond.jpg"; 
 import axios from "axios";
+import DrawPicture from "./registrationPage/DrawPicture";
 
 const PondPage = () => {
   const {  id } = useParams();
@@ -10,6 +11,7 @@ const PondPage = () => {
   const URL = process.env.REACT_APP_IP;
   
   const [ponds, setPonds] = useState([]);
+
 
   // Fetch pond data
   const fetchPonds = async () => {
@@ -66,6 +68,7 @@ const PondPage = () => {
           </p>
         )}
       </div>
+
     </div>
   );
 };

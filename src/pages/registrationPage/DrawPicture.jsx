@@ -7,13 +7,17 @@ import Layout from "./Layout";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-// import mqtt from "mqtt";
+// import './DrawData.css'
+import mqtt from "mqtt";
 import transformer from "../../assets/Images/transformer.png";
 import cutouter from "../../assets/Images/electric-panel.png";
 import { useNavigate } from "react-router-dom";
+import { useRegistrationContext } from "../../context/RegistrationContext";
+
 const URL = process.env.REACT_APP_IP
 
 const DrawMap = ({
+  id,
   color,
   weight,
   drawnItemsRef,
@@ -29,14 +33,13 @@ const DrawMap = ({
   const map = useMap();
   const pondLayerRef = useRef(null);
   const polygonRef = useRef(null);
-  const { id } = useParams();
   const isFetched = useRef(false); // Ref to track if features are fetched
   const [drawndata, SetDrawndata] = useState(null);
   const drawnItems = new L.FeatureGroup();
   const pondLayer = new L.FeatureGroup();
   const BASEURL =process.env.REACT_APP_IP;
 
-  // console.log("id is :", id);
+  console.log("id is :", id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -217,16 +220,6 @@ const DrawMap = ({
     });
   }, [pondData]);
 
-  // useEffect(() => {
-  // drawndata?.forEach((feature) => {
-  // if (feature.geometry.type === "Point") {
-  // const { coordinates } = feature.geometry;
-  // const { type } = feature.properties;
-
-  // addCustomMarker(coordinates[1], coordinates[0], type, drawnItems); // Add marker using type
-  // }
-  // });
-  // }, [ ]);
 
   useEffect(() => {
     if (customMarker) {
@@ -343,7 +336,7 @@ const SetMapCenter = ({ center }) => {
 
   return null;
 };
-const DrawData = () => {
+const DrawData = ({id}) => {
   const [color, setColor] = useState("#3388ff");
   const [weight, setWeight] = useState(5);
   const [mapType, setMapType] = useState("white");
@@ -355,14 +348,19 @@ const DrawData = () => {
   const [center, setCenter] = useState([21.559, 87.065]);
   const [showModal, setShowModal] = useState(false);
   const modalRef = useRef(null);
+  const [zoom, setZoom] =  useState(18)
+  // const {clusterId} = useRegistrationContext();
 
-  const { id } = useParams();
+
+
   const uniqueMarkers = useRef(new Set());
   const navigate = useNavigate();
   const [lineColors, setLineColors] = useState({}); // Store line colors
   const [markerCounters, setMarkerCounters] = useState({});
   const [deleteTrigger, setDeleteTrigger] = useState(0); // Track deletions
 
+  // const id= clusterId;
+  console.log("drawdataid:",id)
   useEffect(() => {
     const fetchPondData = async () => {
       const BASEURL = process.env.REACT_APP_IP;
@@ -390,45 +388,45 @@ const DrawData = () => {
     fetchPondData();
   }, [id]);
 
-  // useEffect(() => {
-  //   const mqttClient = mqtt.connect({
-  //     hostname: "newmqtt.bc-pl.com",
-  //     port: 443,
-  //     protocol: "wss",
-  //     path: "/mqtt",
-  //     username: "Vertoxlabs",
-  //     password: "Vertoxlabs@2024",
-  //   });
+  useEffect(() => {
+    const mqttClient = mqtt.connect({
+      hostname: "newmqtt.bc-pl.com",
+      port: 443,
+      protocol: "wss",
+      path: "/mqtt",
+      username: "Vertoxlabs",
+      password: "Vertoxlabs@2024",
+    });
 
-  //   mqttClient.on("connect", () => {
-  //     console.log("Connected to MQTT broker");
-  //     mqttClient.subscribe("456/data");
-  //   });
+    mqttClient.on("connect", () => {
+      console.log("Connected to MQTT broker");
+      mqttClient.subscribe("456/data");
+    });
 
-  //   mqttClient.on("message", (topic, payload) => {
-  //     const data = JSON.parse(payload.toString());
-  //     console.log(data);
-  //     console.log(lineColors);
+    mqttClient.on("message", (topic, payload) => {
+      const data = JSON.parse(payload.toString());
+      console.log(data);
+      console.log(lineColors);
 
-  //     setLineColors((prevColors) => ({
-  //       ...prevColors,
-  //       [`${data.line}`]: data?.current == 0 ? "red" : "green",
-  //     }));
-  //   });
+      setLineColors((prevColors) => ({
+        ...prevColors,
+        [`${data.line}`]: data?.current == 0 ? "red" : "green",
+      }));
+    });
 
-  //   return () => {
-  //     mqttClient.end();
-  //   };
-  // }, []);
+    return () => {
+      mqttClient.end();
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setZoom(window.innerWidth < 768 ? 10 : 18); // Adjust zoom based on screen size
-  //   };
+  useEffect(() => {
+    const handleResize = () => {
+      setZoom(window.innerWidth < 768 ? 10 : 18); // Adjust zoom based on screen size
+    };
 
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const saveDrawings = () => {
     const BASEURL = process.env.REACT_APP_IP;
@@ -442,7 +440,7 @@ const DrawData = () => {
         });
         if (response.status == "201") {
           alert("Data Saved Successfully");
-          navigate("/adminside/cluster-for-picture");
+          // navigate("/adminside/cluster-for-picture");
         }
         console.log(response.data);
       } catch (error) {
@@ -526,11 +524,11 @@ const DrawData = () => {
   return (
     <>
       <Layout>
-        <div className="flex">
-          {/* <AdminSideBar /> */}
-          <div className="tools hidden lg:block">
-            <div className="button-group">
+        <div >
+          <div className="tools">
+            <div className="button-group flex p-2 gap-3">
               <button
+              type="button"
                 className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={saveDrawings}
@@ -538,6 +536,7 @@ const DrawData = () => {
                 Save
               </button>
               <button
+                type="button"
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={toggleMapType}
@@ -549,6 +548,7 @@ const DrawData = () => {
                   : "White Mode"}
               </button>
               <button
+                type="button"
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={() => handleAddMarker("powerhouse")}
@@ -556,6 +556,7 @@ const DrawData = () => {
                 <b>Powerhouse </b>
               </button>
               <button
+                type="button"
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={() => handleAddMarker("starter")}
@@ -563,6 +564,7 @@ const DrawData = () => {
                 <b>Starter</b>
               </button>
               <button
+                type="button"
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={() => handleAddMarker("areator")}
@@ -570,6 +572,7 @@ const DrawData = () => {
                 <b>Aerator </b>
               </button>
               <button
+                type="button"
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={() => handleAddMarker("checktray")}
@@ -577,6 +580,7 @@ const DrawData = () => {
                 <b>Checktray</b>
               </button>
               <button
+                type="button"
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ border: "1px solid black", borderRadius: "10px" }}
                 onClick={(e) => {
@@ -588,73 +592,13 @@ const DrawData = () => {
               </button>
             </div>
           </div>
-          <div className="block lg:hidden ">
-            <nav
-              className="bg-gray-100 p-4 fixed top-0 left-0 w-full shadow-lg z-10 "
-              style={{ overflowX: "auto" }}
-            >
-              <div
-                className="flex justify-between  ml-20 "
-                style={{ width: "600px" }}
-              >
-                <button
-                  className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={saveDrawings}
-                >
-                  Save
-                </button>
-                <button
-                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={toggleMapType}
-                >
-                  {mapType === "white"
-                    ? "Satellite"
-                    : mapType === "satellite"
-                    ? "OpenStreetMap"
-                    : "White Mode"}
-                </button>
-                <button
-                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={() => handleAddMarker("powerhouse")}
-                >
-                  <b>Powerhouse</b>
-                </button>
-                <button
-                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={() => handleAddMarker("starter")}
-                >
-                  <b>Starter</b>
-                </button>
-                <button
-                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={() => handleAddMarker("areator")}
-                >
-                  <b>Aerator</b>
-                </button>
-                <button
-                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={() => handleAddMarker("checktray")}
-                >
-                  <b>Checktray</b>
-                </button>
-                <button
-                  className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2  border border-blue-500 hover:border-transparent rounded"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteClick();
-                  }}
-                >
-                  <b>Delete</b>
-                </button>
-              </div>
-            </nav>
-          </div>
+         
 
           <MapContainer
             center={center}
             zoom={18}
             maxZoom={18}
-            style={{ height: "100vh", width: "100%", zIndex: 0 }}
+            style={{ height: "65vh", width: "100%", zIndex: 0 }}
             className="mt-20 md:mt-0"
           >
             {mapType !== "white" && (
@@ -670,6 +614,7 @@ const DrawData = () => {
             )}
             <SetMapCenter center={center} />
             <DrawMap
+              id={id}
               color={color}
               weight={weight}
               drawnItemsRef={drawnItemsRef}

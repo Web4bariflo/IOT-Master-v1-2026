@@ -27,7 +27,7 @@ const Sidebar = () => {
       {/* Sidebar for larger screens */}
       <aside
         className={`${
-          isSidebarOpen ? "w-52" : "w-42"
+          isSidebarOpen ? "w-40" : " w-40"
         } hidden md:block h-full bg-sky-100 shadow-md transition-all duration-300`}
         style={{ zIndex: 1000 }}
       >
@@ -42,7 +42,7 @@ const Sidebar = () => {
 
           {/* Aqua Logo */}
           <div
-            className="text-black p-3 mb-3 cursor-pointer flex items-center rounded-xl hover:bg-white fixed top-28"
+            className="text-black p-3 mb-3 cursor-pointer flex items-center rounded-xl hover:bg-white absolute top-28"
             onClick={handleAquaLogoClick}
           >
             {/* Logo */}

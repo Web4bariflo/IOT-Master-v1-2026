@@ -148,7 +148,7 @@ const RegistrationForm = ({ onSuccess }) => {
   return (
     <div className="flex flex-col items-center justify-center mt-5">
       {/* Form Container */}
-      <div className="w-full max-w-6xl bg-white rounded-lg p-8">
+      <div className=" bg-white rounded-lg p-8" style={{width:'80rem'}}>
         <form className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           {/* Input Fields */}
           <div className="relative">

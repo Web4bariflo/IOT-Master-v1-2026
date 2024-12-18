@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdOutlineLocationOn } from "react-icons/md";
 import PondLocation from "./PondLocation";
 import { BsPlusCircleFill } from "react-icons/bs";
 import DrawPicture from "./DrawPicture";
+import { useRegistrationContext } from "../../context/RegistrationContext";
 
-const AddDevice = () => {
+
+const AddDevice = ({onSuccess}) => {
   const [pondList, setPondList] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedPond, setSelectedPond] = useState("");
   const [numberOfPonds, setNumberOfPonds] = useState("");
   const [successfulPonds, setSuccessfulPonds] = useState([]);
-  const [pondData, setPondData] = useState({}); // State to hold input data for ponds
+  const [pondData, setPondData] = useState({});
   const [pondName, setPondName] = useState("");
-  const [showDrawPicture, setShowDrawPicture] = useState(false); // State to control visibil
+  const [showDrawPicture, setShowDrawPicture] = useState(false);
+  const [locationsAdded, setLocationsAdded] = useState({});
+  const {clusterId} = useRegistrationContext();
+
 
   const fieldData = {
     Aeration: { label: "Aeration" },
@@ -24,23 +29,11 @@ const AddDevice = () => {
     "Lora Gateway": { label: "Lora Gateway", icon: "" },
   };
 
-  const handleLocationClick = ( pond) => {
-    // e.preventDefault()
-    console.log("handleLocationClick triggered");
-
-    console.log(pond);
+  const handleLocationClick = (pond) => {
     setPondName(pond);
-
     const pondDetails = pondData[pond] || {};
-
-    // Set the field data for the selected pond
     setSelectedPond(pondDetails);
-
-    console.log("Selected pond input data:", pondDetails);
-
     setIsPopupVisible(true);
-    console.log("Popup Visibility:", true);
-
   };
 
   const closePopup = (pondAdded) => {
@@ -48,14 +41,15 @@ const AddDevice = () => {
     setSelectedPond("");
     if (pondAdded && !successfulPonds.includes(pondAdded)) {
       setSuccessfulPonds((prev) => [...prev, pondAdded]);
+      setLocationsAdded((prev) => ({
+        ...prev,
+        [pondAdded]: true, // Mark the location as added for this pond
+      }));
     }
-      console.log("Popup Visibility:", false);
-
   };
 
   const addPonds = (e) => {
-    console.log('pond addeded')
-    e.preventDefault()
+    e.preventDefault();
     const count = parseInt(numberOfPonds);
     if (count > 0) {
       const newPonds = Array.from(
@@ -63,7 +57,7 @@ const AddDevice = () => {
         (_, index) => `Pond ${index + 1}`
       );
       setPondList(newPonds);
-      setNumberOfPonds("");
+      // setNumberOfPonds("");
       setPondData((prev) => {
         const updatedData = { ...prev };
         newPonds.forEach((pond) => {
@@ -85,17 +79,28 @@ const AddDevice = () => {
       },
     }));
   };
-  
 
-  
   const handleDrawClick = () => {
-    setShowDrawPicture(true); // Show the DrawPicture component
-    console.log("drawdata click")
+    setShowDrawPicture(true);
   };
+
+  const handleSubmit = () => {
+    console.log("pond data submitted!");
+    alert("Drawdata submitted successfully")
+    onSuccess();
+  };
+
+  // Check if all ponds have location added and ponds exist
+  const allPondsHaveLocations = pondList.every(
+    (pond) => locationsAdded[pond] === true
+  );
+
+  // Disable the draw button until ponds are added and all locations are added
+  const isDrawButtonDisabled = pondList.length === 0 || !allPondsHaveLocations;
 
   return (
     <React.Fragment>
-      <div className="flex mt-10 ml-28">
+      <div className="flex mt-10 ">
         <p className=" text-xl">Add No. of Ponds: </p>
         <input
           type="number"
@@ -103,21 +108,19 @@ const AddDevice = () => {
           onChange={(e) => setNumberOfPonds(e.target.value)}
           className="border rounded-md p-1 ml-2 text"
         />
-        <button type= 'button' onClick={addPonds} className="text-blue-700 ml-2">
+        <button type="button" onClick={addPonds} className="text-blue-700 ml-2">
           <BsPlusCircleFill />
         </button>
       </div>
 
-      <h3 className=" ml-28 mt-8 text-xl font-bold">Add Device : </h3>
-      <div className="mt-8 ml-28 border mr-20 bg-[#F6F9FD]">
+      <h3 className="mt-8 text-xl font-bold">Add Device : </h3>
+      <div className="mt-8 border mr-20 bg-[#F6F9FD]">
         <div>
           {pondList.length > 0 && (
             <table border="1" className="w-full text-center mt-8">
               <thead>
                 <tr>
                   <th>Pond Name</th>
-                 
-
                   {Object.keys(fieldData).map((field, index) => (
                     <th key={index}>
                       <div className="flex flex-col items-center text-sm">
@@ -141,7 +144,6 @@ const AddDevice = () => {
                         {pond}
                       </div>
                     </td>
-                  
 
                     {Object.keys(fieldData).map((field, fieldIndex) => (
                       <td key={fieldIndex}>
@@ -152,14 +154,14 @@ const AddDevice = () => {
                           onChange={(e) =>
                             handleInputChange(pond, field, e.target.value)
                           }
-                          value={pondData[pond]?.[field] || ""} // Ensure default is blank
+                          value={pondData[pond]?.[field] || ""}
                         />
                       </td>
                     ))}
                     <td>
                       <div className="flex justify-center mt-4">
                         <button
-                        type="button"
+                          type="button"
                           className={`flex border rounded-md items-center py-1 px-2 ${
                             successfulPonds.includes(pond)
                               ? "bg-green-500"
@@ -185,14 +187,30 @@ const AddDevice = () => {
           )}
 
           <div className="flex-col justify-center my-2">
-            <button 
-            type='button' 
-            className={`flex border rounded-md items-center py-1 px-2 
-              ${showDrawPicture ? 'bg-[#A6C8F7]' : 'bg-[#C8D8F8]'}`
-            }            onClick={handleDrawClick} >
+            <button
+              type="button"
+              className={`flex border rounded-md items-center py-1 px-2 ${
+                isDrawButtonDisabled ? "bg-[#C8D8F8]" : "bg-[#A6C8F7]"
+              }`}
+              onClick={handleDrawClick}
+              disabled={isDrawButtonDisabled} // Disable the button until ponds and locations are ready
+            >
               <BiSolidEdit className="text-xl" /> Draw
             </button>
-            {showDrawPicture && <DrawPicture/>}
+            {showDrawPicture && (
+              <div>
+                <DrawPicture id={clusterId}/>
+                {/* Submit button below DrawPicture */}
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-blue-500 text-white rounded-md py-2 px-6"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {isPopupVisible && (

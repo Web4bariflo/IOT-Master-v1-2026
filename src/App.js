@@ -12,6 +12,7 @@ import PondPage from "./pages/PondPage";
 import CustomerProfile from "./pages/CustomerProfile";
 import DrawPicture from "./pages/registrationPage/DrawPicture";
 import PondDetails from "./pages/PondDetails";
+// import AddCluster from "./pages/registrationPage/ClusterCard";
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           <Route path="/pond/:id" element={<PondPage />} />
           <Route path="/customerprofile/:id" element={<CustomerProfile />} />
           <Route path="/ponddetails/:id" element={<PondDetails/>} />
-          <Route exact path="/drawpicture" element={<DrawPicture/>} />
+          {/* <Route exact path="/drawpicture" element={<DrawPicture/>} /> */}
         </Routes>
         </div>      
       </div>

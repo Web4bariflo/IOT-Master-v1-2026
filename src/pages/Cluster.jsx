@@ -3,12 +3,23 @@ import React, { useEffect, useState } from "react";
 import Mapimg from "../assets/Images/Cluster.jpg";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import DrawPicture from "./registrationPage/DrawPicture";
 
 const Cluster = () => {
   const { customer_id } = useParams();
   const URL = process.env.REACT_APP_IP;
-  //   const navigate = useNavigate();
   const [clusters, setClusters] = useState([]);
+  const [showDrawPicture, setShowDrawPicture] = useState(false); // State to control visibility of DrawPicture
+  const [selectedOption, setSelectedOption] = useState(""); // State for selected option
+
+
+  const handleDrawDataClick = () => {
+    setShowDrawPicture(true); // Show the DrawPicture component when the button is clicked
+  };
+
+  const closeDrawPicture = () => {
+    setShowDrawPicture(false); // Close the DrawPicture component
+  };
 
   // Fetch cluster and user data
   const fetchClusters = async () => {
@@ -16,8 +27,10 @@ const Cluster = () => {
       const response = await axios.get(
         `${URL}/admin_cluster_view/${customer_id}/`
       );
-      console.log(response.data);
-      setClusters(response.data); // Assuming response.data is an array of clusters
+      setClusters(response.data);
+      if (response.data.length > 0) {
+        setSelectedOption(response.data[0].id); // Set the initial selected option to the first cluster's ID
+      }
     } catch (error) {
       console.error(error);
     }
@@ -65,6 +78,37 @@ const Cluster = () => {
           </p>
         )}
       </div>
+      <div className="flex items-center space-x-2 p-4 bg-gray-100 rounded-md shadow-md"> 
+      <select
+          value={selectedOption}
+          onChange={(e) => setSelectedOption(e.target.value)} // Update state on selection change
+          className="border border-gray-300 rounded-md p-2 text-lg"
+          >
+          <option value="" disabled>Select a cluster</option> {/* Placeholder option */}
+          {clusters.map((cluster) => (
+            <option key={cluster.id} value={cluster.id}>
+              {cluster.Name} {/* Display cluster name */}
+            </option>
+          ))}
+        </select>        
+        <button
+          onClick={handleDrawDataClick}
+          className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200"
+          >
+          Draw Data
+        </button>
+      </div>
+      {showDrawPicture && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md">
+            <DrawPicture id={selectedOption} />
+            {/* Close button */}
+            <button onClick={closeDrawPicture} className="mt-4 bg-red-500 text-white p-2 rounded-md">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

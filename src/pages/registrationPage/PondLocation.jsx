@@ -127,6 +127,7 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
           area: totalArea,
           latitude: latitude,
           longitude: longitude,
+          address:cityName,
         });
 
         const res = await axios.post(`${BASEURL}/demo/`, {
@@ -137,6 +138,7 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
           area: totalArea,
           latitude: latitude,
           longitude: longitude,
+          address:cityName,
         });
         console.log(res);
 
@@ -199,6 +201,17 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
             >
               ✕
             </button>
+            <div className="flex items-center w-full ml-4">
+              <span className="flex items-center pr-2">
+              </span>
+              <input
+                type="text"
+                placeholder="cityName"
+                value={cityName}
+                onChange={(e) => setCityName(e.target.value)}
+                className="pl-3 border border-gray-300 rounded-xl p-3 w-full focus:ring-blue-500 focus:border-blue-500 h-11"
+              />
+            </div>
 
             <div className="flex items-center w-full mr-2 ml-1">
               <span className="flex items-center pr-3">
