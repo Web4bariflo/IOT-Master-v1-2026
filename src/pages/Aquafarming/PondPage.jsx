@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams,Link } from "react-router-dom";
-import PondImage from "../assets/Images/Pond.jpg"; 
+import PondImage from "../../assets/Images/Pond.jpg"; 
 import axios from "axios";
-import DrawPicture from "./registrationPage/DrawPicture";
 
 const PondPage = () => {
   const {  id } = useParams();

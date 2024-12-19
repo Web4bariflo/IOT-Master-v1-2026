@@ -4,7 +4,7 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import PondLocation from "./PondLocation";
 import { BsPlusCircleFill } from "react-icons/bs";
 import DrawPicture from "./DrawPicture";
-import { useRegistrationContext } from "../../context/RegistrationContext";
+import { useRegistrationContext } from "../../../context/RegistrationContext";
 
 
 const AddDevice = ({onSuccess}) => {

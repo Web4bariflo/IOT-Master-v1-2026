@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { TbWorldLongitude, TbWorldLatitude } from "react-icons/tb";
-import { useRegistrationContext } from "../../context/RegistrationContext";
+import { useRegistrationContext } from "../../../context/RegistrationContext";
 
 const PondLocation = ({ pond, onClose, fieldData }) => {
   const mapRef = useRef(null);

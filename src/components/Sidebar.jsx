@@ -108,20 +108,14 @@ const Sidebar = () => {
             </div>
           )}
 
-          {/* Additional Aqua Logo at Bottom */}
-          {/* <div className="text-black p-1 mb-3 cursor-pointer flex items-start rounded-xl justify-start mt-12 top-22 left-0">
-            <i className="bi bi-droplet-half text-xl mr-2" />
-            <div className="hover:bg-white text-lg">Water Body</div>
-          </div> */}
+    
 
           <div
             className="text-black p-3 mb-3 cursor-pointer flex items-start rounded-xl hover:bg-white top-22 mt-14"
           >
-            {/* Logo */}
-            {/* <i className="bi bi-droplet-half text-xl mr-2" /> */}
-
-            {/* Heading */}
-            <div className="text-sm font-black">Water Body</div>
+        <Link to='/waterbody'>
+        <div className="text-sm font-black">Water Body</div>
+        </Link>
           </div>
         </div>
       </aside>
@@ -196,7 +190,7 @@ const Sidebar = () => {
             {/* Aqua Body */}
             <div className="text-black p-3 rounded hover:bg-white cursor-pointer flex">
               <i className="bi bi-water text-2xl"></i>
-              <Link to="/device-registry" className="no-underline text-black">
+              <Link to="/waterbody" className="no-underline text-black">
                 <div className="p-2 hover:bg-white text-sm">water Body</div>
               </Link>
             </div>

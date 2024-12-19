@@ -9,10 +9,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 // import './DrawData.css'
 import mqtt from "mqtt";
-import transformer from "../../assets/Images/transformer.png";
-import cutouter from "../../assets/Images/electric-panel.png";
+import transformer from "../../../assets/Images/transformer.png";
+import cutouter from "../../../assets/Images/electric-panel.png";
 import { useNavigate } from "react-router-dom";
-import { useRegistrationContext } from "../../context/RegistrationContext";
 
 const URL = process.env.REACT_APP_IP
 
