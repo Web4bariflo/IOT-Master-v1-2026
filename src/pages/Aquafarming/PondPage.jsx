@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams,Link } from "react-router-dom";
 import PondImage from "../../assets/Images/Pond.jpg"; 
 import axios from "axios";
+import AddDevice from "./registrationPage/AddDevice";
 
 const PondPage = () => {
   const {  id } = useParams();
@@ -10,7 +11,14 @@ const PondPage = () => {
   const URL = process.env.REACT_APP_IP;
   
   const [ponds, setPonds] = useState([]);
+  const [showPondPage, setShowPondPage] = useState(false);
 
+ const closePondPage = () => {
+    setShowPondPage(false)
+ }
+ const addNewPond = () => {
+  setShowPondPage(true)
+ }
 
   // Fetch pond data
   const fetchPonds = async () => {
@@ -67,6 +75,26 @@ const PondPage = () => {
           </p>
         )}
       </div>
+      <div 
+      className='fixed bottom-6 right-10 cursor-pointer'
+      onClick={addNewPond}
+      >
+        <i class="bi bi-plus-circle-fill text-6xl"></i>
+      </div>
+      {showPondPage && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md">
+            <AddDevice/>
+            {/* Close button */}
+            <button
+              onClick={closePondPage}
+              className="mt-4 bg-red-500 text-white p-2 rounded-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );

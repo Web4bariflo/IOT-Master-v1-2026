@@ -25,7 +25,7 @@ function App() {
           <Route exact path="/registration" element={<Registration/>} />
           <Route exact path="/device-registry" element={<DeviceRegistery/>} />
           <Route exact path="/devicepage" element={<DevicePage/>} />
-          <Route path="/cluster/:customer_id" element={<Cluster />} />
+          <Route path="/cluster/:mob" element={<Cluster />} />
           <Route path="/pond/:id" element={<PondPage />} />
           <Route path="/customerprofile/:id" element={<CustomerProfile />} />
           <Route path="/ponddetails/:id" element={<PondDetails/>} />

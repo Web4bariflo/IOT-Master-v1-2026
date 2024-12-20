@@ -20,7 +20,7 @@ const AddCluster = () => {
     setShowAddDevice(false);
     setShowAllCluster(true);
   };
-
+  console.log(mob);
   const handleAddCluster = async () => {
     if (!clusterName) {
       alert("Cluster name is required!");
