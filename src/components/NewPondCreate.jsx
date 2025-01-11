@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { BiSolidEdit } from "react-icons/bi";
 import { MdOutlineLocationOn } from "react-icons/md";
-import PondLocation from "./PondLocation";
 import { BsPlusCircleFill } from "react-icons/bs";
-import DrawPicture from "./DrawPicture";
-import { useRegistrationContext } from "../../../context/RegistrationContext";
+import NewPondLocation from "./NewPondLocation";
 
-
-const AddDevice = ({onSuccess}) => {
+const NewPondCreate = ({id}) => {
   const [pondList, setPondList] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedPond, setSelectedPond] = useState("");
@@ -15,21 +11,23 @@ const AddDevice = ({onSuccess}) => {
   const [successfulPonds, setSuccessfulPonds] = useState([]);
   const [pondData, setPondData] = useState({});
   const [pondName, setPondName] = useState("");
-  const [showDrawPicture, setShowDrawPicture] = useState(false);
   const [locationsAdded, setLocationsAdded] = useState({});
-  const {clusterId} = useRegistrationContext();
-
 
   const fieldData = {
     Aeration: { label: "Aeration" },
-    "Feeding": { label: " Feeding" },
-    "Feed Tray": { label: "Feed Tray", icon: "feed_tray_icon.png" },
-
-    // "Lora Gateway": { label: "Lora Gateway", icon: "" },
-    // Monitoring: { label: "Monitoring" },
-    // "Power Circuit": { label: "Power Circuit" },
+    "Power Circuit": { label: "Power Circuit" },
+    Monitoring: { label: "Monitoring" },
+    "Feeding": { label: "Feeding" },
+    "Check Tray": { label: "Check Tray", icon: "check_tray_icon.png" },
+    "Lora Gateway": { label: "Lora Gateway", icon: "" },
   };
 
+  const handlePondAdd = () => {
+    console.log('New pond Added')
+    window.location.href = window.location.href;
+   }
+
+   
   const handleLocationClick = (pond) => {
     setPondName(pond);
     const pondDetails = pondData[pond] || {};
@@ -81,23 +79,7 @@ const AddDevice = ({onSuccess}) => {
     }));
   };
 
-  const handleDrawClick = () => {
-    setShowDrawPicture(true);
-  };
 
-  const handleSubmit = () => {
-    console.log("pond data submitted!");
-    alert("Drawdata submitted successfully")
-    onSuccess();
-  };
-
-  // Check if all ponds have location added and ponds exist
-  const allPondsHaveLocations = pondList.every(
-    (pond) => locationsAdded[pond] === true
-  );
-
-  // Disable the draw button until ponds are added and all locations are added
-  const isDrawButtonDisabled = pondList.length === 0 || !allPondsHaveLocations;
 
   return (
     <React.Fragment>
@@ -187,46 +169,28 @@ const AddDevice = ({onSuccess}) => {
             </p>
           )}
 
-          <div className="flex-col justify-center my-2">
-            <button
-              type="button"
-              className={`flex border rounded-md items-center py-1 px-2 ${
-                isDrawButtonDisabled ? "bg-[#C8D8F8]" : "bg-[#A6C8F7]"
-              }`}
-              onClick={handleDrawClick}
-              disabled={isDrawButtonDisabled} // Disable the button until ponds and locations are ready
-            >
-              <BiSolidEdit className="text-xl" /> Draw
-            </button>
-            {showDrawPicture && (
-              <div>
-                <DrawPicture id={clusterId}/>
-                {/* Submit button below DrawPicture */}
-                <div className="flex justify-center mt-4">
-                  <button
-                    onClick={handleSubmit}
-                    className="bg-blue-500 text-white rounded-md py-2 px-6"
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
 
           {isPopupVisible && (
             <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-              <PondLocation
-                pond={pondName}
-                onClose={closePopup}
-                fieldData={selectedPond || {}}
+          
+              <NewPondLocation
+              id={id}
+              pond={pondName}
+              onClose={closePopup}
+              fieldData={selectedPond || {}}
               />
             </div>
           )}
         </div>
+        <button
+              onClick={handlePondAdd}
+              className="m-4 bg-blue-500 text-white p-2 rounded-md"
+            >
+              Add
+            </button>
       </div>
     </React.Fragment>
   );
 };
 
-export default AddDevice;
+export default NewPondCreate;

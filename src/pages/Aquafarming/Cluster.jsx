@@ -13,7 +13,7 @@ const Cluster = () => {
   const [showDrawPicture, setShowDrawPicture] = useState(false); 
   const [showClusterPage, setShowClusterPage] = useState(false);// State to control visibility of DrawPicture
   const [selectedOption, setSelectedOption] = useState(""); // State for selected option
-console.log(mob)
+  console.log(mob)
   const handleDrawDataClick = () => {
     setShowDrawPicture(true); // Show the DrawPicture component when the button is clicked
   };
@@ -67,7 +67,7 @@ console.log(mob)
               key={index}
               className="w-60 p-4 bg-white rounded-lg shadow-md mt-4 ml-6 "
             >
-              <Link to={`/pond/${cluster.id}`} key={cluster.id}>
+              <Link to={`/aquafarming/pond/${cluster.id}`} key={cluster.id}>
                 <img
                   src={Mapimg}
                   alt="Cluster Map"

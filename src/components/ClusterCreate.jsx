@@ -30,7 +30,7 @@ const ClusterCreate = ({mob}) => {
       setSuccess("Cluster added successfully!");
       setClusterName("");
 
-
+      window.location.href = window.location.href;  // Refreshes the entire page
     } catch (error) {
       setError("There was an error creating the cluster. Please try again.");
       console.error("Error during API call:", error);

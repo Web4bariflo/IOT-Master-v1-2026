@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams,Link } from "react-router-dom";
 import PondImage from "../../assets/Images/Pond.jpg"; 
 import axios from "axios";
-import AddDevice from "./registrationPage/AddDevice";
+import NewPondCreate from "../../components/NewPondCreate";
 
 const PondPage = () => {
   const {  id } = useParams();
   // console.log("Customer ID:", customer_id);
-  console.log("Pond ID:", id); 
+  console.log("cluster ID:", id); 
   const URL = process.env.REACT_APP_IP;
   
   const [ponds, setPonds] = useState([]);
@@ -19,6 +19,7 @@ const PondPage = () => {
  const addNewPond = () => {
   setShowPondPage(true)
  }
+
 
   // Fetch pond data
   const fetchPonds = async () => {
@@ -50,7 +51,7 @@ const PondPage = () => {
       <div className="w-full mt-8 flex gap-3 flex-wrap justify-center sm:justify-start">
         {ponds.length > 0 ? (
           ponds.map((pond, index) => (
-      <Link to={`/ponddetails/${pond.id}`} key={pond.id}> 
+          <Link to={`/aquafarming/ponddetails/${pond.id}`} key={pond.id}> 
             <div
               key={index}
               className="w-60 p-4 bg-white rounded-lg shadow-md mt-4 ml-6"
@@ -65,7 +66,7 @@ const PondPage = () => {
                 {pond.name}
               </p>
             </div>
-            </Link>
+          </Link>
 
 
           ))
@@ -79,12 +80,12 @@ const PondPage = () => {
       className='fixed bottom-6 right-10 cursor-pointer'
       onClick={addNewPond}
       >
-        <i class="bi bi-plus-circle-fill text-6xl"></i>
+        <i className="bi bi-plus-circle-fill text-6xl"></i>
       </div>
       {showPondPage && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded-md">
-            <AddDevice/>
+          <div className="bg-white p-4 rounded-md ">
+            <NewPondCreate id={id}/>
             {/* Close button */}
             <button
               onClick={closePondPage}
@@ -92,6 +93,7 @@ const PondPage = () => {
             >
               Close
             </button>
+         
           </div>
         </div>
       )}

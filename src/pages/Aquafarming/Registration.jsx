@@ -7,6 +7,7 @@ const Registration = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [clusters, setClusters] = useState([]);
   const [isClusterCreated, setIsClusterCreated] = useState(false);
+  const [userCategory, setUserCategory] = useState(); 
   
 
   const handleSubmit = () => {
@@ -21,8 +22,8 @@ const Registration = () => {
 
 
   return (
-   <div>
-      <form className="flex-col w-full" onSubmit={handleSubmit}>
+   <div style={{ width: "100%"}} className="h-screen">
+      <form className="flex flex-col justify-center items-center mt-2 p-10" onSubmit={handleSubmit}>
         <div className="flex w-full text-center mt-12 mx-24">
           <div className="bg-white p-3 h-10 text-lg font-normal shadow-md rounded-lg ">
             Registration Form

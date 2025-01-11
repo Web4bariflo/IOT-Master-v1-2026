@@ -23,11 +23,11 @@ const Sidebar = () => {
   };
 
   return (
-    <div className=" h-screen">
+    <div className="">
       {/* Sidebar for larger screens */}
       <aside
         className={`${
-          isSidebarOpen ? "w-40" : " w-40"
+          isSidebarOpen ? "w-44" : " w-44"
         } hidden md:block h-full bg-sky-100 shadow-md transition-all duration-300`}
         style={{ zIndex: 1000 }}
       >
@@ -73,14 +73,14 @@ const Sidebar = () => {
                 {(submenuOpen === "customers" || submenuOpen === "both") && (
                   <div className="mt-3 w-40 bg-sky-100 shadow-md">
                     <Link
-                      to="/registration"
+                      to="/aquafarming/registration"
                       className="no-underline text-black"
                     >
                       <div className="p-2 hover:bg-white text-sm">
                         New Registration
                       </div>
                     </Link>
-                    <Link to="/" className="no-underline text-black">
+                    <Link to="/aquafarming/" className="no-underline text-black">
                       <div className="p-2 hover:bg-white text-sm">
                         Customer Registry
                       </div>
@@ -92,7 +92,7 @@ const Sidebar = () => {
               {/* Device Registry Menu */}
               <div className="flex items-center text-black p-3 rounded hover:bg-white cursor-pointer">
                 <Link
-                  to="/device-registry"
+                  to="/aquafarming/device-registry"
                   className="flex items-center no-underline text-black"
                 >
                   <i className="bi bi-diagram-3-fill text-xl opacity-70 hover:opacity-100 transition-opacity duration-300"></i>
@@ -112,10 +112,9 @@ const Sidebar = () => {
 
           <div
             className="text-black p-3 mb-3 cursor-pointer flex items-start rounded-xl hover:bg-white top-22 mt-14"
+            // onClick={}
           >
-        <Link to='/waterbody'>
-        <div className="text-sm font-black">Water Body</div>
-        </Link>
+            <div className="text-sm font-black">Water Body</div>       
           </div>
         </div>
       </aside>
@@ -158,14 +157,14 @@ const Sidebar = () => {
                   {submenuOpen === "customers" && (
                     <div className="mt-3 w-40 bg-sky-100 shadow-md">
                       <Link
-                        to="/registration"
+                        to="/aquafarming/registration"
                         className="no-underline text-black"
                       >
                         <div className="p-2 hover:bg-white text-sm">
                           New Registration
                         </div>
                       </Link>
-                      <Link to="/" className="no-underline text-black">
+                      <Link to="/aquafarming/" className="no-underline text-black">
                         <div className="p-2 hover:bg-white text-sm">
                           Customer Registry
                         </div>
@@ -177,7 +176,7 @@ const Sidebar = () => {
                 {/* Device Registry */}
                 <div className="flex items-center text-black p-3 rounded hover:bg-white cursor-pointer">
                   <Link
-                    to="/device-registry"
+                    to="/aquafarming/device-registry"
                     className="flex items-center no-underline text-black"
                   >
                     <i className="bi bi-diagram-3-fill text-xl opacity-70 hover:opacity-100 transition-opacity duration-300"></i>
@@ -190,7 +189,7 @@ const Sidebar = () => {
             {/* Aqua Body */}
             <div className="text-black p-3 rounded hover:bg-white cursor-pointer flex">
               <i className="bi bi-water text-2xl"></i>
-              <Link to="/waterbody" className="no-underline text-black">
+              <Link to="/aquafarming/waterbody" className="no-underline text-black">
                 <div className="p-2 hover:bg-white text-sm">water Body</div>
               </Link>
             </div>

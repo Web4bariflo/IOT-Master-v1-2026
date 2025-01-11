@@ -33,21 +33,22 @@ const DeviceRegistery = () => {
     if (!acc[Company_name]) {
       acc[Company_name] = {
         Aeration: [],
-        PowerCircuit: [],
-        Checktray: [],
-        Monitoring: [],
-        AutomatedFeeder: [],
-        LoraGateway: [],
+        Feedtray: [],
+        Feeding: [],
+        // AutomatedFeeder: [],
+        // LoraGateway: [],
+        // PowerCircuit: [],
       };
     }
 
     if (name === "Aeration") acc[Company_name].Aeration.push(device);
-    if (name === "Power Circuit") acc[Company_name].PowerCircuit.push(device);
-    if (name === "Check Tray") acc[Company_name].Checktray.push(device);
-    if (name === "Monitoring") acc[Company_name].Monitoring.push(device);
-    if (name === "Automated Feeder")
-      acc[Company_name].AutomatedFeeder.push(device);
-    if (name === "Lora Gateway") acc[Company_name].LoraGateway.push(device);
+    if (name === "Feed Tray") acc[Company_name].Feedtray.push(device);
+    if (name === "Feeding") acc[Company_name].Feeding.push(device);
+    
+    // if (name === "Power Circuit") acc[Company_name].PowerCircuit.push(device);
+    // if (name === "Automated Feeder")
+      // acc[Company_name].AutomatedFeeder.push(device);
+    // if (name === "Lora Gateway") acc[Company_name].LoraGateway.push(device);
 
     return acc;
   }, {});
@@ -96,11 +97,12 @@ const DeviceRegistery = () => {
                 <th className="px-4 py-3">S.L</th>
                 <th className="px-4 py-3">Customer Name</th>
                 <th className="px-4 py-3">Aeration</th>
-                <th className="px-4 py-3">Power Circuit</th>
-                <th className="px-4 py-3">Checktray</th>
-                <th className="px-4 py-3">Monitoring</th>
-                <th className="px-4 py-3">Automated Feeder</th>
-                <th className="px-4 py-3">Lora Gateway</th>
+                <th className="px-4 py-3">Feedtray</th>
+                <th className="px-4 py-3">Feeding</th>
+                
+                {/* <th className="px-4 py-3">Automated Feeder</th> */}
+                {/* <th className="px-4 py-3">Lora Gateway</th> */}
+                {/* <th className="px-4 py-3">Power Circuit</th> */}
               </tr>
             </thead>
             <tbody>
@@ -132,7 +134,7 @@ const DeviceRegistery = () => {
                       <div>
                         {/* Show only the first device for Aeration */}
                         <Link
-                          to={`/devicepage`}
+                          to={`/aquafarming/devicepage`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Aeration[0]}
@@ -144,7 +146,7 @@ const DeviceRegistery = () => {
                             {devices.Aeration.slice(1).map((device, idx) => (
                               <div key={idx} className="">
                                 <Link
-                                  to={`/devicepage`}
+                                  to={`/aquafarming/devicepage`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -156,53 +158,25 @@ const DeviceRegistery = () => {
                       </div>
                     </td>
 
-                    <td className="px-4 py-3 align-top">
-                      <div>
-                        {/* Show only the first device for Power Circuit */}
-                        <Link
-                          to={`/devicepage`}
-                          className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
-                        >
-                          {devices.PowerCircuit[0]}
-                        </Link>
-
-                        {/* Show all devices if expanded */}
-                        {expandedCustomers[companyName] && (
-                          <>
-                            {devices.PowerCircuit.slice(1).map(
-                              (device, idx) => (
-                                <div key={idx} className="">
-                                  <Link
-                                    to={`/devicepage`}
-                                    className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
-                                  >
-                                    {device}
-                                  </Link>
-                                </div>
-                              )
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </td>
+                  
 
                     <td className="px-4 py-3 align-top">
                       <div>
                         {/* Show only the first device for Check Tray */}
                         <Link
-                          to={`/devicepage`}
+                          to={`/aquafarming/devicepage`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
-                          {devices.Checktray[0]}
+                          {devices.Feedtray[0]}
                         </Link>
 
                         {/* Show all devices if expanded */}
                         {expandedCustomers[companyName] && (
                           <>
-                            {devices.Checktray.slice(1).map((device, idx) => (
+                            {devices.Feedtray.slice(1).map((device, idx) => (
                               <div key={idx} className="b">
                                 <Link
-                                  to={`/devicepage`}
+                                  to={`/aquafarming/devicepage`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -216,21 +190,21 @@ const DeviceRegistery = () => {
 
                     <td className="px-4 py-3 align-top">
                       <div>
-                        {/* Show only the first device for Monitoring */}
+                        {/* Show only the first device for Feeding */}
                         <Link
-                          to={`/devicepage`}
+                          to={`/aquafarming/devicepage`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
-                          {devices.Monitoring[0]}
+                          {devices.Feeding[0]}
                         </Link>
 
                         {/* Show all devices if expanded */}
                         {expandedCustomers[companyName] && (
                           <>
-                            {devices.Monitoring.slice(1).map((device, idx) => (
+                            {devices.Feeding.slice(1).map((device, idx) => (
                               <div key={idx} className="">
                                 <Link
-                                  to={`/devicepage`}
+                                  to={`/aquafarming/devicepage`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -242,63 +216,8 @@ const DeviceRegistery = () => {
                       </div>
                     </td>
 
-                    <td className="px-4 py-3 align-top">
-                      <div>
-                        {/* Show only the first device for Automated Feeder */}
-                        <Link
-                          to={`/devicepage`}
-                          className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
-                        >
-                          {devices.AutomatedFeeder[0]}
-                        </Link>
-
-                        {/* Show all devices if expanded */}
-                        {expandedCustomers[companyName] && (
-                          <>
-                            {devices.AutomatedFeeder.slice(1).map(
-                              (device, idx) => (
-                                <div key={idx} className="">
-                                  <Link
-                                    to={`/devicepage`}
-                                    className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
-                                  >
-                                    {device}
-                                  </Link>
-                                </div>
-                              )
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="px-4 py-3 align-top">
-                      <div>
-                        {/* Show only the first device for Lora Gateway */}
-                        <Link
-                          to={`/devicepage`}
-                          className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
-                        >
-                          {devices.LoraGateway[0]}
-                        </Link>
-
-                        {/* Show all devices if expanded */}
-                        {expandedCustomers[companyName] && (
-                          <>
-                            {devices.LoraGateway.slice(1).map((device, idx) => (
-                              <div key={idx} className="">
-                                <Link
-                                  to={`/devicepage`}
-                                  className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
-                                >
-                                  {device}
-                                </Link>
-                              </div>
-                            ))}
-                          </>
-                        )}
-                      </div>
-                    </td>
+                 
+                
                   </tr>
                 ))
               ) : (

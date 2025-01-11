@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import Layout from "./Layout";
+import Layout from "../../../Layout/Layout";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";

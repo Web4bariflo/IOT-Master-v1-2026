@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRegistrationContext } from "../../../context/RegistrationContext";
 
-const RegistrationForm = ({ onSuccess }) => {
+const RegistrationForm = ({ onSuccess}) => {
   const { setName, setMob } = useRegistrationContext(); // Access context setters
-  const [userCategory, setUserCategory] = useState(""); //track the catagory
+
   const [formData, setFormData] = useState({
     company_name: "",
     Pan_no: "",
@@ -13,6 +13,8 @@ const RegistrationForm = ({ onSuccess }) => {
     mobno: "",
     password: "",
     address: "",
+    category: "Aquafarming",
+    customer_category: "owner",
   });
 
   const [errors, setErrors] = useState({});
@@ -51,6 +53,13 @@ const RegistrationForm = ({ onSuccess }) => {
       newErrors.GST_no = "GST Number is required";
     } else if (!gstPattern.test(formData.GST_no)) {
       newErrors.GST_no = "Invalid GST Number format";
+    }
+
+    const mobPattern = /^\d{10}$/; // Regular expression for exactly 10 digits
+    if (!formData.mobno.trim()) {
+      newErrors.mobno = "Mobile number is required";
+    } else if (!mobPattern.test(formData.mobno)) {
+      newErrors.mobno = "Mobile number must be exactly 10 digits";
     }
 
     // Verify Password Validation
@@ -148,7 +157,7 @@ const RegistrationForm = ({ onSuccess }) => {
   return (
     <div className="flex flex-col items-center justify-center mt-5">
       {/* Form Container */}
-      <div className=" bg-white rounded-lg p-8" style={{width:'80rem'}}>
+      <div className=" bg-white rounded-lg p-8 w-full">
         <form className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           {/* Input Fields */}
           <div className="relative">
@@ -278,7 +287,7 @@ const RegistrationForm = ({ onSuccess }) => {
           </div>
 
           <div className="relative col-span-1">
-            <span className="absolute inset-y-0 left-0 flex items-center bg-gray-300 px-3 border-r border-gray-300 rounded-lg h-28">
+            <span className="absolute inset-y-0 left-0 flex items-center bg-gray-300 px-3 border-r border-gray-300 rounded-lg h-12">
               <i className="bi bi-geo-alt"></i>
             </span>
             <textarea
@@ -286,7 +295,7 @@ const RegistrationForm = ({ onSuccess }) => {
               value={formData.address}
               onChange={handleChange}
               placeholder="Address"
-              className={`w-full h-28 pl-12 pt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              className={`w-full h-12 pl-12 pt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.address ? "border-red-500" : ""
               }`}
             />
