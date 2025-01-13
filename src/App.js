@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/aquafarming/*" element={<AquaMainPage />} />
+        <Route path="/master/*" element={<AquaMainPage />} />
         <Route path="/manager/*" element={<ManagerMain />} />
         <Route path="*" element={<PageNotFound/>} />
       </Routes>

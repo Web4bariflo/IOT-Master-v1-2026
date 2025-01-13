@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Outlet, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Nav from "../../components/Nav";
 import Sidebar from "../../components/Sidebar";
 import CustomerRegister from "./CustomerRegister";
@@ -17,9 +17,19 @@ import CreateManager from './CreateManager'
 const AquaMainPage = () => {
   const BASEURl = process.env.REACT_APP_IP;
   const urlParams = new URLSearchParams(window.location.search);
-  const mobno = urlParams.get("mobno");
+  const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
+  const csrf_token = urlParams.get("token") || localStorage.getItem("token");
+  const category = urlParams.get("category") || localStorage.getItem("category");
   const navigate = useNavigate();
   console.log(mobno);
+
+  if (mobno) localStorage.setItem("mobno", mobno);
+  if (csrf_token) localStorage.setItem("token", csrf_token);
+  if (category) localStorage.setItem("category", category);
+
+
+  const url = `http://localhost:3001/waterbody?category=${category}&token=${csrf_token}&mobno=${mobno}`;
+
 
   useEffect(() => {
     if (mobno) {
@@ -31,19 +41,19 @@ const AquaMainPage = () => {
         .then((response) => {
           console.log(response);
           localStorage.setItem("auth", JSON.stringify(response.data));
-          navigate(`/aquafarming/`);
+          navigate(`/master/`);
         })
         .catch((error) => {
           console.log("There was an error fetching data!", error);
         });
     }
-  });
+  },[mobno]);
 
   return (
     <div>
       <Nav />
       <div className="App flex">
-        <Sidebar />
+        <Sidebar url = {url}/>
         <Routes>
           <Route element={<AquaPrivateRoute />}>
             <Route path="/" element={<CustomerRegister />} />

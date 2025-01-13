@@ -84,7 +84,7 @@ const CustomerRegister = () => {
       <div className=" flex justify-end mb-4 lg:my-4 lg:mx-12">
         <button 
         className=" btn bg-blue-600 text-white rounded-md p-2 transition duration-300 ease-in-out transform hover:bg-blue-700 hover:scale-105" 
-        onClick={() => navigate("/aquafarming/create-manager")}>
+        onClick={() => navigate("/master/create-manager")}>
           Create Manager
         </button>
       </div>
@@ -119,7 +119,7 @@ const CustomerRegister = () => {
                   <td className="px-4 py-3">{customer.customer_id}</td>
                   <td className="px-4 py-3 flex justify-center gap-2">
                     <Link
-                      to={`/aquafarming/customerprofile/${customer.customer_id}`}
+                      to={`/master/customerprofile/${customer.customer_id}`}
                       className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
                     >
                       <button className="bg-teal-700 text-white px-3 py-1 rounded shadow hover:bg-teal-600">
@@ -127,7 +127,7 @@ const CustomerRegister = () => {
                       </button>
                     </Link>
                     <Link
-                      to={`/aquafarming/cluster/${customer.Mob}`}
+                      to={`/master/cluster/${customer.Mob}`}
                       className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200 inline-block transform"
                     >
                       <button className="bg-teal-700 text-white px-3 py-1 rounded shadow hover:bg-teal-600">

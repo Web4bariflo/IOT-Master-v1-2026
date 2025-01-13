@@ -51,7 +51,7 @@ const PondPage = () => {
       <div className="w-full mt-8 flex gap-3 flex-wrap justify-center sm:justify-start">
         {ponds.length > 0 ? (
           ponds.map((pond, index) => (
-          <Link to={`/aquafarming/ponddetails/${pond.id}`} key={pond.id}> 
+          <Link to={`/master/ponddetails/${pond.id}`} key={pond.id}> 
             <div
               key={index}
               className="w-60 p-4 bg-white rounded-lg shadow-md mt-4 ml-6"

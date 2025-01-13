@@ -67,7 +67,7 @@ const Cluster = () => {
               key={index}
               className="w-60 p-4 bg-white rounded-lg shadow-md mt-4 ml-6 "
             >
-              <Link to={`/aquafarming/pond/${cluster.id}`} key={cluster.id}>
+              <Link to={`/master/pond/${cluster.id}`} key={cluster.id}>
                 <img
                   src={Mapimg}
                   alt="Cluster Map"

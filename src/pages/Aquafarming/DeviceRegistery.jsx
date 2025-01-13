@@ -134,7 +134,7 @@ const DeviceRegistery = () => {
                       <div>
                         {/* Show only the first device for Aeration */}
                         <Link
-                          to={`/aquafarming/devicepage`}
+                          to={`/master/devicepage`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Aeration[0]}
@@ -146,7 +146,7 @@ const DeviceRegistery = () => {
                             {devices.Aeration.slice(1).map((device, idx) => (
                               <div key={idx} className="">
                                 <Link
-                                  to={`/aquafarming/devicepage`}
+                                  to={`/master/devicepage`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -164,7 +164,7 @@ const DeviceRegistery = () => {
                       <div>
                         {/* Show only the first device for Check Tray */}
                         <Link
-                          to={`/aquafarming/devicepage`}
+                          to={`/master/devicepage`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Feedtray[0]}
@@ -176,7 +176,7 @@ const DeviceRegistery = () => {
                             {devices.Feedtray.slice(1).map((device, idx) => (
                               <div key={idx} className="b">
                                 <Link
-                                  to={`/aquafarming/devicepage`}
+                                  to={`/master/devicepage`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -192,7 +192,7 @@ const DeviceRegistery = () => {
                       <div>
                         {/* Show only the first device for Feeding */}
                         <Link
-                          to={`/aquafarming/devicepage`}
+                          to={`/master/devicepage`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Feeding[0]}
@@ -204,7 +204,7 @@ const DeviceRegistery = () => {
                             {devices.Feeding.slice(1).map((device, idx) => (
                               <div key={idx} className="">
                                 <Link
-                                  to={`/aquafarming/devicepage`}
+                                  to={`/master/devicepage`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
