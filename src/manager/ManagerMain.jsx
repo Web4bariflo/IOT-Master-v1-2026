@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate} from "react-router-dom";
 import ClusterviewDetails from "../manager/ClusterviewDetails";
 import SetTime from "./SetTime";
 import Nav from "./ManagerNav";
-import Sidebar from "./ManagerSidebar";
+import ManagerSidebar from "./ManagerSidebar";
 import Test from "./Test";
 import ManagerPrivateRoute from "../Private/ManagerPrivateRoute";
 import Economy from "./Economy";
@@ -39,7 +39,7 @@ const ManagerMain = () => {
       <Nav />
 
       <div className="flex flex-1">
-        <Sidebar />
+        <ManagerSidebar />
 
         <div className="flex-1 p-4 overflow-y-auto">
           <Routes>

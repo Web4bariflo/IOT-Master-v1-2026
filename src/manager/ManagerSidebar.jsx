@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 
-const Sidebar = () => {
+const ManagerSidebar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [clusters, setClusters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,6 +13,7 @@ const Sidebar = () => {
   const URL = process.env.REACT_APP_IP;
   const auth = { token: localStorage.getItem('auth') };
   const tokenObject = JSON.parse(auth.token);
+  console.log(tokenObject);
   const navigate = useNavigate();
   
   // console.log(tokenObject)
@@ -21,7 +22,7 @@ const Sidebar = () => {
   const [selectedClusterId, setSelectedClusterId] = useState(null);
 
 
-  // 7585349545
+  console.log(mob)
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -111,4 +112,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default ManagerSidebar;
