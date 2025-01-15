@@ -12,9 +12,18 @@ import Economy from "./Economy";
 const ManagerMain = () => {
   const BASEURl = process.env.REACT_APP_IP;
   const urlParams = new URLSearchParams(window.location.search);
-  const mobno = urlParams.get("mobno");
+  const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
+  const csrf_token = urlParams.get("token") || localStorage.getItem("token");
+  const category = urlParams.get("category") || localStorage.getItem("category");
   const navigate = useNavigate();
   console.log(mobno);
+
+  if (mobno) localStorage.setItem("mobno", mobno);
+  if (csrf_token) localStorage.setItem("token", csrf_token);
+  if (category) localStorage.setItem("category", category);
+
+
+
 
   useEffect(() => {
     if (mobno) {
@@ -32,7 +41,7 @@ const ManagerMain = () => {
           console.log("There was an error fetching data!", error);
         });
     }
-  });
+  },[mobno]);
 
   return (
     <div className="flex flex-col h-screen">
