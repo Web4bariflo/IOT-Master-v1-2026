@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2ce673df.css",
-    "main.js": "/static/js/main.c8a4f1ff.js",
+    "main.css": "/static/css/main.273675dd.css",
+    "main.js": "/static/js/main.fcc7bdba.js",
     "static/js/453.51b20bab.chunk.js": "/static/js/453.51b20bab.chunk.js",
     "static/media/Pond.jpg": "/static/media/Pond.0eebd155295696f2b217.jpg",
     "static/media/bootstrap-icons.woff?": "/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
@@ -12,12 +12,12 @@
     "static/media/electric-panel.png": "/static/media/electric-panel.f358a8db207fc9a82b85.png",
     "static/media/spritesheet.svg": "/static/media/spritesheet.a4e0eb7ad904a4858361.svg",
     "index.html": "/index.html",
-    "main.2ce673df.css.map": "/static/css/main.2ce673df.css.map",
-    "main.c8a4f1ff.js.map": "/static/js/main.c8a4f1ff.js.map",
+    "main.273675dd.css.map": "/static/css/main.273675dd.css.map",
+    "main.fcc7bdba.js.map": "/static/js/main.fcc7bdba.js.map",
     "453.51b20bab.chunk.js.map": "/static/js/453.51b20bab.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2ce673df.css",
-    "static/js/main.c8a4f1ff.js"
+    "static/css/main.273675dd.css",
+    "static/js/main.fcc7bdba.js"
   ]
 }
