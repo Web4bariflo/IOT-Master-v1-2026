@@ -11,7 +11,7 @@ const Nav = () => {
     localStorage.removeItem("auth");
     localStorage.removeItem("data");
     setShowLogoutPopup(false);
-    window.location.href = "https://newloginbg.bc-pl.com/";
+    window.location.href = "https://newlogin.bc-pl.com/";
   };
 
   return (
