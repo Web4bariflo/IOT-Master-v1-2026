@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import ClusterviewDetails from "../manager/ClusterviewDetails";
 import SetTime from "./SetTime";
-import Nav from "./ManagerNav";
-import ManagerSidebar from "./ManagerSidebar";
 import ManagerPrivateRoute from "../Private/ManagerPrivateRoute";
 import Economy from "./Economy";
-
+import Loader from '../Private/Loader'
 const ManagerMain = () => {
   const BASEURL = process.env.REACT_APP_IP;
   const urlParams = new URLSearchParams(window.location.search);
@@ -49,26 +47,18 @@ const ManagerMain = () => {
 
   if (isLoading) {
     return (
-      <div>Loading...</div> // Or any loading indicator you prefer
+      <div><Loader/></div> // Or any loading indicator you prefer
     );
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <Nav />
-      <div className="flex flex-1">
-        <ManagerSidebar />
-        <div className="flex-1 p-4 overflow-y-auto">
-          <Routes>
-            <Route element={<ManagerPrivateRoute />}>
-              <Route path="/" element={<SetTime />} />
-              <Route path="/economy/:id" element={<Economy />} />
-              <Route path="/clusterview/:id" element={<ClusterviewDetails />} />
-            </Route>
-          </Routes>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route element={<ManagerPrivateRoute />}>
+        <Route path="/" element={<SetTime />} />
+        <Route path="/economy/:id" element={<Economy />} />
+        <Route path="/clusterview/:id" element={<ClusterviewDetails />} />
+      </Route>
+    </Routes>
   );
 };
 

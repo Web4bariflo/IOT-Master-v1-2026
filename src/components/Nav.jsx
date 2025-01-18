@@ -9,9 +9,13 @@ const Nav = () => {
   // Function to handle logout (can be customized as per your logic)
   const LogoutPopUp = () => {
     localStorage.removeItem("auth");
-    localStorage.removeItem("data");
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('data');
+
+  
     setShowLogoutPopup(false);
-    window.location.href = "https://newlogin.bc-pl.com/";
+  
+    window.location.replace('https://newlogin.bc-pl.com/');
   };
 
   return (
