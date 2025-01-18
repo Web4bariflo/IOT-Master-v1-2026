@@ -26,7 +26,7 @@ const AquaMainPage = () => {
   if (csrf_token) localStorage.setItem("token", csrf_token);
   if (category) localStorage.setItem("category", category);
 
-  const url = `http://localhost:3001/waterbody?category=${category}&token=${csrf_token}&mobno=${mobno}`;
+  const url = `https://water.bc-pl.com/waterbody?category=${category}&token=${csrf_token}&mobno=${mobno}`;
 
   useEffect(() => {
     if (mobno) {
