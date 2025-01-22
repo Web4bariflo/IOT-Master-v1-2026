@@ -134,7 +134,7 @@ const DeviceRegistery = () => {
                       <div>
                         {/* Show only the first device for Aeration */}
                         <Link
-                          to={`/master/devicepage`}
+                          to={`/master/devicepage/${devices.Aeration[0]}`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Aeration[0]}
@@ -146,7 +146,7 @@ const DeviceRegistery = () => {
                             {devices.Aeration.slice(1).map((device, idx) => (
                               <div key={idx} className="">
                                 <Link
-                                  to={`/master/devicepage`}
+                                  to={`/master/devicepage/${device}`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -162,21 +162,19 @@ const DeviceRegistery = () => {
 
                     <td className="px-4 py-3 align-top">
                       <div>
-                        {/* Show only the first device for Check Tray */}
                         <Link
-                          to={`/master/devicepage`}
+                          to={`/master/devicepage/${devices.Feedtray[0]}`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Feedtray[0]}
                         </Link>
 
-                        {/* Show all devices if expanded */}
                         {expandedCustomers[companyName] && (
                           <>
                             {devices.Feedtray.slice(1).map((device, idx) => (
                               <div key={idx} className="b">
                                 <Link
-                                  to={`/master/devicepage`}
+                                  to={`/master/devicepage/${device}`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}
@@ -192,7 +190,7 @@ const DeviceRegistery = () => {
                       <div>
                         {/* Show only the first device for Feeding */}
                         <Link
-                          to={`/master/devicepage`}
+                          to={`/master/devicepage/${devices.Feeding[0]}`}
                           className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                         >
                           {devices.Feeding[0]}
@@ -204,7 +202,7 @@ const DeviceRegistery = () => {
                             {devices.Feeding.slice(1).map((device, idx) => (
                               <div key={idx} className="">
                                 <Link
-                                  to={`/master/devicepage`}
+                                  to={`/master/devicepage/${device}`}
                                   className="text-blue-800 hover:bg-slate-300 hover:scale-110 transition-transform duration-200"
                                 >
                                   {device}

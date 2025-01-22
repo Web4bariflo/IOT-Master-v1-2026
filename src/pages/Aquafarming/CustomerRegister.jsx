@@ -71,9 +71,9 @@ const CustomerRegister = () => {
   );
 
   return (
-    <div className="container h-screen mt-4">
-      <div className="flex items-center w-full px-2 mt-2">
-        <div className="bg-white px-4 py-2 text-base font-semibold shadow-md rounded-lg ml-10">
+    <div className="w-full h-screen mt-6">
+      <div className="flex items-center w-full sm:w-2/3 px-2 my-8 sm:my-20">
+        <div className="bg-white px-4 py-2 text-sm sm:text-base font-semibold shadow-md rounded-lg ml-0 sm:ml-10">
           Customer Registry
         </div>
         <div className="flex-grow border-t border-gray-800 mx-2"></div>
@@ -81,17 +81,17 @@ const CustomerRegister = () => {
       </div>
 
       {/* form button part  */}
-      <div className=" flex justify-end mb-4 lg:my-4 lg:mx-12">
-        <button 
-        className=" btn bg-blue-600 text-white rounded-md p-2 transition duration-300 ease-in-out transform hover:bg-blue-700 hover:scale-105" 
-        onClick={() => navigate("/master/create-manager")}>
+      <div className=" flex justify-start lg:justify-end my-5 mx-5 lg:my-4 lg:mx-52">
+        <button
+          className=" btn bg-blue-600 text-white rounded-md p-1 lg:p-2 text-sm lg:text-lg transition duration-300 ease-in-out transform hover:bg-blue-700 hover:scale-105"
+          onClick={() => navigate("/master/create-manager")}
+        >
           Create Manager
         </button>
       </div>
 
       {/* Table Section with Horizontal Scrolling */}
-      <div className="shadow-lg rounded-lg mt-10 lg:my-10 lg:mx-12 md:mx-12">
-        {/*  */}
+      <div className="shadow-lg w-5/6 lg:ml-24 ml-5 rounded-lg lg:my-5 md:mx-12">
         <div className="overflow-auto bg-[#E1E3E7] rounded-xl">
           <table className="w-full min-w-[600px] text-sm text-left text-black mb-1">
             <thead>

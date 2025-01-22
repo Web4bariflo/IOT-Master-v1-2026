@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import barifloLogo from "../assets/Images/Bariflo logo on-01.png";
+import barifloLogo from "../assets/Images/Bariflo logo on-01.png";
 import { AiOutlineLogout } from "react-icons/ai";
 
 const Nav = () => {
@@ -22,7 +22,7 @@ const Nav = () => {
     <>
       <div className="w-full h-[50px] bg-sky-100 z-20 shadow-2xl flex items-center justify-between">
         <div>
-          {/* <img src={barifloLogo} alt="Logo" className="h-[65px]" /> */}
+          <img src={barifloLogo} alt="Logo" className="h-[65px]" />
         </div>
 
         <div>

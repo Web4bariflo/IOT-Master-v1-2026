@@ -92,7 +92,7 @@ const RadialBarChart = ({ inputData, dropdownValue, selectedDate }) => {
         endAngle: 270,
         hollow: {
           margin: 5,
-          size: "30%",
+          size: "10%",
           background: "transparent",
         },
         dataLabels: {
@@ -131,7 +131,7 @@ const RadialBarChart = ({ inputData, dropdownValue, selectedDate }) => {
         height={450}
       />
       {/* Display feed weight and cost below the chart */}
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
+      <div style={{ marginTop: "10px", textAlign: "left", maxHeight: '70px', overflowY: 'auto'  }}>
         {chartData.labels.map((label, index) => {
           const cost = chartData.series[index] * (parseFloat(inputData) || 0);
           return (

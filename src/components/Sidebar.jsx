@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import AquaImage from "../assets/Images/prawn (1).png";
+import WaterImage from "../assets/Images/prawn2.png";
 
-const Sidebar = ({url}) => {
+const Sidebar = ({ url }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(null);
   const [isAquaMenuVisible, setIsAquaMenuVisible] = useState(false);
@@ -22,43 +24,42 @@ const Sidebar = ({url}) => {
     setIsAquaMenuVisible(!isAquaMenuVisible);
   };
   const handleButtonClick = () => {
-    console.log(url)
+    console.log(url);
     window.location.href = url;
-  }
+  };
 
   return (
     <div className="">
       {/* Sidebar for larger screens */}
       <aside
         className={`${
-          isSidebarOpen ? "w-44" : " w-44"
-        } hidden md:block h-full bg-sky-100 shadow-md transition-all duration-300`}
+          isSidebarOpen ? "w-44" : " w-20"
+        } hidden md:block h-full bg-sky-100 shadow-md transition-all duration-300 `}
         style={{ zIndex: 1000 }}
       >
         <div className="flex flex-col p-3">
           {/* Toggle Sidebar Button */}
           <button
-            className="text-black p-3 rounded cursor-pointer"
+            className="text-black p-3 rounded cursor-pointer mt-5 "
             onClick={toggleSidebar}
           >
             <FaBars className="text-xl" />
           </button>
 
-          {/* Aqua Logo */}
           <div
-            className="text-black p-3 mb-3 cursor-pointer flex items-center rounded-xl hover:bg-white absolute top-28"
+            className="text-black p-3 mb-3 cursor-pointer flex items-center rounded-xl hover:bg-white absolute top-32"
             onClick={handleAquaLogoClick}
           >
-            {/* Logo */}
-            {/* <i className="bi bi-droplet-fill text-xl mr-2" /> */}
-
-            {/* Heading */}
-            <div className="text-sm font-black">Aqua Farming</div>
+            <img src={AquaImage} alt="aquafarming" className=" h-7 w-7" />
+            <span
+              className={`${isSidebarOpen ? "inline ml-5 text-sm" : "hidden"}`}
+            >
+              Aquafarming
+            </span>
           </div>
 
-          {/* Aqua Menu */}
           {isAquaMenuVisible && (
-            <div className="relative top-16">
+            <div className="relative top-14 ml-3">
               {/* Customers Menu */}
               <div
                 className="items-center relative text-black p-3 rounded hover:bg-white cursor-pointer"
@@ -70,7 +71,7 @@ const Sidebar = ({url}) => {
                     isSidebarOpen
                       ? "inline opacity-100 transition-opacity duration-500"
                       : "hidden opacity-0"
-                  } ml-2 text-sm`}
+                  } ml-3 text-sm`}
                 >
                   Customers
                 </span>
@@ -80,7 +81,7 @@ const Sidebar = ({url}) => {
                       to="/master/registration"
                       className="no-underline text-black"
                     >
-                      <div className="p-2 hover:bg-white text-sm">
+                      <div className="p-2  hover:bg-white text-sm">
                         New Registration
                       </div>
                     </Link>
@@ -101,7 +102,7 @@ const Sidebar = ({url}) => {
                 >
                   <i className="bi bi-diagram-3-fill text-xl opacity-70 hover:opacity-100 transition-opacity duration-300"></i>
                   <span
-                    className={`ml-2 text-sm transition-opacity duration-500 ${
+                    className={`ml-3 text-sm transition-opacity duration-500 ${
                       isSidebarOpen ? "inline opacity-100" : "hidden opacity-0"
                     }`}
                   >
@@ -112,13 +113,16 @@ const Sidebar = ({url}) => {
             </div>
           )}
 
-    
-
           <div
             className="text-black p-3 mb-3 cursor-pointer flex items-start rounded-xl hover:bg-white top-22 mt-14"
             onClick={handleButtonClick}
           >
-            <div className="text-sm font-black">Water Body</div>       
+            <img src={WaterImage} alt="aquafarming" className=" h-7 w-7" />
+            <span
+              className={`${isSidebarOpen ? "inline ml-5 mt-2 text-sm" : "hidden"}`}
+            >
+              Waterbody
+            </span>
           </div>
         </div>
       </aside>
@@ -193,8 +197,10 @@ const Sidebar = ({url}) => {
             {/* Aqua Body */}
             <div className="text-black p-3 rounded hover:bg-white cursor-pointer flex">
               <i className="bi bi-water text-2xl"></i>
-              <button className="no-underline text-black"
-              onClick={handleButtonClick}>
+              <button
+                className="no-underline text-black"
+                onClick={handleButtonClick}
+              >
                 <div className="p-2 hover:bg-white text-sm">water Body</div>
               </button>
             </div>

@@ -52,7 +52,7 @@ const AquaMainPage = () => {
         <Route path="/" element={<CustomerRegister />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/device-registry" element={<DeviceRegistery />} />
-        <Route path="/devicepage" element={<DevicePage />} />
+        <Route path="/devicepage/:id" element={<DevicePage />} />
         <Route path="/cluster/:mob" element={<Cluster />} />
         <Route path="/pond/:id" element={<PondPage />} />
         <Route path="/customerprofile/:id" element={<CustomerProfile />} />
