@@ -31,7 +31,8 @@ const ShowDeviceDetails = () => {
   return (
     <div className="flex  p-4">
       {/* Device List */}
-      <div className="flex flex-col gap-4 w-48 p-2 overflow-y-auto border re">
+      <div className="flex flex-col gap-4 w-48 p-2 overflow-y-auto border min-w-[100px]">
+
         {devices.length > 0 ? (
           devices.map((device, index) => (
             <div

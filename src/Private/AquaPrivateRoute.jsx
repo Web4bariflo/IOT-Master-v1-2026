@@ -6,7 +6,8 @@ import Sidebar from "../components/Sidebar";
 
 const AquaPrivateRoute = ({url}) => {
   const auth = { token: localStorage.getItem("auth") };
-  const tokenObject = JSON.parse(auth.token);
+  const tokenObject =
+   JSON.parse(auth.token);
   console.log(tokenObject?.category);
 
   return tokenObject?.category === "master" ? (

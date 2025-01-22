@@ -11,7 +11,7 @@ const DevicePage = () => {
   const back = () => {
     navigate(-1);
   };
-
+console.log(id)
 
   useEffect(() => {
     // Fetch device data
@@ -41,7 +41,7 @@ const DevicePage = () => {
 
   return (
     <div className="h-screen w-full">
-      <div className="flex items-center w-full max-w-7xl px-2 mt-20">
+      <div className="flex items-center w-full px-16 mt-16">
         <div className="bg-white px-4 py-2 text-base font-semibold shadow-md rounded-lg ml-4">
           Registration Form
         </div>
@@ -50,8 +50,10 @@ const DevicePage = () => {
       </div>
 
       <div className=" flex justify-end me-6">
-        <button className=" bg-blue-600 p-2 rounded-md text-white w-20" onClick={back}>
-          <i class="bi bi-arrow-left" ></i>Back
+        <button className= "absolute top-36 right-20 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+        onClick={back}>
+          <i class="bi bi-arrow-left" ></i>
+          {/* Back */}
         </button>
       </div>
 

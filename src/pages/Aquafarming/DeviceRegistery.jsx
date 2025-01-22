@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 
 const DeviceRegistery = () => {
   const [customers, setCustomers] = useState([]);
   const [search, setSearch] = useState("");
   const [expandedCustomers, setExpandedCustomers] = useState({});
+  const navigate = useNavigate();
 
   const URL = process.env.REACT_APP_IP;
 
@@ -44,10 +47,10 @@ const DeviceRegistery = () => {
     if (name === "Aeration") acc[Company_name].Aeration.push(device);
     if (name === "Feed Tray") acc[Company_name].Feedtray.push(device);
     if (name === "Feeding") acc[Company_name].Feeding.push(device);
-    
+
     // if (name === "Power Circuit") acc[Company_name].PowerCircuit.push(device);
     // if (name === "Automated Feeder")
-      // acc[Company_name].AutomatedFeeder.push(device);
+    // acc[Company_name].AutomatedFeeder.push(device);
     // if (name === "Lora Gateway") acc[Company_name].LoraGateway.push(device);
 
     return acc;
@@ -68,7 +71,7 @@ const DeviceRegistery = () => {
   return (
     <div className="h-screen w-full">
       {/* Header */}
-      <div className="flex items-center w-full max-w-7xl px-2 mt-20">
+      <div className="flex items-center w-full px-16 mt-16">
         <div className="bg-white px-4 py-2 text-base font-semibold shadow-md rounded-lg ml-4">
           Device Registry
         </div>
@@ -76,8 +79,17 @@ const DeviceRegistery = () => {
         <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
 
+      {/* Back Button */}
+      <button
+        className="absolute top-36 right-20 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+        onClick={() => navigate(-1)}
+      >
+        <IoArrowBack className="text-lg" />
+        {/* Back */}
+      </button>
+
       {/* Search Input */}
-      <div className="mb-4 relative ml-20 mt-4">
+      <div className="mb-4 relative px-20 mt-6">
         <input
           type="text"
           placeholder="Search by Customer Name..."
@@ -85,11 +97,11 @@ const DeviceRegistery = () => {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full sm:w-1/3 lg:w-1/4 h-10 px-4 py-2 pl-10 border border-gray-300 rounded-3xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <i className="bi bi-search absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 h-max"></i>
+        <i className="bi bi-search absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 h-max px-20"></i>
       </div>
 
       {/* Table */}
-      <div className="shadow-lg rounded-lg mt-8 lg:my-10 lg:mx-20">
+      <div className="shadow-lg rounded-lg lg:my-10 lg:mx-20">
         <div className="overflow-x-auto bg-[#E1E3E7] shadow-lg rounded-lg mb-10">
           <table className="min-w-full table-auto mb-8 border-separate">
             <thead className="bg-gray-200">
@@ -99,7 +111,7 @@ const DeviceRegistery = () => {
                 <th className="px-4 py-3">Aeration</th>
                 <th className="px-4 py-3">Feedtray</th>
                 <th className="px-4 py-3">Feeding</th>
-                
+
                 {/* <th className="px-4 py-3">Automated Feeder</th> */}
                 {/* <th className="px-4 py-3">Lora Gateway</th> */}
                 {/* <th className="px-4 py-3">Power Circuit</th> */}
@@ -158,8 +170,6 @@ const DeviceRegistery = () => {
                       </div>
                     </td>
 
-                  
-
                     <td className="px-4 py-3 align-top">
                       <div>
                         <Link
@@ -213,9 +223,6 @@ const DeviceRegistery = () => {
                         )}
                       </div>
                     </td>
-
-                 
-                
                   </tr>
                 ))
               ) : (

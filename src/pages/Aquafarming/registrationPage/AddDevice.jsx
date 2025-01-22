@@ -101,7 +101,7 @@ const AddDevice = ({onSuccess}) => {
 
   return (
     <React.Fragment>
-      <div className="flex mt-10 ">
+      <div className="flex mt-10 h-full">
         <p className=" text-xl">Add No. of Ponds: </p>
         <input
           type="number"

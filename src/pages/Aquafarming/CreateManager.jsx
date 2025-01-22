@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { IoArrowBack } from "react-icons/io5";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const CreateManager = () => {
-    const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState("");
 
   const [userName, setUserName] = useState("");
@@ -13,6 +15,7 @@ const CreateManager = () => {
   const [email, setEmail] = useState("");
 
   const URL = process.env.REACT_APP_IP;
+  const navigate = useNavigate();
 
   // Fetch company details
 
@@ -83,7 +86,17 @@ const CreateManager = () => {
 
   return (
     <div className="container h-screen bg-gray-100">
+
       <div className="flex items-center justify-center">
+        {/* Back Button */}
+        <button
+          className="absolute top-16 right-96 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+          onClick={() => navigate(-1)}
+        >
+          <IoArrowBack className="text-lg" />
+          {/* Back */}
+        </button>
+
         <div className="w-96 xl:w-1/3 bg-white shadow-lg rounded-lg p-6 mt-10 mx-5">
           <h2 className="text-2xl font-semibold text-gray-700 text-center mb-6">
             Select a Company
@@ -196,4 +209,4 @@ const CreateManager = () => {
   );
 };
 
-export default CreateManager
+export default CreateManager;

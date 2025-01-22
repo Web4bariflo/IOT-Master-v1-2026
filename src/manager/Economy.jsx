@@ -17,6 +17,8 @@ import LineChart from "./chart/LineChart";
 import { SlCalender } from "react-icons/sl";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 
 // Register the components with Chart.js
 ChartJS.register(
@@ -38,6 +40,8 @@ const Economy = () => {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
+
+  const navigate = useNavigate();
 
   // const BASEURl = process.env.REACT_APP_IP;
   // const auth = { token: localStorage.getItem("auth") };
@@ -115,6 +119,15 @@ const Economy = () => {
       <div className="flex w-full">
         {/* Card 2 Below */}
 
+        {/* Back Button */}
+        <button
+          className="absolute top-14 right-8 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+          onClick={() => navigate(-1)}
+        >
+          <IoArrowBack className="text-lg" />
+          {/* Back */}
+        </button>
+
         <div className="lg:col-span-2 p-4 w-full">
           <div className="bg-white shadow-lg rounded-lg p-6 h-[35rem]">
             <h3 className="text-xl font-semibold mb-4">pond feed chart</h3>
@@ -148,7 +161,10 @@ const Economy = () => {
                 />
               </div>
             )}
-            <ColumnChart dropdownValue={dropdownValue} selectedDate={selectedDate}/>
+            <ColumnChart
+              dropdownValue={dropdownValue}
+              selectedDate={selectedDate}
+            />
           </div>
         </div>
 
@@ -177,7 +193,11 @@ const Economy = () => {
             <div className="w-[60%] mx-auto">
               {" "}
               {/* Adjusted width */}
-              <RadialBarChart inputData={inputValue} dropdownValue={dropdownValue} selectedDate={selectedDate}/>
+              <RadialBarChart
+                inputData={inputValue}
+                dropdownValue={dropdownValue}
+                selectedDate={selectedDate}
+              />
             </div>
           </div>
         </div>

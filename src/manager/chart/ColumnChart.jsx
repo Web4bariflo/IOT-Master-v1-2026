@@ -97,7 +97,7 @@ const ColumnChart = ({ dropdownValue, selectedDate }) => {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "35%",
+        columnWidth: "60%",
         borderRadius: 5,
         distributed: true,
       },
@@ -107,7 +107,7 @@ const ColumnChart = ({ dropdownValue, selectedDate }) => {
     },
     stroke: {
       show: true,
-      width: 6,
+      width: 7,
       colors: ["transparent"],
     },
     xaxis: {

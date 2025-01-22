@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
-
 import { useParams } from "react-router-dom";
 
 import axios from "axios";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TaskAssign = ({ devices }) => {
   const [ponds, setPonds] = useState([]);
   const { id } = useParams();
   const apiUrl = process.env.REACT_APP_IP;
   const [pondDevices, setPondDevices] = useState([]);
+  const [submissionStatus, setSubmissionStatus] = useState([]);
   const [maxTimeColumns, setMaxTimeColumns] = useState(1);
-  const auth = { token: localStorage.getItem('auth') };
+  const auth = { token: localStorage.getItem("auth") };
   const tokenObject = JSON.parse(auth.token);
-  const  Mob  = tokenObject.Mob;
-
+  const Mob = tokenObject.Mob;
 
   const fetchPonds = async () => {
     try {
@@ -32,11 +34,8 @@ const TaskAssign = ({ devices }) => {
           times: [
             {
               from: "",
-
               to: "",
-
               feedWeight: "",
-
               probiotics: "",
             },
           ],
@@ -55,16 +54,12 @@ const TaskAssign = ({ devices }) => {
 
   const addTimeColumn = (pondIndex, deviceIndex) => {
     const updatedPondDevices = [...pondDevices];
-
     const device = updatedPondDevices[pondIndex].devices[deviceIndex];
 
     device.times.push({
       from: "",
-
       to: "",
-
       feedWeight: "",
-
       probiotics: "",
     });
 
@@ -75,7 +70,6 @@ const TaskAssign = ({ devices }) => {
     );
 
     setMaxTimeColumns(maxColumns);
-
     setPondDevices(updatedPondDevices);
   };
 
@@ -133,7 +127,6 @@ const TaskAssign = ({ devices }) => {
 
     const newFeedTray = {
       deviceName: `Feed Tray ${feedTrayDevices.length + 1}`,
-
       times: [{ from: "", to: "", quantity: "" }],
     };
 
@@ -155,17 +148,11 @@ const TaskAssign = ({ devices }) => {
 
     const tasks = [
       device.deviceName,
-
       device.times.map((time) => [time.from, time.to]),
-
       pond.pondName,
-
       pond.pondId,
-
       device.times.map((time) => time.feedWeight || null),
-
       device.times.map((time) => time.probiotics || null),
-
       device.times.map((time) => time.quantity || null),
     ];
 
@@ -174,9 +161,50 @@ const TaskAssign = ({ devices }) => {
     try {
       const response = await axios.post(`${apiUrl}/work_assign/`, { tasks });
 
+      const updatedSubmissionStatus = [...submissionStatus];
+      if (!updatedSubmissionStatus[pondIndex]) {
+        updatedSubmissionStatus[pondIndex] = [];
+      }
+      updatedSubmissionStatus[pondIndex][deviceIndex] = true;
+      setSubmissionStatus(updatedSubmissionStatus);
+
       console.log("Submission successful:", response.data);
+      toast.success("Submission successful!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      // const updatedPondDevices = [...pondDevices];
+      // updatedPondDevices[pondIndex].devices[deviceIndex].times = [
+      //   {
+      //     from: "",
+      //     to: "",
+      //     feedWeight: "",
+      //     probiotics: "",
+      //     quantity: "",
+      //   },
+      // ];
+      // setPondDevices(updatedPondDevices);
     } catch (error) {
       console.error("Submission failed:", error);
+
+      // Add error toast
+      toast.error("Submission failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
 
@@ -391,7 +419,7 @@ const TaskAssign = ({ devices }) => {
                     <td className="border-none p-3 text-center">
                       <button
                         onClick={() => addTimeColumn(pondIndex, deviceIndex)}
-                        className="bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-700"
+                        className="bg-gray-500 text-white py-2 rounded hover:bg-gray-700 min-w-[85px]"
                       >
                         Add Time
                       </button>
@@ -400,7 +428,12 @@ const TaskAssign = ({ devices }) => {
                     <td className=" p-2 text-center">
                       <button
                         onClick={() => submitData(pondIndex, deviceIndex)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className={`px-4 py-2 rounded text-white ${
+                          submissionStatus[pondIndex] &&
+                          submissionStatus[pondIndex][deviceIndex]
+                            ? "bg-green-500"
+                            : "bg-blue-500"
+                        }`}
                       >
                         Submit
                       </button>
@@ -418,6 +451,7 @@ const TaskAssign = ({ devices }) => {
           </div>
         </div>
       ))}
+      <ToastContainer />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+// import { IoArrowBack } from "react-icons/io5";
 
 const CustomerRegister = () => {
   const [customers, setCustomers] = useState([]);
@@ -72,16 +73,16 @@ const CustomerRegister = () => {
 
   return (
     <div className="w-full h-screen mt-6">
-      <div className="flex items-center w-full sm:w-2/3 px-2 my-8 sm:my-20">
-        <div className="bg-white px-4 py-2 text-sm sm:text-base font-semibold shadow-md rounded-lg ml-0 sm:ml-10">
+      <div className="flex items-center w-full justify-center mt-14 mb-10 px-20">
+        <div className="bg-white px-4 py-2 text-sm sm:text-base font-semibold shadow-md rounded-lg flex justify-center items-center">
           Customer Registry
         </div>
-        <div className="flex-grow border-t border-gray-800 mx-2"></div>
+        <div className="flex-grow border-t border-gray-800"></div>
         <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
 
       {/* form button part  */}
-      <div className=" flex justify-start lg:justify-end my-5 mx-5 lg:my-4 lg:mx-52">
+      <div className=" flex justify-start lg:justify-end my-5 mx-5 lg:my-8 lg:mx-36">
         <button
           className=" btn bg-blue-600 text-white rounded-md p-1 lg:p-2 text-sm lg:text-lg transition duration-300 ease-in-out transform hover:bg-blue-700 hover:scale-105"
           onClick={() => navigate("/master/create-manager")}
@@ -89,6 +90,8 @@ const CustomerRegister = () => {
           Create Manager
         </button>
       </div>
+
+
 
       {/* Table Section with Horizontal Scrolling */}
       <div className="shadow-lg w-5/6 lg:ml-24 ml-5 rounded-lg lg:my-5 md:mx-12">
