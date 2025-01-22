@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { IoArrowBack } from "react-icons/io5";
 
 const CustomerProfile = () => {
-  const {id} = useParams();
-  const [profileData, setProfileData] = useState([]); 
+  const { id } = useParams();
+  const [profileData, setProfileData] = useState([]);
   const navigate = useNavigate();
-  const URL = process.env.REACT_APP_IP
-
+  const URL = process.env.REACT_APP_IP;
 
   // Fetch customer data
   const fetchCustomerData = async () => {
     try {
-      const response = await axios.get(`${URL}/viewuser/${id}/`); 
+      const response = await axios.get(`${URL}/viewuser/${id}/`);
       setProfileData(response.data); // Assuming API returns an array of customer profiles
     } catch (error) {
       console.error("Error fetching customer data:", error);
     }
   };
-//   6371276263
+  //   6371276263
 
   useEffect(() => {
     fetchCustomerData();
@@ -40,16 +40,14 @@ const CustomerProfile = () => {
           <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
         </div>
 
-        <div className="w-full max-w-7xl mb-4">
-          <div className="flex justify-end">
-            <button
-              className="bg-blue-600 p-2 rounded-md text-white w-20"
-              onClick={back}
-            >
-              <i className="bi bi-arrow-left"></i> Back
-            </button>
-          </div>
-        </div>
+        {/* Back Button */}
+        <button
+          className="absolute top-14 right-8 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+          onClick={() => navigate(-1)}
+        >
+          <IoArrowBack className="text-lg" />
+          {/* Back */}
+        </button>
 
         {/* Display Customer Data */}
         <div className="w-full max-w-7xl bg-[#E1E3E7] rounded-lg shadow-lg mt-4 lg:my-10 lg:mx-12 md:mx-12">

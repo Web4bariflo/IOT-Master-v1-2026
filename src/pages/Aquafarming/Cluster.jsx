@@ -5,35 +5,37 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import DrawPicture from "./registrationPage/DrawPicture";
 import ClusterCreate from "../../components/ClusterCreate";
+import { useNavigate } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 
 const Cluster = () => {
   const { mob } = useParams();
   const URL = process.env.REACT_APP_IP;
   const [clusters, setClusters] = useState([]);
-  const [showDrawPicture, setShowDrawPicture] = useState(false); 
-  const [showClusterPage, setShowClusterPage] = useState(false);// State to control visibility of DrawPicture
+  const [showDrawPicture, setShowDrawPicture] = useState(false);
+  const [showClusterPage, setShowClusterPage] = useState(false); // State to control visibility of DrawPicture
   const [selectedOption, setSelectedOption] = useState(""); // State for selected option
-  console.log(mob)
+  console.log(mob);
   const handleDrawDataClick = () => {
     setShowDrawPicture(true); // Show the DrawPicture component when the button is clicked
   };
 
+  const navigate = useNavigate();
+
   const closeDrawPicture = () => {
-    setShowDrawPicture(false); 
+    setShowDrawPicture(false);
     setShowClusterPage(false);
   };
 
   const AddNewCluster = () => {
-    setShowClusterPage(true)
-  }
+    setShowClusterPage(true);
+  };
 
   // Fetch cluster and user data
   const fetchClusters = async () => {
     try {
-      const response = await axios.get(
-        `${URL}/admin_cluster_view/${mob}/`
-      );
-      console.log(response)
+      const response = await axios.get(`${URL}/admin_cluster_view/${mob}/`);
+      console.log(response);
       setClusters(response.data);
       if (response.data.length > 0) {
         setSelectedOption(response.data[0].id); // Set the initial selected option to the first cluster's ID
@@ -57,6 +59,15 @@ const Cluster = () => {
         <div className="flex-grow border-t border-gray-800 mx-2"></div>
         <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
+
+      {/* Back Button */}
+      <button
+        className="absolute top-14 right-8 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+        onClick={() => navigate(-1)}
+      >
+        <IoArrowBack className="text-lg" />
+        {/* Back */}
+      </button>
 
       {/* Cluster Cards Section */}
 
@@ -124,16 +135,16 @@ const Cluster = () => {
       )}
 
       {/* new cluster adding button */}
-      <button 
-      className='fixed bottom-6 right-10 cursor-pointer'
-      onClick={AddNewCluster}
+      <button
+        className="fixed bottom-6 right-10 cursor-pointer"
+        onClick={AddNewCluster}
       >
         <i class="bi bi-plus-circle-fill text-6xl"></i>
       </button>
       {showClusterPage && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-md">
-            <ClusterCreate mob={mob}/>
+            <ClusterCreate mob={mob} />
             {/* Close button */}
             <button
               onClick={closeDrawPicture}

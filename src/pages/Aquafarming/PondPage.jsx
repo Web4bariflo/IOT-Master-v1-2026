@@ -3,6 +3,8 @@ import { useParams,Link } from "react-router-dom";
 import PondImage from "../../assets/Images/Pond.jpg"; 
 import axios from "axios";
 import NewPondCreate from "../../components/NewPondCreate";
+import { IoArrowBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const PondPage = () => {
   const {  id } = useParams();
@@ -12,6 +14,8 @@ const PondPage = () => {
   
   const [ponds, setPonds] = useState([]);
   const [showPondPage, setShowPondPage] = useState(false);
+
+  const navigate = useNavigate();
 
  const closePondPage = () => {
     setShowPondPage(false)
@@ -46,6 +50,15 @@ const PondPage = () => {
         <div className="flex-grow border-t border-gray-800 mx-2"></div>
         <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
+
+              {/* Back Button */}
+              <button
+                className="absolute top-14 right-8 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+                onClick={() => navigate(-1)}
+              >
+                <IoArrowBack className="text-lg" />
+                {/* Back */}
+              </button>
 
       {/* Pond Cards Section */}
       <div className="w-full mt-8 flex gap-3 flex-wrap justify-center sm:justify-start">

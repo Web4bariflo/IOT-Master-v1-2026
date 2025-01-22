@@ -11,6 +11,8 @@ import { useParams } from "react-router-dom";
 import * as turf from "@turf/turf";
 
 import PondGraph from "./PondGraph";
+import { useNavigate } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 
 const PondDetails = () => {
   const { id } = useParams();
@@ -85,6 +87,8 @@ const PondDetails = () => {
       }
     };
 
+
+
     const fetchWeatherData = async (cityName) => {
       try {
         const response = await axios.get(
@@ -118,6 +122,8 @@ const PondDetails = () => {
     fetchMapData();
   }, [id]);
 
+  const navigate = useNavigate();
+
   return (
     <div className="p-4 w-full">
       {/* Title Section */}
@@ -131,6 +137,15 @@ const PondDetails = () => {
 
         <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
       </div>
+
+      {/* Back Button */}
+      <button
+        className="absolute top-14 right-6 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+        onClick={() => navigate(-1)}
+      >
+        <IoArrowBack className="text-lg" />
+        {/* Back */}
+      </button>
 
       <div className="flex flex-wrap gap-5 items-start mt-5 ml-5">
         {/* Map Section */}
