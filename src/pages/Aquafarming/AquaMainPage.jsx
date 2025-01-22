@@ -27,6 +27,8 @@ const AquaMainPage = () => {
   if (category) localStorage.setItem("category", category);
 
   const url = `https://water.bc-pl.com/waterbody?category=${category}&token=${csrf_token}&mobno=${mobno}`;
+  // const url = `http://localhost:3001/waterbody?category=${category}&token=${csrf_token}&mobno=${mobno}`;
+
 
   useEffect(() => {
     if (mobno) {
