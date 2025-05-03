@@ -11,6 +11,8 @@ const TaskAssign = ({ devices }) => {
   const { id } = useParams();
   const apiUrl = process.env.REACT_APP_IP;
   const [pondDevices, setPondDevices] = useState([]);
+  const [workers, setWorkers] = useState([]);
+  const [workername, setWorkername] = useState(null);
   const [submissionStatus, setSubmissionStatus] = useState([]);
   const [maxTimeColumns, setMaxTimeColumns] = useState(1);
   const auth = { token: localStorage.getItem("auth") };
@@ -154,6 +156,7 @@ const TaskAssign = ({ devices }) => {
       device.times.map((time) => time.feedWeight || null),
       device.times.map((time) => time.probiotics || null),
       device.times.map((time) => time.quantity || null),
+      workername,
     ];
 
     console.log(tasks);
@@ -205,6 +208,16 @@ const TaskAssign = ({ devices }) => {
         progress: undefined,
         theme: "colored",
       });
+    }
+  };
+
+  const fetchWorker = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}/workerview/${Mob}/`);
+      console.log(res);
+      setWorkers(res.data.Employee);
+    } catch (error) {
+      console.log("error", error);
     }
   };
 
@@ -416,6 +429,27 @@ const TaskAssign = ({ devices }) => {
               <tbody>
                 {pond.devices.map((device, deviceIndex) => (
                   <tr key={deviceIndex}>
+                    <td className="border-none p-3 text-center">
+                      <div onClick={fetchWorker} className="inline-block">
+                        <select
+                          onChange={(e) => {
+                            setWorkername(e.target.value)
+                          }}
+                          className="bg-green-500 text-white p-2 rounded hover:bg-green-800 min-w-[120px]"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>
+                            Assign Worker
+                          </option>
+                          {workers.map((worker, index) => (
+                            <option key={index} value={worker.name}>
+                              {worker.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </td>
+
                     <td className="border-none p-3 text-center">
                       <button
                         onClick={() => addTimeColumn(pondIndex, deviceIndex)}
