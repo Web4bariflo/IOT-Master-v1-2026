@@ -220,7 +220,10 @@ const TaskAssign = ({ devices }) => {
       console.log("error", error);
     }
   };
-
+  useEffect(() => {
+    fetchWorker();
+  }, []);
+  
   return (
     <div className="container mx-full">
       {pondDevices.map((pond, pondIndex) => (

@@ -6,7 +6,6 @@ import "leaflet-draw";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate, useParams } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { TbWorldLongitude, TbWorldLatitude } from "react-icons/tb";
 import { useRegistrationContext } from "../../../context/RegistrationContext";
@@ -15,7 +14,7 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
   const mapRef = useRef(null);
   const drawnItemsRef = useRef(null);
   const [drawnPolygon, setDrawnPolygon] = useState(null);
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [cityName, setCityName] = useState("");
   const [coardinates, setCoordinates] = useState([]);
 
@@ -23,14 +22,8 @@ const PondLocation = ({ pond, onClose, fieldData }) => {
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [map, setMap] = useState(null);
-  const [isSatelliteView, setIsSatelliteView] = useState(false);
-
-  const [deviceData, setDeviceData] = useState({});
-  const { id } = useParams();
   const [searchName, setSearchName] = useState();
-  const navigate = useNavigate();
   const BASEURL = process.env.REACT_APP_IP;
-
   const {clusterId} = useRegistrationContext();
 
 
