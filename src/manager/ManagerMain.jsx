@@ -9,7 +9,8 @@ import Loader from '../Private/Loader'
 const ManagerMain = () => {
   const BASEURL = process.env.REACT_APP_IP;
   const urlParams = new URLSearchParams(window.location.search);
-  const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
+  // const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
+  const mobno = 9878364512;
   const navigate = useNavigate();
 
   // Track loading state to prevent rendering before mobno is processed
@@ -54,7 +55,7 @@ const ManagerMain = () => {
   return (
     <Routes>
       <Route element={<ManagerPrivateRoute />}>
-        <Route path="/" element={<SetTime />} />
+        <Route path="/" element={<ClusterviewDetails />} />
         <Route path="/economy/:id" element={<Economy />} />
         <Route path="/clusterview/:id" element={<ClusterviewDetails />} />
       </Route>

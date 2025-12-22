@@ -16,11 +16,14 @@ const AquaMainPage = () => {
   const BASEURl = process.env.REACT_APP_IP;
   const urlParams = new URLSearchParams(window.location.search);
   const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
+  // const mobno = 9123458952;
   const csrf_token = urlParams.get("token") || localStorage.getItem("token");
   const category =
-    urlParams.get("category") || localStorage.getItem("category");
+  urlParams.get("category") || localStorage.getItem("category");
   const navigate = useNavigate();
   console.log(mobno);
+  console.log(category);
+
 
   if (mobno) localStorage.setItem("mobno", mobno);
   if (csrf_token) localStorage.setItem("token", csrf_token);

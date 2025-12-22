@@ -81,15 +81,14 @@ const DeviceRegistery = () => {
 
       {/* Back Button */}
       <button
-        className="absolute top-36 right-20 flex gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
+        className="hidden md:flex absolute top-36 right-20 gap-2 bg-gray-200 text-gray-800 rounded-md px-4 py-2 shadow hover:bg-gray-300 transition-transform duration-200"
         onClick={() => navigate(-1)}
       >
         <IoArrowBack className="text-lg" />
-        {/* Back */}
       </button>
 
       {/* Search Input */}
-      <div className="mb-4 relative px-20 mt-6">
+      <div className="mb-4 relative px-20 mt-6 md: left-0">
         <input
           type="text"
           placeholder="Search by Customer Name..."

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const ManagerSidebar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -10,18 +9,23 @@ const ManagerSidebar = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedClusterId, setSelectedClusterId] = useState(null);
+
   const URL = process.env.REACT_APP_IP;
   const auth = { token: localStorage.getItem("auth") };
   const tokenObject = JSON.parse(auth.token);
-  console.log(tokenObject);
-  const navigate = useNavigate();
-
+  // console.log(tokenObject.Mob)
   const mob = tokenObject.Mob;
   const name = tokenObject.name;
-  const [selectedClusterId, setSelectedClusterId] = useState(null);
+
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
   const handleClusterClick = (clusterId) => {
@@ -45,100 +49,102 @@ const ManagerSidebar = () => {
     fetchClusters();
   }, []);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+return (
+  <div className="relative z-[1000]">
+    {/* Hamburger Menu (Mobile) */}
+    <button
+      className="md:hidden p-4 fixed top-4 left-4 z-[1100] bg-white rounded-lg shadow-md"
+      onClick={toggleSidebar}
+    >
+      <i className={`bi ${sidebarOpen ? "bi-x" : "bi-list"} text-2xl text-gray-700`} />
+    </button>
 
-  return (
-    <div className="relative">
-      {/* Hamburger Menu for Mobile */}
-      <button
-        className="md:hidden p-4 absolute top-0 left-0 z-[1000]"
-        onClick={toggleSidebar}
-      >
-        <i className={`bi ${sidebarOpen ? "bi-x" : "bi-list"} text-2xl`}></i>
-      </button>
-
-      {/* Sidebar */}
-      <aside
-        className={`lg:block lg:w-40 h-full bg-white shadow-2xl flex flex-col items-center mt-4 ${
-          sidebarOpen ? "fixed w-40 z-[1000]" : "w-0"
-        } transition-all duration-300 ease-in-out lg:relative lg:z-auto`}
-      >
-        {/* Cross Button for Mobile Sidebar */}
+    {/* Sidebar */}
+    <aside
+      className={`fixed top-0 left-0 h-full z-[1050]
+      w-[260px] md:w-[280px]
+      bg-white
+      shadow-lg
+      transition-transform duration-300 ease-in-out
+      ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }
+      md:relative md:translate-x-0`}
+    >
+      {/* Header / User Info */}
+      <div className="px-6 py-6">
         <button
-          className="md:hidden absolute top-4 right-4 text-2xl z-[1001] text-black"
-          onClick={toggleSidebar}
+          className="w-full flex items-center justify-between"
+          onClick={toggleDropdown}
         >
-          <i className="bi bi-x"></i>
-        </button>
-
-        <div className="bg-sky-100 w-full rounded-t-lg">
-          <button
-            className="w-full flex items-center justify-between p-6 rounded-lg bg-sky-100"
-            onClick={toggleDropdown}
-          >
-            <div className="flex items-center">
-              <i className="bi bi-diagram-3-fill text-xl mr-2"></i>
-              <span className="font-bold text-sm">{name}</span>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 flex items-center justify-center rounded-full bg-sky-100">
+              <i className="bi bi-diagram-3-fill text-sky-600 text-lg"></i>
             </div>
-            <i
-              className={`bi ${
-                dropdownOpen ? "bi-chevron-up" : "bi-chevron-down"
-              }`}
-            ></i>
-          </button>
-        </div>
+            <span className="font-semibold text-gray-800 text-sm truncate">
+              {name}
+            </span>
+          </div>
+          <i
+            className={`bi ${
+              dropdownOpen ? "bi-chevron-up" : "bi-chevron-down"
+            } text-gray-500`}
+          />
+        </button>
+      </div>
 
-        <div className="w-full text-center">
-          {loading ? (
-            <p className="text-gray-500 mt-2">Loading clusters...</p>
-          ) : error ? (
-            <p className="text-red-500 mt-2">{error}</p>
-          ) : (
-            dropdownOpen && (
-              <div className="mt-2 w-full">
-                {clusters.map((cluster) => (
-                  <div key={cluster.id}>
-                    <Link to={`/manager/clusterview/${cluster.id}`}>
-                      <div
-                        className={`p-2 hover:bg-sky-200 text-sm cursor-pointer ${
-                          selectedClusterId === cluster.id ? "bg-sky-100" : ""
-                        }`}
-                        onClick={() => handleClusterClick(cluster.id)}
-                      >
-                        {cluster.Name}
-                      </div>
-                    </Link>
+      {/* Cluster List */}
+      <div className="px-4 space-y-1">
+        {loading ? (
+          <p className="text-gray-400 text-sm px-2">Loading clusters...</p>
+        ) : error ? (
+          <p className="text-red-500 text-sm px-2">Error loading clusters</p>
+        ) : (
+          dropdownOpen &&
+          clusters.map((cluster) => (
+            <div key={cluster.id}>
+              <Link to={`/manager/clusterview/${cluster.id}`}>
+                <div
+                  className={`px-4 py-2 rounded-lg text-sm cursor-pointer
+                  transition-all duration-200
+                  ${
+                    selectedClusterId === cluster.id
+                      ? "bg-sky-100 text-sky-700 font-medium"
+                      : "hover:bg-gray-100 text-gray-700"
+                  }`}
+                  onClick={() => handleClusterClick(cluster.id)}
+                >
+                  {cluster.Name}
+                </div>
+              </Link>
 
-                    {/* Render Pond Economy button for the selected cluster */}
-                    {selectedClusterId === cluster.id && (
-                      <button
-                        className="text-sm border p-2 mt-1 ml-10 bg-sky-200"
-                        onClick={() =>
-                          navigate(`/manager/economy/${cluster.id}`)
-                        }
-                      >
-                        Pond Economy
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )
-          )}
-        </div>
-      </aside>
+              {selectedClusterId === cluster.id && (
+                <button
+                  className="ml-6 mt-1 px-4 py-1.5 text-xs rounded-md
+                  bg-sky-500 text-white hover:bg-sky-600 transition"
+                  onClick={() =>
+                    navigate(`/manager/economy/${cluster.id}`)
+                  }
+                >
+                  Pond Economy
+                </button>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </aside>
 
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-[999] lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
-    </div>
-  );
+    {/* Mobile Overlay */}
+    {sidebarOpen && (
+      <div
+        className="fixed inset-0 bg-black/40 z-[1040] md:hidden"
+        onClick={toggleSidebar}
+      />
+    )}
+  </div>
+);
+
 };
 
 export default ManagerSidebar;

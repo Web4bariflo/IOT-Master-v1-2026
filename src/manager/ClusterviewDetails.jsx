@@ -4,7 +4,7 @@ import axios from "axios";
 import * as turf from "@turf/turf";
 import { useParams } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
-import ShowDeviceDetails from "./ShowDeviceDetails";
+import ShowDeviceDetails from "./pages/ShowDeviceDetails";
 
 const ClusterviewDetails = () => {
   const [pondData, setPondData] = useState([]);
@@ -170,14 +170,14 @@ const ClusterviewDetails = () => {
 
   return (
     <div>
-      <div className="relative w-full bg-gray-100 flex flex-col lg:flex-row gap-4 p-4">
+      <div className="relative w-full flex flex-col lg:flex-row gap-4 p-4">
         {/* Map container */}
-        <div className="flex-[3] border-2 border-gray-300 rounded-lg overflow-hidden">
+        <div className="flex-[3] rounded overflow-hidden">
           <div id="map" className="h-[400px] w-full"></div>
         </div>
 
         {/* Weather Section */}
-        <div className="flex-[1] bg-sky-200 p-6 rounded-lg shadow-md text-gray-800">
+        <div className="flex-[1] bg-slate-100 p-6 rounded shadow-md text-gray-800">
           {loadingWeather ? (
             <p>Loading weather data...</p>
           ) : weatherData && weatherData.length > 0 ? (
@@ -225,6 +225,7 @@ const ClusterviewDetails = () => {
       </div>
       <ShowDeviceDetails />
     </div>
+
   );
 };
 

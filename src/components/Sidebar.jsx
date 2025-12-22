@@ -24,7 +24,9 @@ const Sidebar = ({ url }) => {
     setIsAquaMenuVisible(!isAquaMenuVisible);
   };
   const handleButtonClick = () => {
-    console.log(url);
+    // console.log(url);
+    // window.location.href = url;
+    const url = `http://localhost:3001/manager`;
     window.location.href = url;
   };
 
@@ -119,7 +121,9 @@ const Sidebar = ({ url }) => {
           >
             <img src={WaterImage} alt="aquafarming" className=" h-7 w-7" />
             <span
-              className={`${isSidebarOpen ? "inline ml-5 mt-2 text-sm" : "hidden"}`}
+              className={`${
+                isSidebarOpen ? "inline ml-5 mt-2 text-sm" : "hidden"
+              }`}
             >
               Waterbody
             </span>

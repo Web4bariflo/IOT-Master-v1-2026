@@ -1,9 +1,9 @@
 import React from 'react'
 
-const SetTime = () => {
+const Home = () => {
   return (
-    <div>SetTime</div>
+    <div>Welcome to the manager side page ! click on cluter to view details .</div>
   )
 }
 
-export default SetTime
+export default Home

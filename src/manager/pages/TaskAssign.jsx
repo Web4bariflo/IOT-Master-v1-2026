@@ -444,11 +444,11 @@ const TaskAssign = ({ devices }) => {
                           <option value="" disabled>
                             Assign Worker
                           </option>
-                          {workers.map((worker, index) => (
+                          {/* {workers.map((worker, index) => (
                             <option key={index} value={worker.name}>
                               {worker.name}
                             </option>
-                          ))}
+                          ))} */}
                         </select>
                       </div>
                     </td>
