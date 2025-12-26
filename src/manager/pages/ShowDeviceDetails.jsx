@@ -15,7 +15,7 @@ const ShowDeviceDetails = () => {
         <button
           className={`w-full mb-3 p-3 rounded text-left ${
             activeModule === "feeding"
-              ? "bg-blue-400 text-white"
+              ? "bg-blue-600 text-white"
               : "bg-gray-100"
           }`}
           onClick={() => setActiveModule("feeding")}
@@ -25,7 +25,7 @@ const ShowDeviceDetails = () => {
 
         <button
           className={`w-full p-3 rounded text-left ${
-            activeModule === "energy" ? "bg-blue-400 text-white" : "bg-gray-100"
+            activeModule === "energy" ? "bg-blue-600 text-white" : "bg-gray-100"
           }`}
           onClick={() => setActiveModule("energy")}
         >

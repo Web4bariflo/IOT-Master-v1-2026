@@ -2,16 +2,40 @@ import React, { useState } from "react";
 import DeviceCard from "../../../components/DeviceCard";
 import aeration from "../../../../assets/Images/aeration device.png";
 import ActionButton from "../../../components/ActionButton";
+
+// Static device list
 const DEVICE_IDS = ["DEV-01", "DEV-02", "DEV-03"];
 
 const Aeration = () => {
+  // Selected device and cycle input
   const [deviceId, setDeviceId] = useState("");
   const [cycleCount, setCycleCount] = useState("");
-  const [deviceCycles, setDeviceCycles] = useState({});
-  const [submittingRows, setSubmittingRows] = useState(false);
 
+  // Stores device → number of cycles
+  const [deviceCycles, setDeviceCycles] = useState({});
+
+  // Per-row lifecycle state
+  // rowStates[rowKey] = { status, startTime, endTime, timerId }
+  const [rowStates, setRowStates] = useState({});
+
+  // Lock device selector when all devices are generated
   const isLocked = Object.keys(deviceCycles).length === DEVICE_IDS.length;
 
+  /* ---------------------------------------------------
+     Utility: calculate duration between start & end time
+  ---------------------------------------------------- */
+  const getDurationMs = (start, end) => {
+    if (!start || !end) return 0;
+
+    const [sh, sm] = start.split(":").map(Number);
+    const [eh, em] = end.split(":").map(Number);
+
+    return ((eh * 60 + em) - (sh * 60 + sm)) * 60 * 1000;
+  };
+
+  /* ---------------------------------------------------
+     Generate cycles for selected device
+  ---------------------------------------------------- */
   const handleGenerate = () => {
     if (!deviceId || !cycleCount) return;
 
@@ -21,31 +45,96 @@ const Aeration = () => {
     }));
   };
 
-  const handleSubmit = (key) => {
-    setSubmittingRows(true);
+  /* ---------------------------------------------------
+     Handle time input change per row
+  ---------------------------------------------------- */
+  const handleTimeChange = (rowKey, field, value) => {
+    setRowStates((prev) => ({
+      ...prev,
+      [rowKey]: {
+        ...prev[rowKey],
+        [field]: value,
+      },
+    }));
   };
 
-  // const handleAbort = (key) => {
-  //   setSubmittingRows((prev) => ({
-  //     ...prev,
-  //     [key]: false,
-  //   }));
-  // };
+  /* ---------------------------------------------------
+     Submit cycle → Processing → Auto Completed
+  ---------------------------------------------------- */
+  const handleSubmit = (rowKey) => {
+    const row = rowStates[rowKey];
+    if (!row?.startTime || !row?.endTime) return;
+
+    const duration = getDurationMs(row.startTime, row.endTime);
+    if (duration <= 0) return;
+
+    // Auto-complete after time duration
+    const timerId = setTimeout(() => {
+      setRowStates((prev) => ({
+        ...prev,
+        [rowKey]: {
+          ...prev[rowKey],
+          status: "completed",
+          timerId: null,
+        },
+      }));
+    }, duration);
+
+    setRowStates((prev) => ({
+      ...prev,
+      [rowKey]: {
+        ...prev[rowKey],
+        status: "processing",
+        timerId,
+      },
+    }));
+  };
+
+  /* ---------------------------------------------------
+     Abort cycle → clear time inputs
+  ---------------------------------------------------- */
+  const handleAbort = (rowKey) => {
+    const timer = rowStates[rowKey]?.timerId;
+    if (timer) clearTimeout(timer);
+
+    setRowStates((prev) => ({
+      ...prev,
+      [rowKey]: {
+        status: "aborted",
+        startTime: "",
+        endTime: "",
+        timerId: null,
+      },
+    }));
+  };
+
+  /* ---------------------------------------------------
+     Restart aborted cycle
+  ---------------------------------------------------- */
+  const handleRestart = (rowKey) => {
+    setRowStates((prev) => ({
+      ...prev,
+      [rowKey]: {
+        ...prev[rowKey],
+        status: "idle",
+      },
+    }));
+  };
 
   return (
     <div>
-      {/* TOP CONTROLS */}
+      {/* ================= TOP CONTROLS ================= */}
       <div className="flex items-center gap-6 text-sm p-4">
-        {/* Device ID */}
+        {/* Device selector */}
         <div className="flex items-center gap-2">
           <label className="text-gray-600">Device Id :</label>
           <select
             disabled={isLocked}
             value={deviceId}
             onChange={(e) => setDeviceId(e.target.value)}
-            className={`border rounded px-2 py-1 text-sm
-              ${isLocked ? "bg-gray-100 cursor-not-allowed" : ""}
-            `}
+            className={`border rounded px-2 py-1 text-sm ${
+              isLocked ? "bg-gray-100 cursor-not-allowed" : ""
+            }`}
           >
             <option value="">Select</option>
             {DEVICE_IDS.map((id) => (
@@ -56,22 +145,22 @@ const Aeration = () => {
           </select>
         </div>
 
-        {/* Cycle Count */}
+        {/* Cycle count */}
         <div className="flex items-center gap-2">
           <label className="text-gray-600">Aeration cycle :</label>
           <input
             type="number"
+            min={1}
             disabled={isLocked}
-            min={1} 
             value={cycleCount}
             onChange={(e) => setCycleCount(Number(e.target.value))}
-            className={`w-16 border rounded px-2 py-1 text-sm
-              ${isLocked ? "bg-gray-100 cursor-not-allowed" : ""}
-            `}
+            className={`w-16 border rounded px-2 py-1 text-sm ${
+              isLocked ? "bg-gray-100 cursor-not-allowed" : ""
+            }`}
           />
         </div>
 
-        {/* Generate Button */}
+        {/* Generate */}
         {!isLocked && (
           <button
             onClick={handleGenerate}
@@ -82,12 +171,12 @@ const Aeration = () => {
         )}
       </div>
 
-      {/* MAIN CONTENT */}
+      {/* ================= MAIN CONTENT ================= */}
       <div className="flex gap-6 items-start px-4">
-        {/* Left Device Card */}
+        {/* Left card */}
         <DeviceCard title="Aeration" icon={aeration} />
 
-        {/* Right Table */}
+        {/* Right table */}
         <div className="flex-1 border rounded-lg p-4">
           <table className="w-full text-sm">
             <thead>
@@ -97,7 +186,7 @@ const Aeration = () => {
                 <th className="pb-2">Start Time</th>
                 <th className="pb-2">End Time</th>
                 <th className="pb-2"></th>
-                <th className="pb-2"></th>
+                <th className="pb-2">Status</th>
               </tr>
             </thead>
 
@@ -111,34 +200,68 @@ const Aeration = () => {
               )}
 
               {Object.entries(deviceCycles).map(([devId, count]) =>
-                Array.from({ length: count }, (_, i) => (
-                  <tr key={`${devId}-C${i + 1}`} className="hover:bg-gray-50">
-                    <td className="py-2">{devId}</td>
-                    <td className="py-2">C{i + 1}</td>
+                Array.from({ length: count }, (_, i) => {
+                  const rowKey = `${devId}-C${i + 1}`;
+                  const rowState = rowStates[rowKey] || { status: "idle" };
+                  const isDisabled =
+                    rowState.status === "processing" ||
+                    rowState.status === "completed";
 
-                    <td className="py-2">
-                      <input
-                        type="time"
-                        className="border rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-400"
-                      />
-                    </td>
+                  return (
+                    <tr key={rowKey} className="hover:bg-gray-50 py-2">
+                      <td className="py-2">{devId}</td>
+                      <td className="py-2">C{i + 1}</td>
 
-                    <td className="py-2">
-                      <input
-                        type="time"
-                        className="border rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-400"
-                      />
-                    </td>
+                      <td className="py-2">
+                        <input
+                          type="time"
+                          value={rowState.startTime || ""}
+                          disabled={isDisabled}
+                          onChange={(e) =>
+                            handleTimeChange(
+                              rowKey,
+                              "startTime",
+                              e.target.value
+                            )
+                          }
+                          className="border rounded px-2 py-1"
+                        />
+                      </td>
 
-                    <td className="py-2" onClick={handleSubmit}>
-                      <ActionButton
-                        isSubmitting={submittingRows}
-                        // onSubmit={() => handleSubmit(cycleKey)}
-                        // onAbort={() => handleAbort(cycleKey)}
-                      />
-                    </td>
-                  </tr>
-                ))
+                      <td className="py-2">
+                        <input
+                          type="time"
+                          value={rowState.endTime || ""}
+                          disabled={isDisabled}
+                          onChange={(e) =>
+                            handleTimeChange(
+                              rowKey,
+                              "endTime",
+                              e.target.value
+                            )
+                          }
+                          className="border rounded px-2 py-1"
+                        />
+                      </td>
+
+                      <td className="py-2">
+                        <ActionButton
+                          status={rowState.status}
+                          onSubmit={() => handleSubmit(rowKey)}
+                          onAbort={() => handleAbort(rowKey)}
+                          onRestart={() => handleRestart(rowKey)}
+                        />
+                      </td>
+
+                      <td className="text-gray-500 py-2">
+                        {rowState.status === "idle" && "Ready"}
+                        {rowState.status === "processing" && "Processing"}
+                        {rowState.status === "aborted" && "Aborted"}
+                        {rowState.status === "completed" && "Completed"}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
