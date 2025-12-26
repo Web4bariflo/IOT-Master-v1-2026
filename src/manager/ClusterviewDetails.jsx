@@ -13,16 +13,15 @@ const ClusterviewDetails = () => {
   const { id } = useParams();
   const mapRef = useRef(null);
 
-
+  // console.log("ClusterviewDetails id:", id);
   const WEATHER_API_KEY = "f06c28466bd98b962ed2e94b9fd29598";
-  console.log(id)
 
   useEffect(() => {
     const fetchPondData = async () => {
       const BASEURL = process.env.REACT_APP_IP;
       try {
         const response = await axios.get(`${BASEURL}/send_location/${id}/`);
-        console.log(response);
+        // console.log(response);
 
         setPondData(response.data);
 
@@ -223,7 +222,7 @@ const ClusterviewDetails = () => {
           )}
         </div>
       </div>
-      <ShowDeviceDetails />
+      <ShowDeviceDetails clusterid={id}/>
     </div>
 
   );

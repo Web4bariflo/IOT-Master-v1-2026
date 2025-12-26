@@ -36,6 +36,7 @@ const ManagerSidebar = () => {
     try {
       setLoading(true);
       const response = await axios.get(`${URL}/admin_cluster_view/${mob}/`);
+      console.log("cluster response",response.data);
       setClusters(response.data);
       setLoading(false);
     } catch (error) {
@@ -118,7 +119,7 @@ return (
                 </div>
               </Link>
 
-              {selectedClusterId === cluster.id && (
+              {/* {selectedClusterId === cluster.id && (
                 <button
                   className="ml-6 mt-1 px-4 py-1.5 text-xs rounded-md
                   bg-sky-500 text-white hover:bg-sky-600 transition"
@@ -128,7 +129,7 @@ return (
                 >
                   Pond Economy
                 </button>
-              )}
+              )} */}
             </div>
           ))
         )}
