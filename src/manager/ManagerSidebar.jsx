@@ -36,7 +36,7 @@ const ManagerSidebar = () => {
     try {
       setLoading(true);
       const response = await axios.get(`${URL}/admin_cluster_view/${mob}/`);
-      console.log("cluster response",response.data);
+      // console.log("cluster response",response.data);
       setClusters(response.data);
       setLoading(false);
     } catch (error) {
