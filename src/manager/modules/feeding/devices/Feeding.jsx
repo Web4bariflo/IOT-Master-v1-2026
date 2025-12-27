@@ -1,18 +1,50 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import DeviceCard from "../../../components/DeviceCard";
 import feeding from "../../../../assets/Images/FeedersActive.png";
 import ActionButton from "../../../components/ActionButton";
+const BASEURL = process.env.REACT_APP_IP;
 
-const DEVICE_IDS = ["DEV-01", "DEV-02", "DEV-03"];
-const WORKERS = ["Worker A", "Worker B", "Worker C"];
-
-const Feeding = () => {
-  const [deviceId, setDeviceId] = useState("");
+const Feeding = ({ pondId }) => {
+  const [devices, setDevices] = useState([]); // array from API
+  const [selectedDeviceId, setSelectedDeviceId] = useState("");
+  const [workers, setWorkers] = useState([]);
   const [cycleCount, setCycleCount] = useState("");
   const [deviceCycles, setDeviceCycles] = useState({});
   const [rowStates, setRowStates] = useState({});
+  const [loading, setLoading] = useState(false);
+  const mobno = localStorage.getItem("mobno");
 
-  const isLocked = Object.keys(deviceCycles).length === DEVICE_IDS.length;
+  useEffect(() => {
+    const fetchDeviceIds = async () => {
+      try {
+        const response = await axios.get(
+          `${BASEURL}/deviceid_view/${pondId}/`,
+          { params: { device_type: "Feeding" } }
+        );
+
+        setDevices(response.data.devices || []);
+      } catch (error) {
+        console.error("Error fetching device Ids", error);
+      }
+    };
+
+    const fetchWorkers = async () => {
+      try {
+        const response = await axios.get(`${BASEURL}/workerview/${mobno}/`);
+        setWorkers(
+          response.data.Employee || ["Worker A", "Worker B", "Worker C"]
+        );
+      } catch (error) {
+        console.error("Error fetching device Ids", error);
+      }
+    };
+
+    fetchDeviceIds();
+    fetchWorkers();
+  }, [pondId]);
+
+  const isLocked = Object.keys(deviceCycles).length === devices.length;
 
   /* ================= Utility ================= */
   const getDurationMs = (start, end) => {
@@ -24,8 +56,11 @@ const Feeding = () => {
 
   /* ================= Generate ================= */
   const handleGenerate = () => {
-    if (!deviceId || !cycleCount) return;
-    setDeviceCycles((prev) => ({ ...prev, [deviceId]: cycleCount }));
+    if (!selectedDeviceId || cycleCount < 1) return;
+
+    setDeviceCycles({
+      [selectedDeviceId]: cycleCount,
+    });
   };
 
   /* ================= Row State Handler ================= */
@@ -110,13 +145,16 @@ const Feeding = () => {
           <label className="text-gray-600">Device Id :</label>
           <select
             disabled={isLocked}
-            value={deviceId}
-            onChange={(e) => setDeviceId(e.target.value)}
+            value={selectedDeviceId}
+            onChange={(e) => setSelectedDeviceId(e.target.value)}
             className="border rounded px-2 py-1"
           >
-            <option value="">Select</option>
-            {DEVICE_IDS.map((id) => (
-              <option key={id}>{id}</option>
+            <option value="">{loading ? "Loading..." : "Select"}</option>
+
+            {devices.map((device) => (
+              <option key={device.device_id} value={device.device_id}>
+                {device.device_id}
+              </option>
             ))}
           </select>
         </div>
@@ -234,8 +272,13 @@ const Feeding = () => {
                           className="border rounded px-2 py-1"
                         >
                           <option value="">Select</option>
-                          {WORKERS.map((w) => (
-                            <option key={w}>{w}</option>
+                          {workers.map((workers) => (
+                            <option
+                              key={workers}
+                              value={workers}
+                            >
+                              {workers.name}
+                            </option>
                           ))}
                         </select>
                       </td>

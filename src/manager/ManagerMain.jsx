@@ -29,7 +29,7 @@ const ManagerMain = () => {
       axios
         .post(`${BASEURL}/common_login/`, data)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           // Store the response data in localStorage if login is successful
           localStorage.setItem("auth", JSON.stringify(response.data));
           navigate(`/manager/`);
