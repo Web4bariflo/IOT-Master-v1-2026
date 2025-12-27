@@ -2,21 +2,21 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import FeedingModule from "../modules/feeding/FeedingModule";
 import EnergyModule from "../modules/energy/EnergyModule";
- 
+
 // const ponds = ["POND1", "POND2", "POND3", "POND4"];
- 
- 
+
+
 const ShowDeviceDetails = ({ clusterid }) => {
   const [activeModule, setActiveModule] = useState("feeding");
   const [activePond, setActivePond] = useState("POND1");
   const [pondList, setpondList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
- 
-//  console.log("ShowDeviceDetails clusterid:", clusterid);
+
+  //  console.log("ShowDeviceDetails clusterid:", clusterid);
   const fetchPonds = async () => {
     const BASEURL = process.env.REACT_APP_IP;
- 
+
     try {
       setLoading(true);
       const response = await axios.get(`${BASEURL}/clusterpond_analytic/${clusterid}/`);
@@ -29,25 +29,25 @@ const ShowDeviceDetails = ({ clusterid }) => {
       setLoading(false);
     }
   };
- 
+
   useEffect(() => {
     fetchPonds();
   }, [clusterid]);
- 
+
   return (
     <div className="flex w-full bg-white rounded-lg shadow-sm">
       {/* LEFT SIDE BAR */}
       <div className="w-56 border-r p-4">
         <button
           className={`w-full mb-3 p-3 rounded text-left ${activeModule === "feeding"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-100"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-100"
             }`}
           onClick={() => setActiveModule("feeding")}
         >
           Feeding Module
         </button>
- 
+
         <button
           className={`w-full p-3 rounded text-left ${activeModule === "energy" ? "bg-blue-600 text-white" : "bg-gray-100"
             }`}
@@ -56,14 +56,15 @@ const ShowDeviceDetails = ({ clusterid }) => {
           Energy Module
         </button>
       </div>
- 
+
       {/* RIGHT SIDE CONTENT */}
-      <div className="flex-1 p-4">
+      {pondList!=0 ? (
+        <div className="flex-1 p-4">
         {/* POND TABS */}
         <div className="flex border border-gray-200 mb-4 bg-gray-50">
           {pondList.map((pond) => {
             const isActive = activePond === pond.name;
- 
+
             return (
               <button
                 key={pond.id}
@@ -91,18 +92,23 @@ const ShowDeviceDetails = ({ clusterid }) => {
               </button>
             );
           })}
- 
+
         </div>
- 
+
         {/* MODULE RENDERING */}
         {activeModule === "feeding" && <FeedingModule pondId={activePond} />}
- 
+
         {activeModule === "energy" && <EnergyModule pondId={activePond} />}
       </div>
+      ) : (
+        <div className="flex justify-center items-center flex-1 text-gray-500 text-xl font-medium h-[80vh]" > NO Pond Data Available </div>
+      )};
+
+
+
     </div>
   );
 };
- 
+
 export default ShowDeviceDetails;
- 
- 
+
