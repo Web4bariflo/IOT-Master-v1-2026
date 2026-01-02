@@ -9,7 +9,7 @@ import PondPage from "./PondPage";
 import CustomerProfile from "./CustomerProfile";
 import PondDetails from "./PondDetails";
 import axios from "axios";
-import AquaPrivateRoute from "../../Private/AquaPrivateRoute";
+import AquaPrivateRoute from "../Private/AquaPrivateRoute";
 import CreateManager from "./CreateManager";
 
 const AquaMainPage = () => {

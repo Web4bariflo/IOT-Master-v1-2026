@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import ClusterviewDetails from "../manager/ClusterviewDetails";
+import ClusterviewDetails from "../manager/pages/ClusterviewDetails";
 import SetTime from "./SetTime";
 import ManagerPrivateRoute from "../Private/ManagerPrivateRoute";
-import Economy from "./Economy";
+import Economy from "../manager/pages/Economy";
 import Loader from '../Private/Loader'
 const ManagerMain = () => {
   const BASEURL = process.env.REACT_APP_IP;
   const urlParams = new URLSearchParams(window.location.search);
   const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
-  // const mobno = 9878364512;
+  // const mobno = 8700000010;
   const navigate = useNavigate();
 
   // Track loading state to prevent rendering before mobno is processed

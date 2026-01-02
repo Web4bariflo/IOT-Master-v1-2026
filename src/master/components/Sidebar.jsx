@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import AquaImage from "../assets/Images/prawn (1).png";
-import WaterImage from "../assets/Images/prawn2.png";
+import AquaImage from "../../assets/Images/prawn (1).png";
+import WaterImage from "../../assets/Images/prawn2.png";
 
 const Sidebar = ({ url }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

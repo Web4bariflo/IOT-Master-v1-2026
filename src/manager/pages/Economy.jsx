@@ -11,9 +11,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import RadialBarChart from "./chart/RadialBarChart";
-import ColumnChart from "./chart/ColumnChart";
-import LineChart from "./chart/LineChart";
+import RadialBarChart from "../components/chart/RadialBarChart";
+import ColumnChart from "../components/chart/ColumnChart";
+import LineChart from "../components/chart/LineChart";
 import { SlCalender } from "react-icons/sl";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

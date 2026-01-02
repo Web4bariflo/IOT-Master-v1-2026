@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Loader from "./Loader";
-import Nav from "../components/Nav";
-import Sidebar from "../components/Sidebar";
+import Nav from "../master/components/Nav";
+import Sidebar from "../master/components/Sidebar";
 
 const AquaPrivateRoute = ({url}) => {
   const auth = { token: localStorage.getItem("auth") };

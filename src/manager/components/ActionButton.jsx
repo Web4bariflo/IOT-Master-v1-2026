@@ -1,4 +1,4 @@
-const ActionButton = ({ status, onSubmit, onAbort, onRestart }) => {
+const ActionButton = ({ status, disabled, onSubmit, onAbort, onRestart }) => {
   if (status === "completed") {
     return (
       <button
@@ -14,7 +14,12 @@ const ActionButton = ({ status, onSubmit, onAbort, onRestart }) => {
     return (
       <button
         onClick={onRestart}
-        className="px-4 py-1 rounded-md bg-yellow-500 hover:bg-yellow-600 text-white"
+        disabled={disabled}
+        className={`px-4 py-1 rounded-md text-white ${
+          disabled
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-yellow-500 hover:bg-yellow-600"
+        }`}
       >
         Restart
       </button>
@@ -25,18 +30,28 @@ const ActionButton = ({ status, onSubmit, onAbort, onRestart }) => {
     return (
       <button
         onClick={onAbort}
-        className="px-4 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white"
+        disabled={disabled}
+        className={`px-4 py-1 rounded-md text-white ${
+          disabled
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-red-600 hover:bg-red-700"
+        }`}
       >
         Abort
       </button>
     );
   }
 
-  // default → idle
+  // idle / active
   return (
     <button
       onClick={onSubmit}
-      className="px-4 py-1 rounded-md bg-green-600 hover:bg-sky-600 text-white"
+      disabled={disabled}
+      className={`px-4 py-1 rounded-md text-white ${
+        disabled
+          ? "bg-gray-300 cursor-not-allowed"
+          : "bg-green-600 hover:bg-sky-600"
+      }`}
     >
       Submit
     </button>

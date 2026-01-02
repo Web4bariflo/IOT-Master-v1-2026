@@ -3,14 +3,14 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import Layout from "../../../Layout/Layout";
+import Layout from "../../Layout/Layout";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 // import './DrawData.css'
 import mqtt from "mqtt";
-import transformer from "../../../assets/Images/transformer.png";
-import cutouter from "../../../assets/Images/electric-panel.png";
+import transformer from "../../assets/Images/transformer.png";
+import cutouter from "../../assets/Images/electric-panel.png";
 import { useNavigate } from "react-router-dom";
 
 const URL = process.env.REACT_APP_IP

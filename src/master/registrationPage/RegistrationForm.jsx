@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useRegistrationContext } from "../../../context/RegistrationContext";
+import { useRegistrationContext } from "../context/RegistrationContext";
 
 const RegistrationForm = ({ onSuccess}) => {
   const { setName, setMob } = useRegistrationContext(); // Access context setters

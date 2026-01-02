@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams,Link } from "react-router-dom";
-import PondImage from "../../assets/Images/Pond.jpg"; 
+import PondImage from "../assets/Images/Pond.jpg"; 
 import axios from "axios";
-import NewPondCreate from "../../components/NewPondCreate";
+import NewPondCreate from "./components/NewPondCreate";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 

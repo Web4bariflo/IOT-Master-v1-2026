@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AquaMainPage from "./pages/Aquafarming/AquaMainPage";
+import AquaMainPage from "./master/AquaMainPage";
 import ManagerMain from "./manager/ManagerMain";
-import PageNotFound from "./pages/PageNotFound";
+import PageNotFound from "./Private/PageNotFound";
 
 function App() {
   return (

@@ -4,7 +4,7 @@ import axios from "axios";
 import * as turf from "@turf/turf";
 import { useParams } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
-import ShowDeviceDetails from "./pages/ShowDeviceDetails";
+import ShowDeviceDetails from "./ShowDeviceDetails";
 
 const ClusterviewDetails = () => {
   const [pondData, setPondData] = useState([]);

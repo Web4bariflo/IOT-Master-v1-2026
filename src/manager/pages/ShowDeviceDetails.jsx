@@ -75,7 +75,7 @@ const ShowDeviceDetails = ({ clusterid }) => {
         {/* POND TABS */}
         <div className="flex border border-gray-200 mb-4 bg-gray-50">
           {pondList.map((pond) => {
-            const isActive = activePond === pond.name;
+            const isActive = activePond?.id === pond.id;
 
             return (
               <button

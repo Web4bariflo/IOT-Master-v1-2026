@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import barifloLogo from "../assets/Images/Bariflo logo on-01.png";
+import barifloLogo from "../../assets/Images/Bariflo logo on-01.png";
 import { AiOutlineLogout } from "react-icons/ai";
 
 const Nav = () => {

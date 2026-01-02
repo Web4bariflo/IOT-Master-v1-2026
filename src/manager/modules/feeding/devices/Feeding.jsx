@@ -9,6 +9,7 @@ const Feeding = ({ pondId }) => {
   const [devices, setDevices] = useState([]); // array from API
   const [selectedDeviceId, setSelectedDeviceId] = useState("");
   const [workers, setWorkers] = useState([]);
+  const [feedAmount, setFeedAmount] = useState(0);
   const [cycleCount, setCycleCount] = useState("");
   const [deviceCycles, setDeviceCycles] = useState({});
   const [rowStates, setRowStates] = useState({});
@@ -55,12 +56,55 @@ const Feeding = ({ pondId }) => {
   };
 
   /* ================= Generate ================= */
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!selectedDeviceId || cycleCount < 1) return;
 
-    setDeviceCycles({
-      [selectedDeviceId]: cycleCount,
-    });
+    try {
+      // 1️⃣ FIRST call API
+      const response = await axios.post(`${BASEURL}/generate/`, {
+        deviceName: "Feeding",
+        deviceId: selectedDeviceId,
+        cycles: cycleCount,
+        feedin: feedAmount,
+      });
+
+      console.log("Cycle status response:", response.data);
+
+      const { task_ids } = response.data;
+
+      // 2️⃣ THEN generate cycles in UI
+      setDeviceCycles({
+        [selectedDeviceId]: cycleCount,
+      });
+
+      // 2️⃣ Initialize rowStates WITH task_ids
+      const newRows = {};
+
+      task_ids.forEach((taskId, index) => {
+        const rowKey = `${selectedDeviceId}-C${index + 1}`;
+
+        newRows[rowKey] = {
+          taskId,
+          cycleNo: index + 1, // ✅ important
+          startTime: "",
+          endTime: "",
+          feedWeight: "",
+          worker: "",
+          status: index === 0 ? "active" : "locked", // 👈 KEY
+          timerId: null,
+        };
+      });
+
+      setRowStates((prev) => ({
+        ...prev,
+        ...newRows,
+      }));
+    } catch (error) {
+      console.error(
+        "Cycle status error:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   /* ================= Row State Handler ================= */
@@ -76,22 +120,53 @@ const Feeding = ({ pondId }) => {
 
   /* ================= Submit ================= */
   const handleSubmit = (rowKey) => {
+    console.log("Submitting row:", rowKey);
     const row = rowStates[rowKey];
+
     if (!row?.startTime || !row?.endTime || !row?.feedWeight || !row?.worker)
+      // console.log("Incomplete data for row:", rowKey);
       return;
 
     const duration = getDurationMs(row.startTime, row.endTime);
     if (duration <= 0) return;
 
+    // 🔑 This is the task id from generate API
+    const taskId = row.taskId;
+
+    console.log("Submitting task:", taskId);
+
+    // 👉 Later this will be API call
+    axios.put(`${BASEURL}/tasksubmit/${taskId}/`, {
+      task_id: taskId,
+      from_time: row.startTime,
+      to_time: row.endTime,
+      feed_weight: row.feedWeight,
+      worker_name: row.worker,
+    });
+
     const timerId = setTimeout(() => {
-      setRowStates((prev) => ({
-        ...prev,
-        [rowKey]: {
-          ...prev[rowKey],
-          status: "completed",
-          timerId: null,
-        },
-      }));
+      setRowStates((prev) => {
+        const updated = {
+          ...prev,
+          [rowKey]: {
+            ...prev[rowKey],
+            status: "completed",
+            timerId: null,
+          },
+        };
+
+        // 🔓 Unlock next cycle
+        const nextCycleKey = `${selectedDeviceId}-C${row.cycleNo + 1}`;
+
+        if (updated[nextCycleKey]) {
+          updated[nextCycleKey] = {
+            ...updated[nextCycleKey],
+            status: "active",
+          };
+        }
+
+        return updated;
+      });
     }, duration);
 
     setRowStates((prev) => ({
@@ -102,24 +177,39 @@ const Feeding = ({ pondId }) => {
         timerId,
       },
     }));
+
+    console.log(rowKey, rowStates[rowKey]?.taskId);
   };
 
   /* ================= Abort ================= */
-  const handleAbort = (rowKey) => {
-    const timer = rowStates[rowKey]?.timerId;
-    if (timer) clearTimeout(timer);
+  const handleAbort = async (rowKey) => {
+    const row = rowStates[rowKey];
+    if (!row?.taskId) return;
 
-    setRowStates((prev) => ({
-      ...prev,
-      [rowKey]: {
-        status: "aborted",
-        startTime: "",
-        endTime: "",
-        feedWeight: "",
-        worker: "",
-        timerId: null,
-      },
-    }));
+    // 1️⃣ Clear timer
+    if (row.timerId) {
+      clearTimeout(row.timerId);
+    }
+
+    try {
+      // 2️⃣ Call abort API
+      await axios.post(`${BASEURL}/abort/${row.taskId}/`, {
+        status: "processing",
+      });
+
+      // 3️⃣ Update UI
+      setRowStates((prev) => ({
+        ...prev,
+        [rowKey]: {
+          ...prev[rowKey],
+          status: "aborted",
+          timerId: null,
+        },
+      }));
+    } catch (error) {
+      console.error("Abort failed", error);
+      alert("Failed to abort task");
+    }
   };
 
   /* ================= Restart ================= */
@@ -127,7 +217,8 @@ const Feeding = ({ pondId }) => {
     setRowStates((prev) => ({
       ...prev,
       [rowKey]: {
-        status: "idle",
+        ...prev[rowKey],
+        status: "active",
         startTime: "",
         endTime: "",
         feedWeight: "",
@@ -168,6 +259,17 @@ const Feeding = ({ pondId }) => {
             value={cycleCount}
             onChange={(e) => setCycleCount(Number(e.target.value))}
             className="w-16 border rounded px-2 py-1"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-gray-600">Feed Amount (Kg):</label>
+          <input
+            type="text"
+            disabled={isLocked}
+            value={feedAmount}
+            onChange={(e) => setFeedAmount(Number(e.target.value))}
+            className="w-16 border rounded px-2 py-1"
+            placeholder="Kg"
           />
         </div>
 
@@ -212,8 +314,7 @@ const Feeding = ({ pondId }) => {
                 Array.from({ length: count }, (_, i) => {
                   const rowKey = `${devId}-C${i + 1}`;
                   const row = rowStates[rowKey] || { status: "idle" };
-                  const disabled =
-                    row.status === "processing" || row.status === "completed";
+                  const disabled = row.status !== "active";
 
                   return (
                     <tr key={rowKey} className="hover:bg-gray-50">
@@ -246,7 +347,6 @@ const Feeding = ({ pondId }) => {
 
                       <td className="pb-2">
                         <input
-                          type="number"
                           min={1}
                           max={100}
                           disabled={disabled}
@@ -272,12 +372,9 @@ const Feeding = ({ pondId }) => {
                           className="border rounded px-2 py-1"
                         >
                           <option value="">Select</option>
-                          {workers.map((workers) => (
-                            <option
-                              key={workers}
-                              value={workers}
-                            >
-                              {workers.name}
+                          {workers.map((worker) => (
+                            <option key={worker.id} value={worker.name}>
+                              {worker.name}
                             </option>
                           ))}
                         </select>
@@ -286,6 +383,7 @@ const Feeding = ({ pondId }) => {
                       <td className="pb-2">
                         <ActionButton
                           status={row.status}
+                          disabled={disabled}
                           onSubmit={() => handleSubmit(rowKey)}
                           onAbort={() => handleAbort(rowKey)}
                           onRestart={() => handleRestart(rowKey)}
@@ -293,10 +391,11 @@ const Feeding = ({ pondId }) => {
                       </td>
 
                       <td className="text-gray-500 pb-2">
-                        {row.status === "idle" && "Ready"}
+                        {row.status === "locked" && "Locked"}
+                        {row.status === "active" && "Ready"}
                         {row.status === "processing" && "Processing"}
-                        {row.status === "aborted" && "Aborted"}
                         {row.status === "completed" && "Completed"}
+                        {row.status === "aborted" && "Aborted"}
                       </td>
                     </tr>
                   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRegistrationContext } from "../../../context/RegistrationContext"; // Import context
+import { useRegistrationContext } from "../context/RegistrationContext"; // Import context
 import axios from "axios"; // Import axios for API calls
 import AddDevice from "./AddDevice";
 

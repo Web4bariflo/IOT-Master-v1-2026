@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-import Mapimg from "../../assets/Images/Cluster.jpg";
+import Mapimg from "../assets/Images/Cluster.jpg";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import DrawPicture from "./registrationPage/DrawPicture";
-import ClusterCreate from "../../components/ClusterCreate";
+import ClusterCreate from "./components/ClusterCreate";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 
