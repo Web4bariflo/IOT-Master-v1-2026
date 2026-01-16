@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import ClusterviewDetails from "../manager/pages/ClusterviewDetails";
-import SetTime from "./SetTime";
+import  Dashboard  from "./pages/Dashboard";
 import ManagerPrivateRoute from "../Private/ManagerPrivateRoute";
-import Economy from "../manager/pages/Economy";
 import Loader from '../Private/Loader'
 const ManagerMain = () => {
   const BASEURL = process.env.REACT_APP_IP;
@@ -55,9 +53,7 @@ const ManagerMain = () => {
   return (
     <Routes>
       <Route element={<ManagerPrivateRoute />}>
-        <Route path="/" element={<SetTime />} />
-        <Route path="/economy/:id" element={<Economy />} />
-        <Route path="/clusterview/:id" element={<ClusterviewDetails />} />
+        <Route path="/" element={<Dashboard />} />
       </Route>
     </Routes>
   );

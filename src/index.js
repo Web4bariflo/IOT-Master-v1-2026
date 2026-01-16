@@ -1,24 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { RegistrationProvider } from './master/context/RegistrationContext';
-
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { RegistrationProvider } from "./master/context/RegistrationContext";
+import { MqttProvider } from "./context/MqttContext";
+import "leaflet/dist/leaflet.css";
 
 
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
 />
-
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+;
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <RegistrationProvider>
-      <App />
+      <MqttProvider>
+        <App />
+      </MqttProvider>
     </RegistrationProvider>
   </React.StrictMode>
 );

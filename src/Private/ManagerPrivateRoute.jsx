@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import ManagerNav from "../manager/ManagerNav"
-import ManagerSidebar from "../manager/ManagerSidebar"
+import ManagerNav from "../manager/components/layout/ManagerNav"
+import ManagerSidebar from "../manager/components/layout/ManagerSidebar"
 
 const ManagerPrivateRoute = () => {
   // const auth = { token: localStorage.getItem("auth") };
