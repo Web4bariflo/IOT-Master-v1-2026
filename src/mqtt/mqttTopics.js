@@ -8,5 +8,10 @@ export const MQTT_TOPICS = {
 
   ALERT: (id) => `auto_feeder/${id}/system/alert`,
   ALIVE: (id) => `auto_feeder/${id}/system/alive`,
+  BATTERY: (id) => `auto_feeder/${id}/system/battery`,
+
   AC_POWER: (id) => `bms/${id}/ac`,
+  BATTERYSTATE: (id) => `bms/${id}/battery_state`,
+  ONLINE: (id) => `bms/${id}/online`,
+  EVENT: (id) => `bms/${id}/event`,
 };

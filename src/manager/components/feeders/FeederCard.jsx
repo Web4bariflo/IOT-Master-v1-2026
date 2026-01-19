@@ -1,7 +1,31 @@
 import Feeder from "../../../assets/Images/FeedersActive.png";
 import { useState } from "react";
+import { useMqtt } from "../../../context/MqttContext";
+import { scheduleFeeding, abortFeeding } from "../../../mqtt/mqttActions";
+
 const FeederCard = ({ feeder }) => {
+  const { client } = useMqtt();
   const [active, setActive] = useState(false);
+
+  const [startTime, setStartTime] = useState("13:00");
+  const [endTime, setEndTime] = useState("13:30");
+  const [feedKg, setFeedKg] = useState(400);
+
+  // ▶ SCHEDULE
+  const handleSchedule = () => {
+    const payload = {
+      startTime,
+      endTime,
+      feedKg,
+    };
+
+    scheduleFeeding(client, feeder.id, payload);
+  };
+
+  // ⛔ ABORT
+  const handleAbort = () => {
+    abortFeeding(client, feeder.id);
+  };
 
   return (
     <div className="bg-[#F7F7F9] border border-gray-200 rounded-lg overflow-hidden">
@@ -95,30 +119,24 @@ const FeederCard = ({ feeder }) => {
 
         {/* Buttons */}
         <div className="flex gap-2">
-        <button
-          disabled={!active}
-          className={`px-3 py-1 text-xs font-medium rounded text-white transition
-            ${
-              active
-                ? "bg-[#2F80ED] hover:bg-blue-600"
-                : "bg-blue-300 cursor-not-allowed"
-            }`}
-        >
-          Start Schedule
-        </button>
+          <button
+            disabled={!active}
+            onClick={handleSchedule}
+            className={`px-3 py-1 text-xs font-medium rounded text-white
+    ${active ? "bg-blue-600" : "bg-blue-300 cursor-not-allowed"}`}
+          >
+            Start Schedule
+          </button>
 
-        <button
-          disabled={!active}
-          className={`px-3 py-1 text-xs font-medium rounded text-white transition
-            ${
-              active
-                ? "bg-[#EB5757] hover:bg-red-600"
-                : "bg-red-300 cursor-not-allowed"
-            }`}
-        >
-          Abort
-        </button>
-      </div>
+          <button
+            disabled={!active}
+            onClick={handleAbort}
+            className={`px-3 py-1 text-xs font-medium rounded text-white
+    ${active ? "bg-red-600" : "bg-red-300 cursor-not-allowed"}`}
+          >
+            Abort
+          </button>
+        </div>
       </div>
     </div>
   );

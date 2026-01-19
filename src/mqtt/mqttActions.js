@@ -1,47 +1,36 @@
-import { MQTT_TOPICS } from "../mqtt/mqttTopics";
+// mqttActions.js
+import { MQTT_TOPICS } from "./mqttTopics";
 
 export const scheduleFeeding = (
   client,
-  deviceId,
-  time,
-  duration,
-  feedRpm,
-  sprinkleRpm
+  feederId,
+  payload
 ) => {
-  if (!client) {
-    console.error("❌ MQTT client not available");
+  if (!client || !client.connected) {
+    console.error("❌ MQTT not connected");
     return;
   }
 
-  const topic = MQTT_TOPICS.SCHEDULE(deviceId);
-  const payload = `${time},${duration},${feedRpm},${sprinkleRpm}`;
+  console.log("📤 MQTT SCHEDULE", feederId, payload);
 
-  console.log("📤 Scheduling feed", { topic, payload });
-
-  client.publish(topic, payload, { qos: 1 }, (err) => {
-    if (err) {
-      console.error("❌ Schedule publish failed", err);
-    } else {
-      console.log("✅ Schedule command delivered to broker");
-    }
-  });
+  client.publish(
+    MQTT_TOPICS.SCHEDULE(feederId),
+    JSON.stringify(payload),
+    { qos: 1 }
+  );
 };
 
-export const abortFeeding = (client, deviceId) => {
-  if (!client) {
-    console.error("❌ MQTT client not available");
+export const abortFeeding = (client, feederId) => {
+  if (!client || !client.connected) {
+    console.error("❌ MQTT not connected");
     return;
   }
 
-  const topic = MQTT_TOPICS.ABORT(deviceId);
+  console.log("⛔ MQTT ABORT", feederId);
 
-  console.log("🛑 Aborting feed", { topic });
-
-  client.publish(topic, "abort", { qos: 1 }, (err) => {
-    if (err) {
-      console.error("❌ Abort publish failed", err);
-    } else {
-      console.log("✅ Abort command delivered to broker");
-    }
-  });
+  client.publish(
+    MQTT_TOPICS.ABORT(feederId),
+    "abort",
+    { qos: 1 }
+  );
 };
