@@ -1,9 +1,4 @@
-
-import { useState } from "react";
-
-const GlobalFeederControl = () => {
-    const [isActive, setIsActive] = useState(false);
-
+const GlobalFeederControl = ({ applyAll, setApplyAll }) => {
   return (
     <div className="w-full bg-white rounded border border-gray-200 px-6 py-5 space-y-2">
       
@@ -18,25 +13,28 @@ const GlobalFeederControl = () => {
           </span>
 
           {/* Toggle */}
-          <div className="relative flex items-center" onClick={() => setIsActive(!isActive)}>
-                 <div
+          <div
+            className="relative flex items-center cursor-pointer"
+            onClick={() => setApplyAll(!applyAll)}
+          >
+            <div
               className={`w-12 h-6 rounded-full flex items-center px-1 transition-colors ${
-                isActive ? "bg-green-500" : "bg-gray-200"
+                applyAll ? "bg-green-500" : "bg-gray-200"
               }`}
             >
               <div
                 className={`w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform ${
-                  isActive ? "translate-x-6" : "translate-x-0"
+                  applyAll ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </div>
 
             <span
               className={`ml-2 text-xs font-medium ${
-                isActive ? "text-green-600" : "text-gray-400"
+                applyAll ? "text-green-600" : "text-gray-400"
               }`}
             >
-              {isActive ? "ON" : "OFF"}
+              {applyAll ? "ON" : "OFF"}
             </span>
           </div>
         </div>
@@ -47,9 +45,9 @@ const GlobalFeederControl = () => {
             <span className="text-gray-500">Start</span>
             <input
               type="time"
-              disabled={!isActive}
-             className={`w-20 text-center border rounded-md py-1 text-sm ${
-                isActive
+              disabled={!applyAll}
+              className={`w-20 text-center border rounded-md py-1 text-sm ${
+                applyAll
                   ? "bg-white text-gray-700"
                   : "bg-gray-50 text-gray-400"
               }`}
@@ -60,9 +58,9 @@ const GlobalFeederControl = () => {
             <span className="text-gray-500">End</span>
             <input
               type="time"
-              disabled={!isActive}
-                className={`w-20 text-center border rounded-md py-1 text-sm ${
-                isActive
+              disabled={!applyAll}
+              className={`w-20 text-center border rounded-md py-1 text-sm ${
+                applyAll
                   ? "bg-white text-gray-700"
                   : "bg-gray-50 text-gray-400"
               }`}
@@ -81,8 +79,12 @@ const GlobalFeederControl = () => {
           <input
             type="text"
             value="06:00"
-            disabled={!isActive}
-            className="w-20 text-center border rounded-md py-1 bg-white text-gray-700"
+            disabled={!applyAll}
+            className={`w-20 text-center border rounded-md py-1 ${
+              applyAll
+                ? "bg-white text-gray-700"
+                : "bg-gray-50 text-gray-400"
+            }`}
           />
         </div>
 

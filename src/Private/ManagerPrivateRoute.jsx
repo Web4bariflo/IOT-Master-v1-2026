@@ -1,23 +1,33 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import ManagerNav from "../manager/components/layout/ManagerNav"
-import ManagerSidebar from "../manager/components/layout/ManagerSidebar"
+import React, { useState } from "react";
+import { Outlet, useMatch } from "react-router-dom";
+import ManagerNav from "../manager/components/layout/ManagerNav";
+import ManagerSidebar from "../manager/components/layout/ManagerSidebar";
 
 const ManagerPrivateRoute = () => {
   // const auth = { token: localStorage.getItem("auth") };
   // const tokenObject = JSON.parse(auth.token);
   // console.log(tokenObject?.category);
+  const [devices, setDevices] = useState([]);
+  const [activePond, setActivePond] = useState(null);
+
+  const isPondModule = useMatch("/manager/pond-module/:pondId");
 
   const category = "owner";
   return category === "owner" ? (
-  // return ["manager", "owner"].includes(tokenObject?.category) ? (
+    // return ["manager", "owner"].includes(tokenObject?.category) ? (
 
     <div className="flex flex-col h-screen">
-      <ManagerNav/>
+      <ManagerNav />
       <div className="flex flex-1">
-        <ManagerSidebar />
+        {!isPondModule && (
+          <ManagerSidebar
+            setDevices={setDevices}
+            setActivePond={setActivePond}
+            activePond={activePond}
+          />
+        )}
         <div className="flex-1 overflow-y-auto">
-          <Outlet />
+           <Outlet context={{ devices, activePond }} />
         </div>
       </div>
     </div>

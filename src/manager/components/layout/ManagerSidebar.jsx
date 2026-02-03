@@ -1,174 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
- 
-const ponds = [
-  { id: 1, name: "Pond P1" },
-  { id: 2, name: "Pond P2" },
-  { id: 3, name: "Pond P3" },
-  { id: 4, name: "Pond P4" },
-];
-
-// const ManagerSidebar = () => {
-//   const [dropdownOpen, setDropdownOpen] = useState(false);
-//   const [clusters, setClusters] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-//   const [sidebarOpen, setSidebarOpen] = useState(false);
-//   const [selectedClusterId, setSelectedClusterId] = useState(null);
-
-//   const URL = process.env.REACT_APP_IP;
-//   const auth = { token: localStorage.getItem("auth") };
-//   const tokenObject = JSON.parse(auth.token);
-//   // console.log(tokenObject.Mob)
-//   const mob = tokenObject.Mob;
-//   const name = tokenObject.name;
-
-//   const navigate = useNavigate();
-
-//   const toggleDropdown = () => {
-//     setDropdownOpen(!dropdownOpen);
-//   };
-
-//   const toggleSidebar = () => {
-//     setSidebarOpen(!sidebarOpen);
-//   };
-
-//   const handleClusterClick = (clusterId) => {
-//     setSelectedClusterId(clusterId);
-//   };
-
-//   const fetchClusters = async () => {
-//     try {
-//       setLoading(true);
-//       const response = await axios.get(`${URL}/admin_cluster_view/${mob}/`);
-//       // console.log("cluster response",response.data);
-//       setClusters(response.data);
-//       setLoading(false);
-//     } catch (error) {
-//       console.error(error);
-//       setError("Failed to fetch cluster data. Please try again later.");
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchClusters();
-//   }, []);
-
-// return (
-//   <div className="relative z-[1000]">
-//     {/* Hamburger Menu (Mobile) */}
-//     <button
-//       className="md:hidden p-4 fixed top-4 left-4 z-[1100] bg-white rounded-lg shadow-md"
-//       onClick={toggleSidebar}
-//     >
-//       <i className={`bi ${sidebarOpen ? "bi-x" : "bi-list"} text-2xl text-gray-700`} />
-//     </button>
-
-//     {/* Sidebar */}
-//     <aside
-//       className={`fixed top-0 left-0 h-full z-[1050]
-//       w-[260px] md:w-[280px]
-//       bg-white
-//       shadow-lg
-//       transition-transform duration-300 ease-in-out
-//       ${
-//         sidebarOpen ? "translate-x-0" : "-translate-x-full"
-//       }
-//       md:relative md:translate-x-0`}
-//     >
-//       {/* Header / User Info */}
-//       <div className="px-6 py-6">
-//         <button
-//           className="w-full flex items-center justify-between"
-//           onClick={toggleDropdown}
-//         >
-//           <div className="flex items-center gap-3">
-//             <div className="w-9 h-9 flex items-center justify-center rounded-full bg-sky-100">
-//               <i className="bi bi-diagram-3-fill text-sky-600 text-lg"></i>
-//             </div>
-//             <span className="font-semibold text-gray-800 text-sm truncate">
-//               {name}
-//             </span>
-//           </div>
-//           <i
-//             className={`bi ${
-//               dropdownOpen ? "bi-chevron-up" : "bi-chevron-down"
-//             } text-gray-500`}
-//           />
-//         </button>
-//       </div>
-
-//       {/* Cluster List */}
-//       <div className="px-4 space-y-1">
-//         {loading ? (
-//           <p className="text-gray-400 text-sm px-2">Loading clusters...</p>
-//         ) : error ? (
-//           <p className="text-red-500 text-sm px-2">Error loading clusters</p>
-//         ) : (
-//           dropdownOpen &&
-//           clusters.map((cluster) => (
-//             <div key={cluster.id}>
-//               <Link to={`/manager/clusterview/${cluster.id}`}>
-//                 <div
-//                   className={`px-4 py-2 rounded-lg text-sm cursor-pointer
-//                   transition-all duration-200
-//                   ${
-//                     selectedClusterId === cluster.id
-//                       ? "bg-sky-100 text-sky-700 font-medium"
-//                       : "hover:bg-gray-100 text-gray-700"
-//                   }`}
-//                   onClick={() => handleClusterClick(cluster.id)}
-//                 >
-//                   {cluster.Name}
-//                 </div>
-//               </Link>
-
-//               {/* {selectedClusterId === cluster.id && (
-//                 <button
-//                   className="ml-6 mt-1 px-4 py-1.5 text-xs rounded-md
-//                   bg-sky-500 text-white hover:bg-sky-600 transition"
-//                   onClick={() =>
-//                     navigate(`/manager/economy/${cluster.id}`)
-//                   }
-//                 >
-//                   Pond Economy
-//                 </button>
-//               )} */}
-//             </div>
-//           ))
-//         )}
-//       </div>
-//     </aside>
-
-//     {/* Mobile Overlay */}
-//     {sidebarOpen && (
-//       <div
-//         className="fixed inset-0 bg-black/40 z-[1040] md:hidden"
-//         onClick={toggleSidebar}
-//       />
-//     )}
-//   </div>
-// );
-
-// };
-
-const ManagerSidebar = () => {
-  const [activePond, setActivePond] = useState(1);
+const ManagerSidebar = ({ setDevices, setActivePond, activePond, pondId }) => {
+  const [ponds, setPonds] = useState([]);
   const [search, setSearch] = useState("");
-  const [showFilterPonds, setShowFilterPonds] = useState(false); // toggle for filter ponds
- 
+  const [showFilterPonds, setShowFilterPonds] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const BASEURL = process.env.REACT_APP_IP;
+
+  /* ===== FETCH PONDS ===== */
+  useEffect(() => {
+    const fetchPonds = async () => {
+      try {
+        const response = await axios.get(`${BASEURL}/userponds/15/`);
+        // API returns { ponds: [...] }
+        const unsortedPonds = response.data.ponds || [];
+        const sortedPonds = unsortedPonds.sort((a, b) =>
+          a.name.localeCompare(b.name, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          }),
+        );
+        setPonds(sortedPonds);
+      } catch (error) {
+        console.error("Failed to fetch ponds", error);
+      }
+    };
+    fetchPonds();
+  }, [BASEURL]);
+
+  //  const {
+  //   setDevices
+  // } = useFeedingData(pondId);
+
+  /* ===== API CALL ===== */
+  const fetchDevices = async (pondId) => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`${BASEURL}/deviceid_view/${pondId}/`, {
+        params: { device_type: "Feeding" },
+      });
+      setDevices(data.devices || []);
+      console.log("Fetched Devices:", data.devices);
+    } catch (error) {
+      console.error("Failed to fetch devices", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ===== FILTER ===== */
   const filteredPonds = ponds.filter((pond) =>
-    pond.name.toLowerCase().includes(search.toLowerCase())
+    pond.name.toLowerCase().includes(search.toLowerCase()),
   );
 
+  /* ===== HANDLER ===== */
+  const handlePondClick = (pondId) => {
+    setActivePond(pondId);
+
+    if (pondId) {
+      fetchDevices(pondId);
+    } else {
+      setDevices([]); // Clear IDs but keep UI
+    }
+  };
 
   return (
     <aside className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
-      
       {/* ===== SEARCH ===== */}
       <div className="p-4 border-b">
         <div className="relative">
@@ -188,7 +90,7 @@ const ManagerSidebar = () => {
         {filteredPonds.map((pond) => (
           <button
             key={pond.id}
-            onClick={() => setActivePond(pond.id)}
+            onClick={() => handlePondClick(pond.id)}
             className={`w-full flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md text-sm font-medium transition
               ${
                 activePond === pond.id
@@ -214,24 +116,25 @@ const ManagerSidebar = () => {
           />
         </button>
 
-        {/* ===== FILTERED PONDS (Nested) ===== */}
-        {showFilterPonds &&
-          ponds.map((pond) => (
-            <button
-              key={`filter-${pond.id}`}
-              onClick={() => setActivePond(pond.id)}
-              className={`w-full flex items-center gap-3 ml-5 px-3 py-2 text-sm rounded-md transition
-                ${
-                  activePond === pond.id
-                    ? "bg-blue-50 text-blue-700 border-l-4 border-blue-600"
-                    : "text-gray-600 hover:bg-gray-50"
-                }
-              `}
-            >
-              <i className="bi bi-droplet-half text-sm" />
-              {pond.name}
-            </button>
-          ))}
+        <button
+          className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          onClick={() => {
+            console.log("Generate clicked", activePond);
+
+            if (!activePond) {
+              alert("Please select a pond first");
+              return;
+            }
+
+            const pond = ponds.find((p) => p.id === activePond);
+
+            navigate(`/manager/pond-module/${activePond}`, {
+              state: { pondName: pond?.name },
+            });
+          }}
+        >
+          Generate
+        </button>
       </nav>
     </aside>
   );

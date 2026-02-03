@@ -1,31 +1,11 @@
-import Feeder from "../../../assets/Images/FeedersActive.png";
 import { useState } from "react";
-import { useMqtt } from "../../../context/MqttContext";
-import { scheduleFeeding, abortFeeding } from "../../../mqtt/mqttActions";
+import Feeder from "../../../assets/Images/FeedersActive.png";
 
-const FeederCard = ({ feeder }) => {
-  const { client } = useMqtt();
-  const [active, setActive] = useState(false);
+const FeederCard = ({ feeder, applyAll }) => {
+  const active = applyAll;
 
-  const [startTime, setStartTime] = useState("13:00");
-  const [endTime, setEndTime] = useState("13:30");
-  const [feedKg, setFeedKg] = useState(400);
-
-  // ▶ SCHEDULE
-  const handleSchedule = () => {
-    const payload = {
-      startTime,
-      endTime,
-      feedKg,
-    };
-
-    scheduleFeeding(client, feeder.id, payload);
-  };
-
-  // ⛔ ABORT
-  const handleAbort = () => {
-    abortFeeding(client, feeder.id);
-  };
+  // Cycle state
+  const [cycle, setCycle] = useState(1);
 
   return (
     <div className="bg-[#F7F7F9] border border-gray-200 rounded-lg overflow-hidden">
@@ -37,7 +17,7 @@ const FeederCard = ({ feeder }) => {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-gray-800">
-                {feeder.id}
+                {feeder.device_id}
               </span>
               <span className="text-xs px-2 py-0.5 rounded bg-gray-200 text-gray-600">
                 Pause
@@ -50,11 +30,7 @@ const FeederCard = ({ feeder }) => {
         </div>
 
         {/* Toggle */}
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => setActive(!active)}
-        >
-          {/* Label */}
+        <div className="flex items-center gap-2 cursor-pointer">
           <span
             className={`text-xs font-medium ${
               active ? "text-green-600" : "text-gray-500"
@@ -62,8 +38,6 @@ const FeederCard = ({ feeder }) => {
           >
             {active ? "ON" : "OFF"}
           </span>
-
-          {/* Toggle */}
           <div
             className={`w-10 h-5 rounded-full relative transition-colors ${
               active ? "bg-green-500" : "bg-gray-300"
@@ -78,11 +52,9 @@ const FeederCard = ({ feeder }) => {
         </div>
       </div>
 
-      {/* DIVIDER */}
-      <div className="border-t border-gray-200" />
-
       {/* TIME SECTION */}
-      <div className="flex justify-between px-4 py-3 text-sm">
+      <div className="flex justify-between px-4 py-3 text-sm items-center gap-4">
+        {/* Next Feed */}
         <div className="flex items-center gap-2">
           <span className="font-medium text-gray-700">Next Feed :</span>
           <input
@@ -92,6 +64,7 @@ const FeederCard = ({ feeder }) => {
           />
         </div>
 
+        {/* End Time */}
         <div className="flex items-center gap-2">
           <span className="font-medium text-gray-700">End Time :</span>
           <input
@@ -100,20 +73,33 @@ const FeederCard = ({ feeder }) => {
             className="w-20 text-center border rounded bg-white text-gray-700 text-sm py-1"
           />
         </div>
-      </div>
 
-      {/* DIVIDER */}
-      <div className="border-t border-gray-200" />
-
-      {/* FOOTER */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#EFEFF2]">
         {/* Feed Dropdown */}
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2">
           <span className="font-medium text-gray-700">Feed :</span>
-          <select className="border rounded px-2 py-1 bg-white text-gray-700">
+          <select className="border rounded px-2 py-1 bg-white text-gray-700 text-sm">
             <option>400 Kg</option>
             <option>600 Kg</option>
             <option>800 Kg</option>
+          </select>
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <div className="flex items-center justify-between px-4 py-3 bg-[#EFEFF2]">
+        {/* Cycle Dropdown */}
+        <div className="flex items-center gap-2 text-sm">
+          <span className="font-medium text-gray-700">Cycle :</span>
+          <select
+            value={cycle}
+            onChange={(e) => setCycle(Number(e.target.value))}
+            className="border rounded px-2 py-1 bg-white text-gray-700 text-sm"
+          >
+            {[...Array(10)].map((_, i) => (
+              <option key={i + 1} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -121,18 +107,22 @@ const FeederCard = ({ feeder }) => {
         <div className="flex gap-2">
           <button
             disabled={!active}
-            onClick={handleSchedule}
-            className={`px-3 py-1 text-xs font-medium rounded text-white
-    ${active ? "bg-blue-600" : "bg-blue-300 cursor-not-allowed"}`}
+            className={`px-3 py-1 text-xs font-medium rounded text-white transition ${
+              active
+                ? "bg-[#2F80ED] hover:bg-blue-600"
+                : "bg-blue-300 cursor-not-allowed"
+            }`}
           >
             Start Schedule
           </button>
 
           <button
             disabled={!active}
-            onClick={handleAbort}
-            className={`px-3 py-1 text-xs font-medium rounded text-white
-    ${active ? "bg-red-600" : "bg-red-300 cursor-not-allowed"}`}
+            className={`px-3 py-1 text-xs font-medium rounded text-white transition ${
+              active
+                ? "bg-[#EB5757] hover:bg-red-600"
+                : "bg-red-300 cursor-not-allowed"
+            }`}
           >
             Abort
           </button>

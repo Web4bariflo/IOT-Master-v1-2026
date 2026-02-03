@@ -1,6 +1,6 @@
 import Feeder from "../../../assets/Images/checktrayActive.png";
 
-const FarmStatusBanner = () => {
+const FarmStatusBanner = ({ applyAll }) => {
   return (
     <div className="flex items-center justify-between  bg-[#FFF7E6] rounded-xl px-6 py-4">
       {/* Left Section */}
@@ -26,23 +26,23 @@ const FarmStatusBanner = () => {
 
       {/* Right Section: Actions */}
       <div className="flex gap-3">
-        <button
-          className="px-4 py-2 text-sm font-semibold 
-                     text-white bg-blue-500 
-                     rounded-lg hover:bg-blue-600 
-                     transition"
-        >
-          Start Schedule
-        </button>
+       <button
+        disabled={applyAll}
+        className={`px-4 py-2 text-sm font-semibold 
+             text-white ${applyAll ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} 
+             rounded-lg transition`}
+      >
+        Start Schedule
+      </button>
 
-        <button
-          className="px-4 py-2 text-sm font-semibold 
-                     text-white bg-red-500 
-                     rounded-lg hover:bg-red-600 
-                     transition"
-        >
-          Abort
-        </button>
+       <button
+        disabled={applyAll}
+        className={`px-4 py-2 text-sm font-semibold 
+             text-white ${applyAll ? "bg-red-300 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"} 
+             rounded-lg transition`}
+      >
+        Abort
+      </button>
       </div>
     </div>
   );

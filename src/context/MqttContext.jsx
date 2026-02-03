@@ -25,16 +25,16 @@ export const MqttProvider = ({ children }) => {
     });
 
     mqttClient.on("connect", () => {
-      console.log("✅ MQTT connected");
+      // console.log("✅ MQTT connected");
       setIsConnected(true);
     });
 
     mqttClient.on("reconnect", () => {
-      console.warn("🔁 MQTT reconnecting...");
+      // console.warn("🔁 MQTT reconnecting...");
     });
 
     mqttClient.on("close", () => {
-      console.warn("⚠️ MQTT disconnected");
+      // console.warn("⚠️ MQTT disconnected");
       setIsConnected(false);
     });
 

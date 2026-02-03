@@ -1,14 +1,10 @@
 import { useState } from "react";
 
-const GlobalFarmControl = () => {
-    const [isActive, setIsActive] = useState(false);
-
-  return (
+const GlobalFarmControl = ({ applyAll, setApplyAll }) => {
+return (
     <div className="w-full bg-white rounded border border-gray-200 px-6 py-5 space-y-2">
-      
       {/* Top Row */}
       <div className="flex items-center justify-between">
-        
         {/* Left: Apply Toggle */}
         <div className="flex items-center gap-4">
           <span className="text-sm font-semibold text-gray-800">
@@ -17,28 +13,33 @@ const GlobalFarmControl = () => {
           </span>
 
           {/* Toggle */}
-          <div className="relative flex items-center" onClick={() => setIsActive(!isActive)}>
-                 <div
+          <div
+            className="relative flex items-center cursor-pointer"
+            onClick={() => setApplyAll(!applyAll)} // use applyAll from props
+          >
+            <div
               className={`w-12 h-6 rounded-full flex items-center px-1 transition-colors ${
-                isActive ? "bg-green-500" : "bg-gray-200"
+                applyAll ? "bg-green-500" : "bg-gray-200"
               }`}
             >
               <div
                 className={`w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform ${
-                  isActive ? "translate-x-6" : "translate-x-0"
+                  applyAll ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </div>
 
             <span
               className={`ml-2 text-xs font-medium ${
-                isActive ? "text-green-600" : "text-gray-400"
+                applyAll ? "text-green-600" : "text-gray-400"
               }`}
             >
-              {isActive ? "ON" : "OFF"}
+              {applyAll ? "ON" : "OFF"}
             </span>
           </div>
         </div>
+
+
 
         {/* Right: Start & End Time */}
         <div className="flex items-center gap-6 text-sm">
@@ -46,9 +47,9 @@ const GlobalFarmControl = () => {
             <span className="text-gray-500">Start</span>
             <input
               type="time"
-              disabled={!isActive}
+              disabled={!applyAll}
              className={`w-20 text-center border rounded-md py-1 text-sm ${
-                isActive
+                applyAll
                   ? "bg-white text-gray-700"
                   : "bg-gray-50 text-gray-400"
               }`}
@@ -59,9 +60,9 @@ const GlobalFarmControl = () => {
             <span className="text-gray-500">End</span>
             <input
               type="time"
-              disabled={!isActive}
+              disabled={!applyAll}
                 className={`w-20 text-center border rounded-md py-1 text-sm ${
-                isActive
+                applyAll
                   ? "bg-white text-gray-700"
                   : "bg-gray-50 text-gray-400"
               }`}
@@ -80,7 +81,7 @@ const GlobalFarmControl = () => {
           <input
             type="text"
             value="06:00"
-            disabled={!isActive}
+            disabled={!applyAll}
             className="w-20 text-center border rounded-md py-1 bg-white text-gray-700"
           />
         </div>

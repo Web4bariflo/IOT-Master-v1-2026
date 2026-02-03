@@ -1,18 +1,18 @@
 import { useState } from "react";
 import FarmCard from "./FarmCard";
+import CheckTrayActive from "../../../assets/Images/checktrayActive.png"; // Farm image
 
-const feeders = [
-  { id: "789458" },
-  { id: "789459" },
-  { id: "789460" },
-];
-
-const FarmGrid = () => {
+const FarmGrid = ({ applyAll }) => {
   const [view, setView] = useState("grid");
+
+  const feeders = [
+    { id: "Feeder 1" },
+    { id: "Feeder 2" },
+    { id: "Feeder 3" },
+  ];
 
   return (
     <div className="border rounded-lg p-3 bg-white space-y-3">
-
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <h3 className="text-sm font-semibold text-gray-800">Feeders</h3>
@@ -22,9 +22,7 @@ const FarmGrid = () => {
           <button
             onClick={() => setView("grid")}
             className={`p-1.5 rounded ${
-              view === "grid"
-                ? "bg-white shadow text-blue-600"
-                : "text-gray-500"
+              view === "grid" ? "bg-white shadow text-blue-600" : "text-gray-500"
             }`}
           >
             <i className="bi bi-grid-3x3-gap text-sm" />
@@ -33,9 +31,7 @@ const FarmGrid = () => {
           <button
             onClick={() => setView("list")}
             className={`p-1.5 rounded ${
-              view === "list"
-                ? "bg-white shadow text-blue-600"
-                : "text-gray-500"
+              view === "list" ? "bg-white shadow text-blue-600" : "text-gray-500"
             }`}
           >
             <i className="bi bi-list-ul text-sm" />
@@ -44,18 +40,13 @@ const FarmGrid = () => {
       </div>
 
       {/* CONTENT */}
-      <div
-        className={
-          view === "grid"
-            ? "grid grid-cols-2 gap-4"
-            : "flex flex-col gap-3"
-        }
-      >
+      <div className={`grid ${view === "grid" ? "grid-cols-2" : "grid-cols-1"} gap-4`}>
         {feeders.map((feeder) => (
           <FarmCard
             key={feeder.id}
             feeder={feeder}
-            view={view}
+            applyAll={applyAll}
+            feederImage={CheckTrayActive} // Pass the farm image here
           />
         ))}
       </div>

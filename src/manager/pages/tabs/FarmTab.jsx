@@ -1,15 +1,16 @@
 import FarmStatusBanner from "../../components/farm i/FarmStatusBanner";
-import GlobalFarmControl from "../../components/farm i/GlobalFarmControl";
+import GlobalFeederControl from "../../components/feeders/GlobalFeederControl";
 import FarmGrid from "../../components/farm i/FarmGrid";
 
 
-const FarmTab = () => {
+const FarmTab = ({ applyAll, setApplyAll, activeTab }) => {
   return (
     <div className="space-y-4">
-      <FarmStatusBanner />
-      <GlobalFarmControl />
-      <FarmGrid />
+      <FarmStatusBanner applyAll={applyAll} />
+      <GlobalFeederControl applyAll={applyAll} setApplyAll={setApplyAll} />
+      <FarmGrid applyAll={applyAll} activeTab={activeTab} /> {/* pass activeTab */}
     </div>
   );
 };
-export default FarmTab
+
+export default FarmTab;

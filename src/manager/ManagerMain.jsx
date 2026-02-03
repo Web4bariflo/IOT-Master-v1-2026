@@ -1,59 +1,59 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import  Dashboard  from "./pages/Dashboard";
+
+import Dashboard from "./pages/Dashboard";
 import ManagerPrivateRoute from "../Private/ManagerPrivateRoute";
-import Loader from '../Private/Loader'
+import Loader from "../Private/Loader";
+import PondModulePage from "./modules/PondModulePage";
+import FeedingModule from "./modules/feeding/FeedingModule";
+
 const ManagerMain = () => {
   const BASEURL = process.env.REACT_APP_IP;
-  const urlParams = new URLSearchParams(window.location.search);
-  const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
-  // const mobno = 8700000010;
   const navigate = useNavigate();
 
-  // Track loading state to prevent rendering before mobno is processed
+  const urlParams = new URLSearchParams(window.location.search);
+  const mobno = urlParams.get("mobno") || localStorage.getItem("mobno");
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (mobno) {
-      // Save mobno to localStorage if it's found and not already stored
-      localStorage.setItem("mobno", mobno);
+    if (!mobno) {
+      setIsLoading(false);
+      return;
     }
 
-    if (mobno) {
-      const data = { Mob: parseInt(mobno) };
+    // Save mobno to localStorage
+    localStorage.setItem("mobno", mobno);
 
-      // Make the API request only if mobno is available
-      axios
-        .post(`${BASEURL}/common_login/`, data)
-        .then((response) => {
-          // console.log(response);
-          // Store the response data in localStorage if login is successful
-          localStorage.setItem("auth", JSON.stringify(response.data));
-          navigate(`/manager/`);
-        })
-        .catch((error) => {
-          console.log("There was an error fetching data!", error);
-        })
-        .finally(() => {
-          // After the request finishes, update loading state
-          setIsLoading(false);
-        });
-    } else {
-      setIsLoading(false); // No mobno, stop loading
-    }
-  }, [mobno, BASEURL]); // Adding dependencies to avoid continuous rendering
+    const data = {
+      Mob: parseInt(mobno, 10),
+    };
+
+    axios
+      .post(`${BASEURL}/common_login/`, data)
+      .then((response) => {
+        localStorage.setItem("auth", JSON.stringify(response.data));
+        // navigate("/manager/", { replace: true });
+      })
+      .catch((error) => {
+        console.error("Login API error:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [mobno, BASEURL, navigate]);
 
   if (isLoading) {
-    return (
-      <div><Loader/></div> // Or any loading indicator you prefer
-    );
+    return <Loader />;
   }
 
   return (
     <Routes>
       <Route element={<ManagerPrivateRoute />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="feeding" element={<FeedingModule />} />
+        <Route path="pond-module/:pondId" element={<PondModulePage />} />
       </Route>
     </Routes>
   );
