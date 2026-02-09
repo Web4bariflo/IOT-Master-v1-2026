@@ -7,191 +7,177 @@ const useFeedingData = (pondId) => {
   const [devices, setDevices] = useState([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState("");
   const [workers, setWorkers] = useState([]);
-  const [feedAmount, setFeedAmount] = useState(0);
-  const [cycleCount, setCycleCount] = useState("");
-  const [deviceCycles, setDeviceCycles] = useState({});
+  const [tasks, setTasks] = useState([]);
   const [rowStates, setRowStates] = useState({});
+  const [cycleCount, setCycleCount] = useState("");
+  const [feedAmount, setFeedAmount] = useState("");
 
-  const mobno = localStorage.getItem("mobno") || "7744110055"; // default for testing
+  const mobno = localStorage.getItem("mobno") || "7744110055";
 
-  /* ================= FETCH ================= */
+  /* ======================================================
+     FETCH DEVICES + WORKERS
+  ====================================================== */
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (!pondId) return;
+    if (!pondId) return;
 
+    const fetchBaseData = async () => {
       try {
         const devicesRes = await axios.get(
           `${BASEURL}/deviceid_view/${pondId}/`,
           { params: { device_type: "Feeding" } },
         );
-        console.log("Device API OK:", devicesRes.data);
 
-        setDevices(
-          Array.isArray(devicesRes.data)
-            ? devicesRes.data
-            : devicesRes.data?.devices || [],
-        );
+        const list = Array.isArray(devicesRes.data)
+          ? devicesRes.data
+          : devicesRes.data?.devices || [];
+
+        setDevices(list);
+
+        if (list.length && !selectedDeviceId) {
+          setSelectedDeviceId(list[0].device_id);
+        }
       } catch (err) {
-        console.error(
-          " Device API failed:",
-          err.response?.status,
-          err.config?.url,
-        );
+        console.error("Device fetch failed", err);
       }
 
       try {
-        console.log("Calling WORKER API...");
         const res = await axios.get(`${BASEURL}/workerview/${mobno}/`);
-        const employeeList = res.data?.Employee || [];
-        setWorkers(employeeList.map((emp) => emp.name));
-      } catch (err) {
-        console.error(
-          " Worker API failed:",
-          err.response?.status,
-          err.config?.url,
-        );
+        setWorkers((res.data?.Employee || []).map((e) => e.name));
+      } catch {
         setWorkers([]);
       }
     };
 
-    fetchData();
-  }, [pondId, mobno]);
+    fetchBaseData();
+  }, [pondId]);
 
-  const isLocked = Object.keys(deviceCycles).length === devices.length;
+  /* ======================================================
+     FETCH EXISTING CYCLES FOR SELECTED DEVICE
+  ====================================================== */
+useEffect(() => {
+  if (!pondId || !selectedDeviceId) return;
 
-  /* ================= GENERATE ================= */
+  fetchDeviceTasks(selectedDeviceId);
+
+  const interval = setInterval(() => {
+    fetchDeviceTasks(selectedDeviceId);
+  }, 60000); // every 5 seconds
+
+  return () => clearInterval(interval);
+}, [pondId, selectedDeviceId]);
+
+  const fetchDeviceTasks = async (deviceId) => {
+    try {
+      const res = await axios.get(`${BASEURL}/pond-task/`, {
+        params: {
+          pond_id: pondId,
+          device_id: deviceId,
+        },
+      });
+
+      const backendTasks = res.data?.tasks || [];
+
+      // ✅ map backend tasks → frontend task shape
+      const mappedTasks = backendTasks.map((task) => ({
+        taskId: task.id,
+        cycleNo: task.cycles,
+        startTime: task.from_time || "",
+        endTime: task.to_time || "",
+        feedWeight: task.feed_weight || "",
+        worker: task.worker_name || "",
+        status: task.status || "pending",
+      }));
+
+      setTasks(mappedTasks);
+    } catch (err) {
+      console.error("Fetch pond-task failed", err);
+      setTasks([]); // fail-safe
+    }
+  };
+
+  /* ======================================================
+     GENERATE CYCLES
+  ====================================================== */
+
   const handleGenerate = async () => {
     if (!selectedDeviceId || cycleCount < 1) return;
 
-    // ✅ CREATE PLACEHOLDER TASK IDS
-    const task_ids = Array.from(
-      { length: Number(cycleCount) },
-      (_, i) => `pending-${Date.now()}-${i + 1}`,
-    );
-
-    // 🔁 Call backend (fire & forget)
     try {
-      const res = await axios.post(`${BASEURL}/generate/`, {
+      await axios.post(`${BASEURL}/generate/`, {
         deviceName: "Feeding",
         deviceId: selectedDeviceId,
         cycles: cycleCount,
         feedin: feedAmount,
       });
-
-      console.log("Generate response:", res.data);
+      
+      // ✅ DO NOT touch table state
+      // Just refetch from backend
+      fetchDeviceTasks(selectedDeviceId);
     } catch (err) {
-      console.error("Generate failed", err);
+      console.error("Error generating cycles:", err);
     }
-
-    // ✅ DEVICE META
-    setDeviceCycles((prev) => ({
-      ...prev,
-      [selectedDeviceId]: {
-        cycles: cycleCount,
-        feedAmount,
-      },
-    }));
-
-    // ✅ CREATE UI ROWS IMMEDIATELY
-    const rows = {};
-    task_ids.forEach((taskId, i) => {
-      rows[`${selectedDeviceId}-C${i + 1}`] = {
-        taskId,
-        cycleNo: i + 1,
-        startTime: "",
-        endTime: "",
-        feedWeight: "",
-        worker: "",
-        status: i === 0 ? "active" : "locked",
-      };
-    });
-
-    setRowStates((prev) => ({
-      ...prev,
-      ...rows,
-    }));
   };
 
-  /* ================= ROW CHANGE ================= */
-  const handleRowChange = (rowKey, field, value) => {
-    setRowStates((p) => ({
-      ...p,
-      [rowKey]: { ...p[rowKey], [field]: value },
-    }));
+  /* ======================================================
+     ROW CHANGE (LOCAL ONLY)
+  ====================================================== */
+
+  const updateTask = (taskId, field, value) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.taskId === taskId ? { ...t, [field]: value } : t)),
+    );
   };
 
-  /* ================= SUBMIT ================= */
-  const handleSubmit = async (rowKey) => {
-    const row = rowStates[rowKey];
-    if (!row) return;
+  /* ======================================================
+     SUBMIT (START)
+  ====================================================== */
 
-    // ✅ REST (ACTIVE)
-    await axios.put(`${BASEURL}/tasksubmit/${row.taskId}/`, {
-      from_time: row.startTime,
-      to_time: row.endTime,
-      feed_weight: row.feedWeight,
-      worker_name: row.worker,
-    });
-
-    /*
-  // 🚧 MQTT (FOR LATER)
-  publishMQTT("feeding/command", {
-    action: "submit",
-    taskId: row.taskId,
-    deviceId: selectedDeviceId,
-    cycle: row.cycleNo,
-  });
-  */
-
-    setRowStates((p) => ({
-      ...p,
-      [rowKey]: { ...p[rowKey], status: "processing" },
-    }));
+  const handleSubmit = async (row) => {
+    if (!row.taskId) return;
+    try {
+      await axios.put(`${BASEURL}/tasksubmit/${row.taskId}/`, {
+        from_time: row.startTime,
+        to_time: row.endTime,
+        feed_weight: row.feedWeight,
+        worker_name: row.worker,
+      });
+       console.log("Submitting cycle:", row);
+      // ✅ refetch real data
+      fetchDeviceTasks(selectedDeviceId);
+    } catch (err) {
+      console.error("Submit failed", err);
+    }
   };
 
-  /* ================= ABORT ================= */
-  const handleAbort = async (rowKey) => {
-    const row = rowStates[rowKey];
-    if (!row) return;
 
-    await axios.post(`${BASEURL}/abort/${row.taskId}/`);
+  const handleAbort = (row) => {
+  // MQTT / API abort call
+  console.log("Aborting cycle:", row.taskId);
 
-    setRowStates((p) => ({
-      ...p,
-      [rowKey]: { ...p[rowKey], status: "aborted" },
-    }));
-  };
+  // updateTask(row.taskId, "status", "aborted");
+};
 
-  /* ================= RESTART ================= */
-  const handleRestart = (rowKey) => {
-    setRowStates((p) => ({
-      ...p,
-      [rowKey]: {
-        ...p[rowKey],
-        status: "active",
-        startTime: "",
-        endTime: "",
-        feedWeight: "",
-        worker: "",
-      },
-    }));
-  };
+const handleRestart = (row) => {
+  console.log("Restarting cycle:", row.taskId);
 
+  // updateTask(row.taskId, "status", "pending");
+};
   return {
     devices,
-    workers,
     selectedDeviceId,
     setSelectedDeviceId,
-    feedAmount,
-    setFeedAmount,
+    workers,
     cycleCount,
     setCycleCount,
-    deviceCycles,
-    rowStates,
-    isLocked,
+    feedAmount,
+    setFeedAmount,
+    tasks,
+    updateTask,
     handleGenerate,
-    handleRowChange,
     handleSubmit,
+    rowStates,
+    setRowStates,
     handleAbort,
     handleRestart,
   };
