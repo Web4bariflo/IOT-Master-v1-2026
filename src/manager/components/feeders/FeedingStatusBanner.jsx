@@ -20,22 +20,7 @@ const FeedingStatusBanner = ({ applyAll }) => {
   </div>
 
   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-    <button
-      disabled={applyAll}
-      className={`px-4 py-2 text-sm font-semibold text-white rounded-lg transition ${
-        applyAll ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-      }`}
-    >
-      Start Schedule
-    </button>
-    <button
-      disabled={applyAll}
-      className={`px-4 py-2 text-sm font-semibold text-white rounded-lg transition ${
-        applyAll ? "bg-gray-300 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
-      }`}
-    >
-      Abort
-    </button>
+
   </div>
 </div>
   );

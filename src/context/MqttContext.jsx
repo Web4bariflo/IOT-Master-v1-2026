@@ -1,17 +1,14 @@
 import React, { createContext, useEffect, useState, useContext } from "react";
 import mqtt from "mqtt";
+import { MQTT_TOPICS } from "../mqtt/mqttTopics";
 
 export const MqttContext = createContext(null);
 
 export const MqttProvider = ({ children }) => {
   const [client, setClient] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [deviceStatus, setDeviceStatus] = useState({});
 
-
-
-  // -----------------------------
-  // MQTT CONNECT
-  // -----------------------------
   useEffect(() => {
     const mqttClient = mqtt.connect({
       hostname: "mqttbroker.bc-pl.com",
@@ -25,16 +22,11 @@ export const MqttProvider = ({ children }) => {
     });
 
     mqttClient.on("connect", () => {
-      // console.log("✅ MQTT connected");
       setIsConnected(true);
-    });
-
-    mqttClient.on("reconnect", () => {
-      // console.warn("🔁 MQTT reconnecting...");
+      console.log("✅ MQTT connected");
     });
 
     mqttClient.on("close", () => {
-      // console.warn("⚠️ MQTT disconnected");
       setIsConnected(false);
     });
 
@@ -42,33 +34,89 @@ export const MqttProvider = ({ children }) => {
       console.error("❌ MQTT error:", err);
     });
 
-    setClient(mqttClient);
+ mqttClient.on("message", (topic, payload) => {
+  const message = payload.toString();
 
-    return () => {
-      mqttClient.end(true);
+  // Extract full device ID correctly
+  const match = topic.match(/auto_feeder\/(.+)\/system/);
+  if (!match) return;
+
+  const deviceId = match[1];
+
+  setDeviceStatus((prev) => {
+    const updated = { ...prev };
+
+    updated[deviceId] = updated[deviceId] || {
+      online: false,
+      battery: null,
+      alert: null,
+      lastSeen: null,
     };
-  }, []);
 
-  // -----------------------------
-  // PUBLISH
-  // -----------------------------
-  const publishMessage = (topic, message) => {
-    if (!client || !client.connected) {
-      console.warn("❌ MQTT not connected, publish skipped");
-      return;
+    // 🔋 BATTERY
+    if (topic.includes("battery")) {
+      updated[deviceId].battery = Number(message);
     }
 
-    client.publish(topic, String(message));
-    console.log(`🚀 Published → ${topic}`, message);
+    // 🟢 ALIVE
+    if (topic.includes("alive")) {
+      updated[deviceId].online =
+        message.toLowerCase() === "alive" ||
+        message === "1" ||
+        message === "true";
+    }
+
+    // 🌐 ONLINE (if separate topic exists)
+    if (topic.includes("online")) {
+      updated[deviceId].online =
+        message === "1" || message === "true";
+    }
+
+    // 🔴 ALERT
+    if (topic.includes("alert")) {
+      updated[deviceId].alert =
+        message.toLowerCase() === "normal" ? null : message;
+    }
+
+    updated[deviceId].lastSeen = Date.now();
+
+    return updated;
+  });
+});
+
+    setClient(mqttClient);
+
+    return () => mqttClient.end(true);
+  }, []);
+
+  // 🔥 DYNAMIC SUBSCRIBE FUNCTION
+  const subscribeDevices = (devices = []) => {
+    if (!client || !client.connected) return;
+
+    devices.forEach((d) => {
+      const id = d.device_id;
+
+      client.subscribe([
+        MQTT_TOPICS.ALIVE(id),
+        MQTT_TOPICS.BATTERY(id),
+        MQTT_TOPICS.ALERT(id),
+        MQTT_TOPICS.ONLINE(id),
+      ]);
+    });
   };
 
-
+  const publishMessage = (topic, message) => {
+    if (!client || !client.connected) return;
+    client.publish(topic, String(message));
+  };
 
   return (
     <MqttContext.Provider
       value={{
         client,
         isConnected,
+        deviceStatus,
+        subscribeDevices,
         publishMessage,
       }}
     >
@@ -77,10 +125,4 @@ export const MqttProvider = ({ children }) => {
   );
 };
 
-export const useMqtt = () => {
-  const ctx = useContext(MqttContext);
-  if (!ctx) {
-    throw new Error("useMqtt must be used inside MqttProvider");
-  }
-  return ctx;
-};
+export const useMqtt = () => useContext(MqttContext);

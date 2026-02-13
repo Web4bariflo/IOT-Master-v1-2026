@@ -8,6 +8,7 @@ import ActionButton from "../../../components/ActionButton";
 
 const Feeding = () => {
   const { pondId } = useParams();
+  const URL = process.env.REACT_APP_IP;
 
   const {
     devices,
@@ -50,8 +51,8 @@ const Feeding = () => {
         return {
           label: "Abort",
           className: "bg-red-600 hover:bg-red-700",
-          disabled: true,
-          onClick: () => handleAbort(row),
+          disabled: false,
+          onClick: () => handleAbort(),
         };
 
       case "aborted":
@@ -77,6 +78,40 @@ const Feeding = () => {
           disabled: true,
           onClick: null,
         };
+    }
+  };
+
+  //clear cycle for testing purpose
+  const handleClearCycles = async (selectedDeviceId) => {
+    if (!selectedDeviceId) {
+      console.warn("No device selected");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${URL}/taskclear/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          device: selectedDeviceId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to clear cycles");
+      }
+
+      const data = await res.json();
+      console.log("Clear cycles success:", data);
+
+      // Avoid full reload if possible
+      window.location.reload();
+    } catch (error) {
+      console.error("Error clearing cycles:");
     }
   };
 
@@ -132,6 +167,12 @@ const Feeding = () => {
         }`}
         >
           Generate
+        </button>
+        <button
+          onClick={() => handleClearCycles(selectedDeviceId)}
+          className="px-4 py-1 text-xs rounded text-white bg-red-600 hover:bg-red-700"
+        >
+          Clear cycle
         </button>
       </div>
 

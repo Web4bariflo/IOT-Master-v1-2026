@@ -3,23 +3,32 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const ManagerSidebar = ({ setDevices, setActivePond, activePond, pondId }) => {
+const ManagerSidebar = () => {
   const [ponds, setPonds] = useState([]);
   const [search, setSearch] = useState("");
   const [showFilterPonds, setShowFilterPonds] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  // ✅ ACTIVE POND STATE
+  const [activePond, setActivePond] = useState(() => {
+    const saved = localStorage.getItem("activePond");
+    return saved ? Number(saved) : null;
+  });
+
   const navigate = useNavigate();
-
   const BASEURL = process.env.REACT_APP_IP;
-
+  const clusterId = JSON.parse(localStorage.getItem("auth"))?.cluster
+    ?.clusters?.[0]?.id;
+  // console.log("Cluster ID from localStorage:", clusterId);
   /* ===== FETCH PONDS ===== */
   useEffect(() => {
+    if (!clusterId) {
+      console.error("Cluster ID not available");
+      return;
+    }
     const fetchPonds = async () => {
       try {
-        const response = await axios.get(`${BASEURL}/userponds/15/`);
-        // API returns { ponds: [...] }
-        const unsortedPonds = response.data.ponds || [];
-        const sortedPonds = unsortedPonds.sort((a, b) =>
+        const response = await axios.get(`${BASEURL}/userponds/${clusterId}/`);
+        const sortedPonds = (response.data.ponds || []).sort((a, b) =>
           a.name.localeCompare(b.name, undefined, {
             numeric: true,
             sensitivity: "base",
@@ -30,43 +39,33 @@ const ManagerSidebar = ({ setDevices, setActivePond, activePond, pondId }) => {
         console.error("Failed to fetch ponds", error);
       }
     };
+
     fetchPonds();
   }, [BASEURL]);
-
-  //  const {
-  //   setDevices
-  // } = useFeedingData(pondId);
-
-  /* ===== API CALL ===== */
-  const fetchDevices = async (pondId) => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`${BASEURL}/deviceid_view/${pondId}/`, {
-        params: { device_type: "Feeding" },
-      });
-      setDevices(data.devices || []);
-      console.log("Fetched Devices:", data.devices);
-    } catch (error) {
-      console.error("Failed to fetch devices", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   /* ===== FILTER ===== */
   const filteredPonds = ponds.filter((pond) =>
     pond.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  /* ===== HANDLER ===== */
+  /* ===== POND CLICK ===== */
   const handlePondClick = (pondId) => {
-    setActivePond(pondId);
+    setActivePond(pondId); // UI update
+    localStorage.setItem("activePond", pondId); // persist
+  };
 
-    if (pondId) {
-      fetchDevices(pondId);
-    } else {
-      setDevices([]); // Clear IDs but keep UI
+  /* ===== GENERATE ===== */
+  const handleGenerate = () => {
+    if (!activePond) {
+      alert("Please select a pond first");
+      return;
     }
+
+    const pond = ponds.find((p) => p.id === activePond);
+
+    navigate(`/manager/pond-module/${activePond}`, {
+      state: { pondName: pond?.name },
+    });
   };
 
   return (
@@ -116,22 +115,10 @@ const ManagerSidebar = ({ setDevices, setActivePond, activePond, pondId }) => {
           />
         </button>
 
+        {/* ===== GENERATE ===== */}
         <button
-          className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          onClick={() => {
-            console.log("Generate clicked", activePond);
-
-            if (!activePond) {
-              alert("Please select a pond first");
-              return;
-            }
-
-            const pond = ponds.find((p) => p.id === activePond);
-
-            navigate(`/manager/pond-module/${activePond}`, {
-              state: { pondName: pond?.name },
-            });
-          }}
+          className="w-full mt-3 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          onClick={handleGenerate}
         >
           Generate
         </button>

@@ -7,12 +7,11 @@ const ManagerPrivateRoute = () => {
   // const auth = { token: localStorage.getItem("auth") };
   // const tokenObject = JSON.parse(auth.token);
   // console.log(tokenObject?.category);
-  const [devices, setDevices] = useState([]);
-  const [activePond, setActivePond] = useState(null);
 
   const isPondModule = useMatch("/manager/pond-module/:pondId");
-
   const category = "owner";
+
+
   return category === "owner" ? (
     // return ["manager", "owner"].includes(tokenObject?.category) ? (
 
@@ -20,14 +19,10 @@ const ManagerPrivateRoute = () => {
       <ManagerNav />
       <div className="flex flex-1">
         {!isPondModule && (
-          <ManagerSidebar
-            setDevices={setDevices}
-            setActivePond={setActivePond}
-            activePond={activePond}
-          />
+          <ManagerSidebar/>
         )}
         <div className="flex-1 overflow-y-auto">
-           <Outlet context={{ devices, activePond }} />
+           <Outlet  />
         </div>
       </div>
     </div>

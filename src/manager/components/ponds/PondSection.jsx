@@ -11,33 +11,7 @@ import { POND_TABS } from "../../constants/PondTabs";
 
 const PondSection = ({ activeTab }) => {
   const [applyAll, setApplyAll] = useState(false);
-  const [devices, setDevices] = useState([]);
 
-  useEffect(() => {
-    // ⛔ Clear devices when not on Feeding tab
-    if (activeTab !== POND_TABS.FEEDING) {
-      setDevices([]);
-      return;
-    }
-
-    const fetchDevices = async () => {
-      try {
-        const response = await axios.get(
-          "http://192.168.1.40:8001/deviceid_view/31/?device_type=Feeding"
-        );
-
-        console.log("API RESPONSE:", response.data);
-
-        // ✅ Safe assignment
-        setDevices(response.data?.devices || []);
-      } catch (error) {
-        console.error("API ERROR:", error);
-        setDevices([]); // ⬅️ important to avoid stale UI
-      }
-    };
-
-    fetchDevices();
-  }, [activeTab]);
 
   return (
     <div className="space-y-4">
@@ -59,7 +33,7 @@ const PondSection = ({ activeTab }) => {
             applyAll={applyAll}
             setApplyAll={setApplyAll}
           />
-          <FeederGrid applyAll={applyAll} devices={devices} />
+          <FeederGrid applyAll={applyAll}/>
         </>
       )}
 

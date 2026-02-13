@@ -8,11 +8,17 @@ import PondTabs from "../components/PondTabs";
 import { POND_TABS } from "../constants/PondTabs";
 import MapTab from "./tabs/MapTab";
 import FarmTab from "./tabs/FarmTab";
+import { useMqttt } from "../../context/MqttContext";
+import useFeederDashboardData from "../hooks/useFeederDashboardData";
 
 
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(POND_TABS.FEEDING);
+  const {subscribeDevices } = useMqtt();
+  const { devices, loading } = useFeederDashboardData();
+
+
 
   /* MAP TAB → FULL MAP ONLY */
   if (activeTab === POND_TABS.MAP) {
@@ -34,7 +40,6 @@ const Dashboard = () => {
 
       {/* Right Panel */}
       <RightPanel activeTab={activeTab} />
-
     </div>
   );
 };

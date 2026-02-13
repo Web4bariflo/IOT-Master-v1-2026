@@ -55,17 +55,17 @@ const useFeedingData = (pondId) => {
   /* ======================================================
      FETCH EXISTING CYCLES FOR SELECTED DEVICE
   ====================================================== */
-useEffect(() => {
-  if (!pondId || !selectedDeviceId) return;
+  useEffect(() => {
+    if (!pondId || !selectedDeviceId) return;
 
-  fetchDeviceTasks(selectedDeviceId);
-
-  const interval = setInterval(() => {
     fetchDeviceTasks(selectedDeviceId);
-  }, 60000); // every 5 seconds
 
-  return () => clearInterval(interval);
-}, [pondId, selectedDeviceId]);
+    const interval = setInterval(() => {
+      fetchDeviceTasks(selectedDeviceId);
+    }, 60000); // every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [pondId, selectedDeviceId]);
 
   const fetchDeviceTasks = async (deviceId) => {
     try {
@@ -75,7 +75,7 @@ useEffect(() => {
           device_id: deviceId,
         },
       });
-
+      // console.log("Fetched tasks for device", deviceId, res.data);
       const backendTasks = res.data?.tasks || [];
 
       // ✅ map backend tasks → frontend task shape
@@ -110,7 +110,7 @@ useEffect(() => {
         cycles: cycleCount,
         feedin: feedAmount,
       });
-      
+
       // ✅ DO NOT touch table state
       // Just refetch from backend
       fetchDeviceTasks(selectedDeviceId);
@@ -142,7 +142,11 @@ useEffect(() => {
         feed_weight: row.feedWeight,
         worker_name: row.worker,
       });
-       console.log("Submitting cycle:", row);
+      // console.log("Submitting cycle:", row);
+
+      await axios.post(`${BASEURL}/automode/${selectedDeviceId}/${row.taskId}/`);
+      // console.log("Sent MQTT start command for task:", row.taskId);
+
       // ✅ refetch real data
       fetchDeviceTasks(selectedDeviceId);
     } catch (err) {
@@ -150,19 +154,23 @@ useEffect(() => {
     }
   };
 
+  const handleAbort = async () => {
+    try {
+      await axios.post(`${BASEURL}/automodeabort/${selectedDeviceId}/`);
+      alert("Device task has been aborted successfully!");
 
-  const handleAbort = (row) => {
-  // MQTT / API abort call
-  console.log("Aborting cycle:", row.taskId);
+      fetchDeviceTasks(selectedDeviceId);
+    } catch (err) {
+      console.error("Abort failed", err);
+    }
+  };
+  
 
-  // updateTask(row.taskId, "status", "aborted");
-};
+  const handleRestart = (row) => {
+    console.log("Restarting cycle:", row.taskId);
 
-const handleRestart = (row) => {
-  console.log("Restarting cycle:", row.taskId);
-
-  // updateTask(row.taskId, "status", "pending");
-};
+    // updateTask(row.taskId, "status", "pending");
+  };
   return {
     devices,
     selectedDeviceId,

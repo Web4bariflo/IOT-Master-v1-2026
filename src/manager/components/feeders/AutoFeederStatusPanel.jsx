@@ -1,19 +1,87 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useMqtt } from "../../../context/MqttContext";
+import useFeederDashboardData from "../../hooks/useFeederDashboardData";
 
-const feeders = [
-  { id: "789458", battery: 60, status: "online", signal: 2 },
-  { id: "789459", battery: 50, status: "online", signal: 3 },
-  { id: "789460", battery: 60, status: "online", signal: 3 },
-  { id: "789461", battery: 20, status: "alert", signal: 3 },
-];
+const rssiToBars = (rssi) => {
+  if (rssi > -60) return 5;
+  if (rssi > -70) return 4;
+  if (rssi > -80) return 3;
+  if (rssi > -90) return 2;
+  return 1;
+};
+
+const pondId = Number(localStorage.getItem("activePond"));
 
 const AutoFeederStatusPanel = ({ feederImage }) => {
+  const { deviceStatus, client, isConnected } = useMqtt();
+  const { devices, loading } = useFeederDashboardData(pondId);
+
   const [activeTab, setActiveTab] = useState("all");
+  const [onlineMap, setOnlineMap] = useState({});
+
+  useEffect(() => {
+    if (!client || !isConnected || devices.length === 0) return;
+
+    // Subscribe to alive topics
+    devices.forEach((d) => {
+      client.subscribe(`auto_feeder/${d.device_id}/system/alive`);
+    });
+
+    const handler = (topic, payload) => {
+      const message = payload.toString();
+      const match = topic.match(/auto_feeder\/(.+)\/system\/alive/);
+      if (!match) return;
+
+      const deviceId = match[1];
+
+      setOnlineMap((prev) => ({
+        ...prev,
+        [deviceId]: message.toLowerCase() === "alive",
+      }));
+    };
+
+    client.on("message", handler);
+
+    return () => {
+      devices.forEach((d) => {
+        client.unsubscribe(`auto_feeder/${d.device_id}/system/alive`);
+      });
+      client.removeListener("message", handler);
+    };
+  }, [client, isConnected, devices]);
+
+  const feeders = devices.map((d) => {
+    const mqtt = deviceStatus[d.device_id];
+    const isOnline = onlineMap[d.device_id];
+
+    return {
+      id: d.device_id,
+
+      battery: mqtt && typeof mqtt.battery === "number" ? mqtt.battery : "--",
+
+      status: isOnline ? (mqtt?.alert ? "alert" : "online") : "offline",
+
+      signal:
+        typeof mqtt?.rssi === "number"
+          ? rssiToBars(mqtt.rssi)
+          : isOnline
+            ? 4
+            : 0,
+    };
+  });
 
   const filteredFeeders =
     activeTab === "all"
       ? feeders
       : feeders.filter((f) => f.status === activeTab);
+
+  if (loading) {
+    return (
+      <div className="w-80 bg-white border rounded-xl p-4 text-sm text-gray-500">
+        Loading feeders…
+      </div>
+    );
+  }
 
   return (
     <div className="w-80 bg-white border rounded-xl shadow-sm overflow-hidden font-sans">
@@ -49,8 +117,8 @@ const AutoFeederStatusPanel = ({ feederImage }) => {
             f.battery > 50
               ? "text-green-600"
               : f.battery > 20
-              ? "text-orange-500"
-              : "text-red-500";
+                ? "text-orange-500"
+                : "text-red-500";
 
           return (
             <div
@@ -69,8 +137,26 @@ const AutoFeederStatusPanel = ({ feederImage }) => {
 
               {/* DETAILS */}
               <div className="flex-1">
-                <div className="text-sm font-semibold text-gray-800">
-                  {f.id}
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-semibold text-gray-800">
+                    {f.id}
+                  </div>
+
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                      f.status === "online"
+                        ? "bg-green-100 text-green-700"
+                        : f.status === "alert"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {f.status === "online"
+                      ? "Active"
+                      : f.status === "alert"
+                        ? "Alert"
+                        : "Offline"}
+                  </span>
                 </div>
 
                 <div className="flex items-center mt-1">
