@@ -1,15 +1,14 @@
 import { useState } from "react";
 import FarmCard from "./FarmCard";
-import CheckTrayActive from "../../../assets/Images/checktrayActive.png"; // Farm image
+import CheckTrayActive from "../../../assets/Images/checktrayActive.png";
+import { useFarmingData } from "../../hooks/useFarmingData";
 
 const FarmGrid = ({ applyAll }) => {
   const [view, setView] = useState("grid");
 
-  const feeders = [
-    { id: "Feeder 1" },
-    { id: "Feeder 2" },
-    { id: "Feeder 3" },
-  ];
+   const pondId = Number(localStorage.getItem("activePond"));
+
+   const { tasks } = useFarmingData(pondId);
 
   return (
     <div className="border rounded-lg p-3 bg-white space-y-3">
@@ -39,17 +38,16 @@ const FarmGrid = ({ applyAll }) => {
         </div>
       </div>
 
-      {/* CONTENT */}
       <div className={`grid ${view === "grid" ? "grid-cols-2" : "grid-cols-1"} gap-4`}>
-        {feeders.map((feeder) => (
+        {tasks.map((task) => (
           <FarmCard
-            key={feeder.id}
-            feeder={feeder}
-            applyAll={applyAll}
-            feederImage={CheckTrayActive} // Pass the farm image here
+            key={task.id}
+            task={task}
+            feederImage={CheckTrayActive}
           />
         ))}
       </div>
+
     </div>
   );
 };

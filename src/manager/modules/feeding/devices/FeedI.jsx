@@ -1,131 +1,185 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import feedI from "../../../../assets/Images/checktrayActive.png";
- 
+import { useFarmingData } from "../../../hooks/useFarmingData";
+
+import useFeedingData from "../../../hooks/useFeedingData";
+
 const BASEURL = process.env.REACT_APP_IP;
- 
+
 const FeedI = () => {
   const { pondId } = useParams();
- 
-  const [form, setForm] = useState({
-    deviceId: "",
-    cycleCount: "",
-    startTime: "",
-    timeInterval: "",
-    spray_type: "spray",
-  });
- 
-  const [devices, setDevices] = useState([]);
-  const [deviceCycles, setDeviceCycles] = useState({});
- 
-  useEffect(() => {
-    const fetchDeviceIds = async () => {
-      if (!pondId) return;
-      try {
-        const res = await axios.get(
-          `${BASEURL}/deviceid_view/${pondId}/`,
-          { params: { device_type: "Feeding" } }
-        );
-        setDevices(Array.isArray(res.data) ? res.data : res.data.devices || []);
-      } catch {
-        setDevices([]);
-      }
-    };
-    fetchDeviceIds();
-  }, [pondId]);
- 
-  const updateForm = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
- 
-  const handleGenerate = async () => {
-    const { deviceId, cycleCount } = form;
-    if (!deviceId || !cycleCount) return;
- 
-    setDeviceCycles((prev) => ({
-      ...prev,
-      [deviceId]: [],
-    }));
-  };
- 
+
+  const [deviceId, setDeviceId] = useState("");
+  const [workerSelection, setWorkerSelection] = useState({});
+
+  const { devices, setSelectedDevice, checktrayGenerate, tasks, handleSubmit, handleStartTimeChange, startTimes, handleDelete, isSubmitted,
+    setIsSubmitted, workers } = useFarmingData(pondId);
+
+  console.log(tasks);
+
+
+
   return (
-    <div className=" w-full px-6 py-6">
- 
-      {/* ================= TOP CONTROLS ================= */}
+    <div className="w-full px-6 py-6">
+
+      {/* TOP CONTROLS */}
       <div className="flex items-center gap-4 mb-6">
-       <img
-  src={feedI}
-  alt="farm"
-  className="w-20 h-20 object-contain"
-/>
-{/* Device Id */}
- <div className="flex items-center gap-2">
-    <label className="text-sm text-gray-500">Device Id :</label>
-    <select
-      value={form.deviceId}
-      onChange={(e) => updateForm("deviceId", e.target.value)}
-      className="h-9 px-4 rounded-full border border-gray-300 bg-gray-50 text-sm text-gray-700 focus:outline-none"
-    >
-      <option value="">Select</option>
-      {devices.map((d) => (
-        <option key={d.device_id} value={d.device_id}>
-          {d.device_id}
-        </option>
-      ))}
-    </select>
-  </div>
- 
-       {/* Image Cycle */}
-  <div className="flex items-center gap-2">
-    <label className="text-sm text-gray-500">Image Cycle</label>
-    <select
-      value={form.cycleCount}
-      onChange={(e) => updateForm("cycleCount", e.target.value)}
-      className="h-9 px-4 rounded-full border border-gray-300 bg-gray-50 text-sm text-gray-700 focus:outline-none"
-    >
-      <option value="">0</option>
-      {[1, 2, 3, 4].map((n) => (
-        <option key={n} value={n}>{n}</option>
-      ))}
-    </select>
-  </div>
- 
+        <img src={feedI} alt="farm" className="w-20 h-20 object-contain" />
+
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-gray-500">Device Id :</label>
+          <select
+            value={deviceId}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDeviceId(value);
+              setSelectedDevice(value);
+            }}
+            className="h-9 px-4 rounded-full border border-gray-300 bg-gray-50 text-sm text-gray-700"
+          >
+            <option value="">Select</option>
+            {devices.map((d) => (
+              <option key={d.device_id} value={d.device_id}>
+                {d.device_id}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <button
-          onClick={handleGenerate}
+          onClick={checktrayGenerate}
           className="ml-2 bg-blue-600 text-white px-6 py-1.5 rounded-md text-sm font-medium"
         >
           Generate
         </button>
       </div>
- 
-      {/* ================= FARM LABEL ================= */}
-      <div className="flex items-center gap-3 mb-4">
-        <span className="font-semibold text-sm">FARM I</span>
-      </div>
- 
-      {/* ================= TABLE ================= */}
+
+      {/* TABLE */}
       <div className="w-full">
         <table className="w-full text-sm text-center">
           <thead>
             <tr className="text-gray-400">
-              <th className="py-3 font-medium">Device ID.</th>
-              <th className="font-medium">Cycle No.</th>
+              <th className="py-3 font-medium">Device ID</th>
+              <th className="font-medium">Start Time</th>
+              <th className="font-medium">Stop Time</th>
               <th className="font-medium">Spray Cycle</th>
-              <th className="font-medium">Image Updated</th>
-              <th className="font-medium">Water level Depth</th>
+              <th className="font-medium">Image Update</th>
+              <th className="font-medium">Water level</th>
+              <th className="font-medium">Action</th>
               <th className="font-medium">Status</th>
+              <th className="font-medium">Worker</th>
+              <th className="font-medium">Remove</th>
+              <th className="font-medium">Add New</th>
             </tr>
           </thead>
+
+          <tbody>
+            {tasks && tasks.length > 0 ? (
+              tasks.map((task) => (
+                <tr key={task.id} className="border-t">
+                  <td className="py-3">{task.device_id}</td>
+
+                  <td>
+                    <input
+                      type="datetime-local"
+                      value={startTimes[task.id] || ""}
+                      onChange={(e) =>
+                        handleStartTimeChange(task.id, e.target.value)
+                      }
+                      className="border px-2 py-1 rounded"
+                    />
+                  </td>
+                  <td>
+                    {task.stop_time
+                      ? new Date(task.stop_time).toLocaleTimeString()
+                      : ""}
+                  </td>
+
+
+                  <td>{task.spray_cycle}</td>
+                  <td>{task.image_update}</td>
+                  <td>{task.water_level}</td>
+
+                  <td>
+                    <button
+                      onClick={() => handleSubmit(task, workerSelection[task.id] || task.worker)}
+                      disabled={
+                        task.submit === "True" ||
+                        !startTimes[task.id] ||
+                        !(workerSelection[task.id] || task.worker)
+                      }
+                      className={`px-4 py-1 rounded text-white ${task.submit === "True" || !startTimes[task.id] || !(workerSelection[task.id] || task.worker)
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-green-600"
+                        }`}
+                    >
+                      Submit
+                    </button>
+                  </td>
+
+                  
+
+                  <td>{task.status || "N/A"}</td>
+
+                  <td>
+                    <select
+                      className="border rounded px-2 h-7 text-xs"
+                      value={workerSelection[task.id] || task.worker || ""}
+                      onChange={(e) =>
+                        setWorkerSelection((prev) => ({
+                          ...prev,
+                          [task.id]: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">Select</option>
+                      {workers.map((w, i) => (
+                        <option key={i} value={w}>
+                          {w}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+
+                  <td
+                    onClick={() => handleDelete(task.id)}
+                    className="px-2 mt-2 py-1 text-xs text-red-600 cursor-pointer hover:underline"
+                  >
+                    Delete
+                  </td>
+
+                  {/* ADD NEW COLUMN */}
+                  <td>
+                    <button
+                      onClick={checktrayGenerate}
+                      disabled={task.status !== "Completed"}
+                      className={`px-3 py-1 rounded text-white text-lg
+        ${task.status === "Completed"
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "bg-gray-300 cursor-not-allowed"
+                        }`}
+                    >
+                      yes
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="11" className="py-16 text-gray-500">
+                  No Cycles started
+                </td>
+              </tr>
+            )}
+
+          
+
+          </tbody>
         </table>
- 
-        {/* EMPTY STATE */}
-        <div className="text-center py-16 text-gray-500 text-sm">
-          No Cycles started
-        </div>
       </div>
     </div>
   );
 };
- 
+
 export default FeedI;
