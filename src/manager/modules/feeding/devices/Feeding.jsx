@@ -37,7 +37,6 @@ const Feeding = () => {
     const mm = String(now.getMinutes()).padStart(2, "0");
     const ss = String(now.getSeconds()).padStart(2, "0");
     setFillingTime(`${hh}:${mm}:${ss}`);
-    handleSubmit(row);
   };
 
   const getActionConfig = (row) => {
