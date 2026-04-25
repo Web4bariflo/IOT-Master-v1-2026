@@ -13,6 +13,7 @@ const FeedI = () => {
   const [deviceId, setDeviceId] = useState("");
   const [workerSelection, setWorkerSelection] = useState({});
 
+
   const { devices, setSelectedDevice, checktrayGenerate, tasks, handleSubmit, handleStartTimeChange, startTimes, handleDelete, isSubmitted,
     setIsSubmitted, workers } = useFarmingData(pondId);
 
@@ -83,7 +84,10 @@ const FeedI = () => {
                   <td>
                     <input
                       type="datetime-local"
-                      value={startTimes[task.id] || ""}
+                      value={
+                        startTimes[task.id] ||
+                        (task.start_time ? task.start_time.replace(" ", "T") : "")
+                      }
                       onChange={(e) =>
                         handleStartTimeChange(task.id, e.target.value)
                       }
@@ -110,15 +114,14 @@ const FeedI = () => {
                         !(workerSelection[task.id] || task.worker)
                       }
                       className={`px-4 py-1 rounded text-white ${task.submit === "True" || !startTimes[task.id] || !(workerSelection[task.id] || task.worker)
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-green-600"
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600"
                         }`}
                     >
                       Submit
                     </button>
                   </td>
 
-                  
 
                   <td>{task.status || "N/A"}</td>
 
@@ -155,7 +158,7 @@ const FeedI = () => {
                       onClick={checktrayGenerate}
                       disabled={task.status !== "Completed"}
                       className={`px-3 py-1 rounded text-white text-lg
-        ${task.status === "Completed"
+${task.status === "Completed"
                           ? "bg-blue-600 hover:bg-blue-700"
                           : "bg-gray-300 cursor-not-allowed"
                         }`}
@@ -173,7 +176,6 @@ const FeedI = () => {
               </tr>
             )}
 
-          
 
           </tbody>
         </table>
@@ -183,3 +185,4 @@ const FeedI = () => {
 };
 
 export default FeedI;
+

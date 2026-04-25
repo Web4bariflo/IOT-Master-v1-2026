@@ -59,8 +59,6 @@ export const useFarmingData = (pondId) => {
     }
   };
 
-
-
   const getAllTask = async () => {
     try {
       const res = await axios.get(`${BASEURL}/checktray_task/`, {
@@ -68,18 +66,41 @@ export const useFarmingData = (pondId) => {
           device_id: selectedDevice
         }
       });
-      setTasks(res.data.task);
+
+      const apiTasks = res.data.task || [];
+
+      setTasks(
+        apiTasks.map((task) => ({
+          ...task,
+          worker:
+            task.worker ||
+            localStorage.getItem(`worker_${task.id}`) ||
+            "",
+          start_time:
+            task.start_time ||
+            "",
+        }))
+      );
+
     } catch (error) {
       console.log("getting all task error", error);
     }
   };
-
-
   useEffect(() => {
+
+    const interval = setInterval(() => {
+      getAllTask(selectedDevice);
+    }, 5000); // 5 sec
+
+    // cleanup
+    return () => clearInterval(interval)
+
     if (selectedDevice) {
       getAllTask();
     }
   }, [selectedDevice])
+
+
 
 
   useEffect(() => { getAllTask() }, [])
@@ -95,13 +116,8 @@ export const useFarmingData = (pondId) => {
     const formattedTime = startTimes[task.id]?.replace("T", " ");
     const selectedWorker = workerName || task.worker || "";
 
-    if (!formattedTime) {
-      alert("Please select a start time before submitting.");
-      return;
-    }
-
-    if (!selectedWorker) {
-      alert("Please select a worker before submitting.");
+    if (!formattedTime || !selectedWorker) {
+      alert("Fill all fields");
       return;
     }
 
@@ -115,23 +131,38 @@ export const useFarmingData = (pondId) => {
       to_time: task.stop_time || null,
     };
 
-    console.log("Submitting schedule payload", payload);
-
     try {
       const res = await axios.post(`${BASEURL}/schedule/`, payload);
+
       if (res.status === 200) {
-        setIsSubmitted(true);
+
+        localStorage.setItem(`worker_${task.id}`, selectedWorker); // ✅ ADD THIS
+
+        // ✅ IMPORTANT: update UI state
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === task.id
+              ? {
+                ...t,
+                worker: selectedWorker,
+                start_time: formattedTime,
+                submit: "True",
+              }
+              : t
+          )
+        );
+
+        // ✅ optional: clear local temp state
+        setStartTimes((prev) => {
+          const copy = { ...prev };
+          delete copy[task.id];
+          return copy;
+        });
+
         alert("Schedule submitted successfully");
-      } else {
-        console.error("Schedule submit returned non-200", res.status, res.data);
-        alert(`Schedule submission failed: ${res.status} ${JSON.stringify(res.data)}`);
       }
     } catch (error) {
-      const responseData = error?.response?.data;
-      const status = error?.response?.status;
-      console.error("Error submitting schedule", status, responseData || error.message || error);
-      const message = responseData?.detail || responseData?.message || responseData || error.message || "Unknown error";
-      alert(`Schedule submission failed: ${status || "?"} ${JSON.stringify(message)}`);
+      console.error(error);
     }
   };
 
@@ -156,6 +187,7 @@ export const useFarmingData = (pondId) => {
     // Additional fields like 'worker' can be stored here and sent with handleSubmit
   };
 
+
   return {
     devices,
     selectedDevice,
@@ -172,3 +204,4 @@ export const useFarmingData = (pondId) => {
     updateTask,
   };
 };
+
