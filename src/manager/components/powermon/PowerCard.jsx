@@ -4,19 +4,22 @@ export default function PowerCard({ session, onAbort }) {
     const isOn = session.status === "PROCESSING";
 
     return (
-        <div className="border rounded shadow-sm bg-gray-50 p-4 h-[180px] w-[440px] ml-16">
+        <div className="border rounded shadow-sm bg-gray-50 p-4 w-full">
 
             {/* Top Section */}
-            <div className="flex justify-between items-center border-b p-2">
-                <img src={PowerMonImg} alt="" className="w-6 h-6" />
+            <div className="flex justify-between items-center border-b p-2 ">
+                <div className="flex gap-4">
+                    <img src={PowerMonImg} alt="" className="w-6 h-6" />
                 <span>{session.id}</span>
+                </div>
 
                 <div className="flex gap-2">
                     <span>PF:</span>
                     <input type="number" className="rounded border w-14" />
                 </div>
 
-                {/* Toggle UI */}
+<div className=" flex gap-4">
+                    {/* Toggle UI */}
                 <div
                     className={`w-12 h-6 flex items-center rounded-full border px-1 transition duration-300 ${isOn ? "bg-green-300" : "bg-gray-500"
                         }`}
@@ -28,6 +31,7 @@ export default function PowerCard({ session, onAbort }) {
                 </div>
 
                 <span>{isOn ? "ON" : "OFF"}</span>
+</div>
             </div>
 
             {/* Middle Section */}

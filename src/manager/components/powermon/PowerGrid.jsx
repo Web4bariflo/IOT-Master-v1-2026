@@ -60,16 +60,26 @@ export default function PowerGrid() {
     return null;
   }
 
+  // return (
+  //   <div className="grid grid-cols-2 mt-4 border shadow-md gap-2 px-6 py-6 rounded">
+  //     {sessions.map((session) => (
+  //       <div key={session.id}>
+  //         <PowerCard 
+  //           session={session} 
+  //           onAbort={handleAbort}
+  //         />
+  //       </div>
+  //     ))}
+  //   </div>
+  // );
+
   return (
-    <div className="grid grid-cols-2 mt-4 border shadow-md gap-2 px-6 py-6 rounded">
-      {sessions.map((session) => (
-        <div key={session.id}>
-          <PowerCard 
-            session={session} 
-            onAbort={handleAbort}
-          />
-        </div>
-      ))}
-    </div>
-  );
+  <div className="grid grid-cols-2 gap-4 p-0">
+    {sessions.map((session) => (
+      <div key={session.id}>
+        <PowerCard session={session} />
+      </div>
+    ))}
+  </div>
+);
 }

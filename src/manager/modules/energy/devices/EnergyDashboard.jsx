@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Power from "../../../../assets/Images/PowerMon.png";
 import PondMap from "../../../../manager/components/ponds/PondMap.jsx";
-import PondMap2 from "../../../../manager/components/ponds/PondMap2.jsx";
+// import PondMap2 from "../../../../manager/components/ponds/PondMap2.jsx";
 import WeatherCard from "./WeatherCard";
 import { useEffect, useState } from "react";
 import {
@@ -409,16 +409,6 @@ export default function EnergyDashboard() {
 
             <div className="flex-1 p-6">
 
-                <div className="flex gap-4">
-                    <div className="flex-1 bg-white rounded-lg shadow overflow-hidden">
-
-                        {/* this is show pond map */}
-                        <PondMap2 />
-                    </div>
-
-                    {/* this show weather card */}
-                    <WeatherCard />
-                </div>
 
                 <div className="mt-6 border-1 rounded-lg shadow p-4">
 
